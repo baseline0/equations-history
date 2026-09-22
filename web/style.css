@@ -356,6 +356,205 @@ kbd {
     border-color: var(--accent);
 }
 
+/* Related equations section */
+.related-equations {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: 6px;
+}
+
+.related-equations h3 {
+    color: var(--accent-alt);
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-base);
+    text-transform: uppercase;
+}
+
+.relation-card {
+    margin: var(--spacing-lg) 0;
+    padding: var(--spacing-md);
+    background-color: var(--bg-tertiary);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+}
+
+.relation-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.relation-header strong {
+    font-size: var(--font-size-base);
+    color: var(--text-primary);
+}
+
+.relation-kind {
+    display: inline-block;
+    padding: 2px 8px;
+    background-color: var(--bg-secondary);
+    color: var(--accent);
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.relation-strength {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.relation-strength.informal {
+    background-color: var(--warning);
+    color: var(--bg-primary);
+}
+
+.relation-strength.structural {
+    background-color: #6e40aa;
+    color: #fff;
+}
+
+.relation-strength.proven-equivalence {
+    background-color: var(--success);
+    color: var(--bg-primary);
+}
+
+.relation-description {
+    color: var(--text-secondary);
+    margin: var(--spacing-md) 0;
+    line-height: 1.6;
+    font-size: var(--font-size-base);
+}
+
+/* Parameter mapping table */
+.parameter-mapping {
+    margin: var(--spacing-md) 0;
+    padding: var(--spacing-md);
+    background-color: var(--bg-secondary);
+    border-radius: 4px;
+}
+
+.parameter-mapping h4 {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: var(--spacing-sm);
+}
+
+.mapping-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.mapping-table tr {
+    border-bottom: 1px solid var(--bg-tertiary);
+}
+
+.mapping-table th {
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-align: left;
+    background-color: var(--bg-tertiary);
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 10px;
+}
+
+.mapping-table td {
+    padding: var(--spacing-sm) var(--spacing-md);
+    color: var(--text-secondary);
+}
+
+.mapping-table code {
+    background-color: var(--bg-tertiary);
+    padding: 2px 4px;
+    border-radius: 2px;
+    font-family: "Courier New", monospace;
+    color: var(--accent);
+}
+
+/* Normalized forms */
+.normalized-forms {
+    margin: var(--spacing-md) 0;
+    padding: var(--spacing-md);
+    background-color: var(--bg-secondary);
+    border-radius: 4px;
+}
+
+.normalized-forms h4 {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: var(--spacing-md);
+}
+
+.form-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+}
+
+.form-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.form-item small {
+    color: var(--text-muted);
+    font-size: 11px;
+}
+
+.form-item .equation-latex {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--bg-tertiary);
+    border-radius: 4px;
+    padding: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+}
+
+@media (max-width: 768px) {
+    .form-pair {
+        grid-template-columns: 1fr;
+    }
+
+    .relation-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Formal proof link */
+.formal-proof {
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--bg-tertiary);
+}
+
+.proof-link {
+    display: inline-block;
+    padding: 4px 12px;
+    background-color: var(--accent);
+    color: var(--bg-primary);
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.proof-link:hover {
+    background-color: var(--accent-alt);
+}
+
 /* Visualization area */
 .visualization {
     margin-top: var(--spacing-lg);

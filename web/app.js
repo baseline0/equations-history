@@ -135,7 +135,7 @@ function selectEquation(key) {
 /**
  * Display equation details
  */
-function displayEquation(key) {
+async function displayEquation(key) {
     const equation = state.equations[state.currentTopic][key];
     const detailDiv = document.getElementById('equation-detail');
 
@@ -199,8 +199,146 @@ function displayEquation(key) {
         window.open(url, '_blank');
     });
 
+    // Fetch and display related equations
+    await displayRelatedEquations();
+
     // Show visualizations if available
     displayVisualization(key);
+}
+
+/**
+ * Fetch and display related equations from taxonomy
+ */
+async function displayRelatedEquations() {
+    if (!state.currentTopic) return;
+
+    try {
+        const response = await fetch(`${API_BASE}/taxonomy/${getTaxonomyDomain()}/${getTaxonomyFamily()}/${state.currentEquation}`);
+        if (!response.ok) return;
+
+        const taxonomy = await response.json();
+
+        if (!taxonomy.related_equations || taxonomy.related_equations.length === 0) {
+            return;
+        }
+
+        // Insert related equations section after citations
+        const equationDiv = document.querySelector('.equation');
+        if (!equationDiv) return;
+
+        const relatedHtml = `
+            <div class="related-equations">
+                <h3>Related Equations</h3>
+                ${taxonomy.related_equations.map(related => `
+                    <div class="relation-card">
+                        <div class="relation-header">
+                            <strong>${related.target_name}</strong>
+                            <span class="relation-kind">${formatRelationshipKind(related.relationship.kind)}</span>
+                            <span class="relation-strength ${related.relationship.strength.replace('_', '-')}">${formatRelationshipStrength(related.relationship.strength)}</span>
+                        </div>
+
+                        <p class="relation-description">${escapeHtml(related.relationship.definition)}</p>
+
+                        ${Object.keys(related.parameter_mapping).length > 0 ? `
+                            <div class="parameter-mapping">
+                                <h4>Parameter Correspondence</h4>
+                                <table class="mapping-table">
+                                    <tr>
+                                        <th>This System</th>
+                                        <th>Target System</th>
+                                        <th>Interpretation</th>
+                                    </tr>
+                                    ${Object.values(related.parameter_mapping).map(mapping => `
+                                        <tr>
+                                            <td><code>${escapeHtml(mapping.source_param)}</code> (${escapeHtml(mapping.source_name)})</td>
+                                            <td><code>${escapeHtml(mapping.target_param)}</code> (${escapeHtml(mapping.target_name)})</td>
+                                            <td>${escapeHtml(mapping.interpretation)}</td>
+                                        </tr>
+                                    `).join('')}
+                                </table>
+                            </div>
+                        ` : ''}
+
+                        ${related.normalized_form_source ? `
+                            <div class="normalized-forms">
+                                <h4>Normalized Forms</h4>
+                                <div class="form-pair">
+                                    <div class="form-item">
+                                        <small>This System</small>
+                                        <div class="equation-latex">$$${related.normalized_form_source}$$</div>
+                                    </div>
+                                    <div class="form-item">
+                                        <small>Target System</small>
+                                        <div class="equation-latex">$$${related.normalized_form_target}$$</div>
+                                    </div>
+                                </div>
+                            </div>
+                        ` : ''}
+
+                        ${related.relationship.formal_proof ? `
+                            <div class="formal-proof">
+                                <a href="${related.relationship.formal_proof_url || '#'}" class="proof-link" target="_blank">
+                                    📐 View formal proof in math-trace
+                                </a>
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('')}
+            </div>
+        `;
+
+        equationDiv.insertAdjacentHTML('afterend', relatedHtml);
+
+        // Re-render MathJax for normalized forms
+        MathJax.typesetPromise().catch(err => console.error('MathJax error:', err));
+    } catch (error) {
+        console.error('Failed to fetch related equations:', error);
+    }
+}
+
+/**
+ * Map topic to taxonomy domain/family
+ */
+function getTaxonomyDomain() {
+    // For now, map topic to domain
+    const domainMap = {
+        'autoencoder': 'ml_math',
+        'bert': 'ml_math'
+    };
+    return domainMap[state.currentTopic] || state.currentTopic;
+}
+
+function getTaxonomyFamily() {
+    return state.currentTopic;
+}
+
+/**
+ * Format relationship kind for display
+ */
+function formatRelationshipKind(kind) {
+    const labels = {
+        'analogy': '🔄 Analogy',
+        'parameter_correspondence': '↔️ Parameter Correspondence',
+        'model_equivalence': '≡ Model Equivalence',
+        'isomorphism': '≅ Isomorphism',
+        'simulation': '→ Simulation',
+        'shared_structure': '📐 Shared Structure',
+        'shared_hamiltonian_pattern': '⚡ Hamiltonian Pattern',
+        'historical_relation': '📜 Historical'
+    };
+    return labels[kind] || kind;
+}
+
+/**
+ * Format relationship strength for display
+ */
+function formatRelationshipStrength(strength) {
+    const labels = {
+        'informal': 'Informal',
+        'structural': 'Structural',
+        'proven_equivalence': 'Proven ✓'
+    };
+    return labels[strength] || strength;
 }
 
 /**
