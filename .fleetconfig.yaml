@@ -1,0 +1,61 @@
+# Fleet Configuration for equations-history
+# See agent-tooling/docs/FLEET-CONFIG.md for details
+
+repository:
+  name: "equations-history"
+  description: "Traceable, code-grounded equation narratives showing mathematical concept evolution"
+  url: "https://github.com/baseline0/equations-history"
+  owner: "baseline0"
+  intended_audiences:
+    - "ML/math educators (teaching material, interactive learning)"
+    - "Students learning ML math (accessible explanations with code)"
+    - "Researchers (showing equation provenance and evolution)"
+    - "AGMAI (Advisory Group on Mathematics and AI, IAS) — showcase for responsible equation presentation and traceability"
+    - "Math/AI communities (bridging gap between human mathematical understanding and AI systems)"
+
+governance:
+  enabled: true
+  allows_direct_fixes: true
+  fixable_categories:
+    - "environment"  # Python dependencies, FastAPI setup
+    - "config"       # pyproject.toml, Justfile updates
+    - "discovery"    # README, documentation fixes
+  # code category (equation definitions, narratives) require manual review
+
+technology_stack:
+  language: "Python"
+  build_system: "uv + Justfile"
+  equation_engine: "SymPy"
+  web_framework: "FastAPI + Typer CLI"
+  formalization: "Lean 4 (optional)"
+  test_framework: "pytest"
+  frontend: "Vanilla JavaScript + HTML/CSS"
+  visualization: "Plotly"
+
+dependencies:
+  runtime:
+    - "sympy>=1.12"
+    - "fastapi>=0.104"
+    - "typer>=0.9"
+    - "pydantic>=2.0"
+    - "plotly>=5.0"
+  development:
+    - "pytest>=7.4"
+    - "pytest-asyncio>=0.21"
+  system:
+    - "python>=3.11"
+
+quality_standards:
+  code_style: "PEP 8"
+  type_checking: "mypy"
+  testing: "pytest"
+  documentation: "code-as-docs (README + inline narrative)"
+  git_workflow: "just commit (never raw git)"
+
+constraints:
+  - "All git operations through just recipes"
+  - "Python dependencies via uv add/remove"
+  - "Equations must be Python-first (SymPy)"
+  - "Every equation must have: name, LaTeX, narrative history, citations, source_line"
+  - "Web UI must load in <2s, interactions <200ms"
+  - "Responsive design (mobile + desktop)"
