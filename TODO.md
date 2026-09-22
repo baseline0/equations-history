@@ -20,38 +20,65 @@ Traceable, code-grounded equation narratives for learning ML math.
 - [ ] Verify API works (`just serve` → test endpoints)
 - [ ] Initial commit + push to GitHub
 
-### 📋 Phase 1 Pending
-- [ ] Static narrative pages (Markdown/HTML) for each equation topic
-  - Generate narrative HTML from equation metadata
-  - Add "jump to code" links (→ source line in GitHub)
-  - Add visualization placeholders for Phase 2
-- [ ] Documentation (README.md with project overview)
-- [ ] Minimal web UI shell (Phase 2 starting point)
-
-## Phase 2: Interactive Visualizations
-
-**Goal:** Add web UI with light interactive visualizations (sliders, latent space 2D plot, attention matrix heatmap).
-
-### Planned (not yet started)
-- [ ] Build web UI (React or vanilla JS)
+### ✅ Phase 2 Complete
+- [x] Interactive web UI (vanilla JavaScript + HTML/CSS)
+  - Terminal-inspired dark theme (GitHub-like palette)
   - Tab/arrow navigation (terminal-like UX)
-  - Equation display with LaTeX rendering
-  - Narrative text
+  - Keyboard shortcuts (arrow keys, Enter, ?, C for copy)
+  - Equation display with full narrative text
   - Citation links
-  - "Jump to code" links
-  
-- [ ] Light interactive visualizations
-  - Autoencoder: 2D VAE latent space explorer (slider to change dimensions)
-  - BERT: Attention matrix heatmap (interactive slider for layer/head)
-  - Loss curves: simple plots showing how losses evolve during training
-  
-- [ ] Live code examples (Python/PyTorch snippets that users can run in browser via Pyodide)
+  - "Jump to code" links (→ GitHub source line)
+  - Help modal with keyboard reference
+  - Responsive design (mobile + desktop)
 
-- [ ] Performance monitoring
-  - Log which equations are accessed most
-  - Feedback form for learners
+- [x] Light interactive visualizations
+  - Autoencoder: 2D VAE latent space explorer (Plotly heatmap, slider for dimensions)
+  - BERT: Attention matrix heatmap (Plotly heatmap, interactive head selector)
+  - MLM loss curve: Training dynamics visualization (step-by-step loss decay)
+
+- [x] Backend integration
+  - FastAPI CORS support for web UI
+  - Static file serving (web UI at root path)
+  - API routes prioritized over static mount
+
+- [x] Testing & Validation
+  - All 18 equation tests passing
+  - API endpoints verified (JSON responses)
+  - Static file serving verified
+  - Web UI loads without errors
+
+## Phase 2 Quick Start
+
+To run the interactive web UI:
+
+```bash
+cd /home/mark/projects/equations-history
+
+# Start the server
+just serve
+
+# Open browser to http://localhost:8000
+```
+
+**Navigation:**
+- `↑` / `↓` — Navigate equations
+- `←` / `→` — Navigate topics
+- `Enter` — Select equation
+- `C` — Copy LaTeX to clipboard
+- `?` — Show help modal
+
+**Features:**
+- LaTeX rendering with MathJax
+- Interactive visualizations (sliders, heatmaps)
+- "Jump to code" links in each equation
+- Full narrative history + citations
+- Responsive design (works on mobile)
+
+---
 
 ## Phase 3: Advanced Features (Deferred)
+
+**Goal:** Lean formalization, additional topics, interactive derivations.
 
 ### Planned (no timeline)
 - [ ] Lean formalization (optional)
