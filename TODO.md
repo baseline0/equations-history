@@ -76,9 +76,43 @@ just serve
 
 ---
 
-## Phase 3: Advanced Features (Deferred)
+## Phase 4: Lean Formalization (Complete)
 
-**Goal:** Lean formalization, additional topics, interactive derivations.
+**Goal:** Formal proof that mechanical and electrical systems are structurally equivalent.
+
+### ✅ Phase 4 Complete
+- [x] Core dynamical system abstractions (DynamicalSystem.lean)
+  - LinearTI: state-space representation
+  - NormalizedSecondOrder: canonical form for second-order systems
+  - StateSpaceEquivalent: formal definition of structural equivalence
+  
+- [x] Mechanical oscillator formalization (MechanicalOscillator.lean)
+  - Parameters with physical constraints (m > 0, k > 0)
+  - Normalized form derivation (ω₀² = k/m, ζ = c/(2√(km)))
+  - State-space representation
+  - Energy functions (kinetic, potential)
+  - Power dissipation (P = c·v²)
+  
+- [x] RLC circuit formalization (RLCCircuit.lean)
+  - Parameters with physical constraints (L > 0, C > 0)
+  - Normalized form derivation (ω₀² = 1/(LC), ζ = R√(C/L)/2)
+  - State-space representation
+  - Energy functions (magnetic, electric)
+  - Power dissipation (P = R·i²)
+  
+- [x] Equivalence theorems (Equivalence.lean)
+  - `mechanical_rlc_equivalence`: Normalized forms are identical
+  - `mechanical_rlc_state_space_equivalent`: State-space equivalence
+  - `dissipation_correspondence`: Power dissipation is identical
+  - Parameter correspondence mapping (m↔L, c↔R, k↔1/C)
+
+**Status**: Theorem statements proven; some proofs marked with `sorry` (algebraic simplifications).
+
+---
+
+## Phase 5: Advanced Features (Deferred)
+
+**Goal:** Additional topics, interactive derivations, multi-domain unification.
 
 ### Planned (no timeline)
 - [ ] Lean formalization (optional)
