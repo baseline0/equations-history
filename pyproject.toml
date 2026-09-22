@@ -1,0 +1,62 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "equations-history"
+version = "0.1.0"
+description = "Traceable, code-grounded equation narratives for learning ML math"
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [
+    {name = "Mark Alexiuk", email = "malexiuk@gmail.com"}
+]
+license = {text = "MIT"}
+
+dependencies = [
+    "sympy>=1.12",
+    "typer>=0.9.0",
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+    "pydantic>=2.0",
+    "numpy>=1.24",
+    "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "mypy>=1.7",
+    "ruff>=0.1.0",
+]
+
+[project.scripts]
+learn = "equations_history.cli:app"
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP"]
+ignore = ["E501"]  # line-length handled by formatter
+
+[tool.ruff.lint.isort]
+known-first-party = ["equations_history"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+]
