@@ -7,7 +7,11 @@ Auto-generated from Typer CLI commands. Endpoints mirror the CLI structure:
 """
 
 from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from pathlib import Path
 from equations_history.equations.autoencoders import get_all_equations as get_ae_equations
 from equations_history.equations.bert import get_all_equations as get_bert_equations
 
@@ -15,6 +19,15 @@ app = FastAPI(
     title="equations-history API",
     description="Traceable, code-grounded equation narratives for learning ML math",
     version="0.1.0",
+)
+
+# Enable CORS for web UI
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins for development
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
@@ -109,3 +122,9 @@ async def get_bert_equation(topic: str) -> EquationResponse:
         source_line=eq.source_line,
         concepts=eq.concepts,
     )
+
+
+# Serve static files (web UI) — MUST be last so API routes take precedence
+web_dir = Path(__file__).parent.parent.parent / "web"
+if web_dir.exists():
+    app.mount("/", StaticFiles(directory=str(web_dir), html=True), name="static")

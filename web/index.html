@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>equations-history: Traceable Equation Narratives</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <!-- Plotly for visualizations -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>equations-history</h1>
+            <p class="subtitle">Traceable, code-grounded equation narratives for learning ML math</p>
+        </header>
+
+        <!-- Main content -->
+        <main class="main">
+            <!-- Navigation sidebar -->
+            <nav class="sidebar">
+                <div class="nav-section">
+                    <h3>Topics</h3>
+                    <ul class="topic-list">
+                        <li><button class="topic-btn" data-topic="autoencoder">Autoencoders</button></li>
+                        <li><button class="topic-btn" data-topic="bert">BERT</button></li>
+                    </ul>
+                </div>
+
+                <div class="nav-section" id="equations-section" style="display: none;">
+                    <h3>Equations</h3>
+                    <ul class="equation-list" id="equation-list">
+                        <!-- Populated dynamically -->
+                    </ul>
+                </div>
+
+                <div class="help-text">
+                    <p><kbd>↑</kbd><kbd>↓</kbd> Navigate | <kbd>Enter</kbd> Select | <kbd>?</kbd> Help</p>
+                </div>
+            </nav>
+
+            <!-- Content area -->
+            <article class="content">
+                <div id="equation-detail" class="equation-detail">
+                    <div class="welcome">
+                        <h2>Welcome to equations-history</h2>
+                        <p>A code-first approach to learning ML math. Each formula is tied to:</p>
+                        <ul>
+                            <li><strong>Source code</strong> (SymPy—click to jump)</li>
+                            <li><strong>Narrative context</strong> (why & how it evolved)</li>
+                            <li><strong>Citations</strong> (original papers)</li>
+                            <li><strong>Interactive visuals</strong> (sliders, plots)</li>
+                        </ul>
+                        <p style="margin-top: 2rem; font-size: 0.9em; color: #666;">
+                            Click a topic on the left to get started, or use arrow keys to navigate.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Visualizations (context-dependent) -->
+                <div id="visualization" class="visualization" style="display: none;">
+                    <!-- Populated dynamically -->
+                </div>
+            </article>
+        </main>
+    </div>
+
+    <!-- Help modal -->
+    <div id="help-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Navigation Help</h2>
+            <table>
+                <tr>
+                    <td><kbd>↑</kbd> / <kbd>↓</kbd></td>
+                    <td>Navigate equations</td>
+                </tr>
+                <tr>
+                    <td><kbd>←</kbd> / <kbd>→</kbd></td>
+                    <td>Navigate topics</td>
+                </tr>
+                <tr>
+                    <td><kbd>Enter</kbd></td>
+                    <td>Select equation</td>
+                </tr>
+                <tr>
+                    <td><kbd>C</kbd></td>
+                    <td>Copy LaTeX</td>
+                </tr>
+                <tr>
+                    <td><kbd>?</kbd></td>
+                    <td>Show this help</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
