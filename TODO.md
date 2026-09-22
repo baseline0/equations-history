@@ -14,11 +14,12 @@ Traceable, code-grounded equation narratives for learning ML math.
 - [x] FastAPI endpoints (auto-generated from Typer, `/api/equations/{topic}/{equation}`)
 - [x] Test suite (equation metadata validation, completeness checks)
 
-### 📋 Phase 1 In Progress
-- [ ] Run test suite (`just test`) — verify all equations pass
-- [ ] Verify CLI works (`just cli autoencoder --explain`, etc.)
-- [ ] Verify API works (`just serve` → test endpoints)
-- [ ] Initial commit + push to GitHub
+### ✅ Phase 1 Validation Complete
+- [x] Run test suite (`just test`) — all 38 tests passing
+- [x] Verify CLI works (`just cli autoencoder --explain`, etc.)
+- [x] Verify API works (`just serve` → test endpoints)
+- [x] Justfile fixed (shebang indentation)
+- [x] VAE KL Divergence verified (standard Gaussian formula from K&W 2013)
 
 ### ✅ Phase 2 Complete
 - [x] Interactive web UI (vanilla JavaScript + HTML/CSS)

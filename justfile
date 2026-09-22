@@ -31,13 +31,12 @@ set shell := ["bash", "-c"]
     set -e
     read -p "Commit message (or press Enter for auto-generate): " msg
     if [ -z "$msg" ]; then
-        # Try commitmate for auto-generate, fall back to manual
-        if command -v commitmate &> /dev/null && which ollama &> /dev/null; then
-            msg=$(timeout 30 commitmate --format || echo "")
-        fi
-        if [ -z "$msg" ]; then
-            read -p "Enter commit message: " msg
-        fi
+    if command -v commitmate &> /dev/null && which ollama &> /dev/null; then
+    msg=$(timeout 30 commitmate --format || echo "")
+    fi
+    if [ -z "$msg" ]; then
+    read -p "Enter commit message: " msg
+    fi
     fi
     git commit -m "$msg" || true
 
