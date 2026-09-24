@@ -111,31 +111,42 @@ just serve
 
 ---
 
-## Phase 5: Advanced Features (Deferred)
+## Phase 5: Advanced Features (In Progress)
 
 **Goal:** Additional topics, interactive derivations, multi-domain unification.
 
-### Planned (no timeline)
+### ✅ Phase 5a: Topic Expansion COMPLETE (2026-09-23)
+
+- [x] Expand to additional topics (25 new equations, 80 tests)
+  - [x] Optimizers: SGD, momentum, Nesterov, Adam (6 equations)
+  - [x] Regularization: Dropout, L2, Batch Norm (6 equations)
+  - [x] Loss functions: Cross-entropy, KL, Wasserstein (6 equations)
+  - [x] Diffusion models: Forward, reverse, score matching, guidance (7 equations)
+  - Total: 25 equations across 4 new topics
+  - CLI commands: `learn optimizers`, `learn regularization`, `learn loss-functions`, `learn diffusion`
+  - API endpoints: Full REST support for all 4 topics
+  - Tests: 80 passing (9 + 10 + 11 + 12 per topic)
+
+### ⏳ Phase 5b: Polish & Extensions (Planned)
+
 - [ ] Lean formalization (optional)
   - Each equation gets an optional formal statement in Lean
   - Example: "ELBO lower-bounds log p(x)"
   - Prove key theorems (reparameterization trick, attention as kernel)
   
-- [ ] Expand to additional topics
-  - Optimizers (Adam, SGD, momentum)
-  - Regularization (dropout, L2, batch norm)
-  - Loss functions (cross-entropy, KL divergence, Wasserstein)
-  - Diffusion models (score matching, reverse process)
-  - Retrieval-augmented generation (RAG)
-  
 - [ ] Interactive derivations
   - Step-by-step walkthroughs (expand/collapse)
   - "Try this yourself" exercises with Python notebooks
   
-- [ ] Cross-linking
+- [ ] Cross-linking infrastructure
   - "Related equations" for each topic
   - "Prerequisites" (e.g., "Read attention before BERT")
   - "Applications" (where this equation is used in practice)
+
+- [ ] Additional topics (future, no timeline)
+  - Retrieval-augmented generation (RAG)
+  - Reinforcement learning (policy gradients, Q-learning)
+  - Attention variants (multi-head, sparse, linear)
 
 ## Design Principles
 
@@ -182,9 +193,14 @@ just serve
 
 ## Current Status
 
-- **Overall progress:** Phase 1 ~80% (infrastructure done, validation + docs in progress)
-- **Next immediate steps:** Run tests, verify CLI/API, write README
-- **Timeline:** Phase 1 complete by end of week, Phase 2 starting next week
+- **Phases 1-4:** ✅ Complete (Foundation, Web UI, Lean formalization, interactive features)
+- **Phase 5a (Topic expansion):** ✅ Complete (25 equations, 4 topics, 80 tests)
+- **Phase 5b (Polish):** ⏳ Ready to start
+  - Cross-linking infrastructure (medium priority)
+  - Interactive derivations (low priority)
+  - Lean formalization for Phase 5 topics (optional, deferred)
+- **Overall progress:** 6 topics, 46 equations total, full CLI/API/web UI integration
+- **Next step:** Begin Phase 5b cross-linking or defer to Phase 6 (additional topics)
 
 ## References & Inspiration
 
