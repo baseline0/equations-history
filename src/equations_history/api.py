@@ -15,6 +15,10 @@ from pathlib import Path
 from typing import List, Dict, Optional
 from equations_history.equations.autoencoders import get_all_equations as get_ae_equations
 from equations_history.equations.bert import get_all_equations as get_bert_equations
+from equations_history.equations.optimizers import get_all_equations as get_opt_equations
+from equations_history.equations.regularization import get_all_equations as get_reg_equations
+from equations_history.equations.loss_functions import get_all_equations as get_loss_equations
+from equations_history.equations.diffusion import get_all_equations as get_diff_equations
 from equations_history.shared_taxonomy.registry import (
     get_equation as get_taxonomy,
     get_related_equations,
@@ -166,6 +170,158 @@ async def list_bert_equations(
 async def get_bert_equation(topic: str) -> EquationResponse:
     """Get a specific BERT equation."""
     equations = get_bert_equations()
+    if topic not in equations:
+        raise HTTPException(status_code=404, detail=f"Equation {topic} not found")
+    eq = equations[topic]
+    return EquationResponse(
+        name=eq.name,
+        latex=eq.latex,
+        description=eq.description,
+        history=eq.history,
+        citations=eq.citations,
+        source_line=eq.source_line,
+        concepts=eq.concepts,
+    )
+
+
+@app.get("/api/equations/optimizers", response_model=dict[str, EquationResponse])
+async def list_optimizer_equations(
+    explain: bool = False,
+) -> dict[str, EquationResponse]:
+    """List all optimizer equations."""
+    equations = get_opt_equations()
+    return {
+        name: EquationResponse(
+            name=eq.name,
+            latex=eq.latex,
+            description=eq.description,
+            history=eq.history,
+            citations=eq.citations,
+            source_line=eq.source_line,
+            concepts=eq.concepts,
+        )
+        for name, eq in equations.items()
+    }
+
+
+@app.get("/api/equations/optimizers/{topic}", response_model=EquationResponse)
+async def get_optimizer_equation(topic: str) -> EquationResponse:
+    """Get a specific optimizer equation."""
+    equations = get_opt_equations()
+    if topic not in equations:
+        raise HTTPException(status_code=404, detail=f"Equation {topic} not found")
+    eq = equations[topic]
+    return EquationResponse(
+        name=eq.name,
+        latex=eq.latex,
+        description=eq.description,
+        history=eq.history,
+        citations=eq.citations,
+        source_line=eq.source_line,
+        concepts=eq.concepts,
+    )
+
+
+@app.get("/api/equations/regularization", response_model=dict[str, EquationResponse])
+async def list_regularization_equations(
+    explain: bool = False,
+) -> dict[str, EquationResponse]:
+    """List all regularization equations."""
+    equations = get_reg_equations()
+    return {
+        name: EquationResponse(
+            name=eq.name,
+            latex=eq.latex,
+            description=eq.description,
+            history=eq.history,
+            citations=eq.citations,
+            source_line=eq.source_line,
+            concepts=eq.concepts,
+        )
+        for name, eq in equations.items()
+    }
+
+
+@app.get("/api/equations/regularization/{topic}", response_model=EquationResponse)
+async def get_regularization_equation(topic: str) -> EquationResponse:
+    """Get a specific regularization equation."""
+    equations = get_reg_equations()
+    if topic not in equations:
+        raise HTTPException(status_code=404, detail=f"Equation {topic} not found")
+    eq = equations[topic]
+    return EquationResponse(
+        name=eq.name,
+        latex=eq.latex,
+        description=eq.description,
+        history=eq.history,
+        citations=eq.citations,
+        source_line=eq.source_line,
+        concepts=eq.concepts,
+    )
+
+
+@app.get("/api/equations/loss-functions", response_model=dict[str, EquationResponse])
+async def list_loss_function_equations(
+    explain: bool = False,
+) -> dict[str, EquationResponse]:
+    """List all loss function equations."""
+    equations = get_loss_equations()
+    return {
+        name: EquationResponse(
+            name=eq.name,
+            latex=eq.latex,
+            description=eq.description,
+            history=eq.history,
+            citations=eq.citations,
+            source_line=eq.source_line,
+            concepts=eq.concepts,
+        )
+        for name, eq in equations.items()
+    }
+
+
+@app.get("/api/equations/loss-functions/{topic}", response_model=EquationResponse)
+async def get_loss_function_equation(topic: str) -> EquationResponse:
+    """Get a specific loss function equation."""
+    equations = get_loss_equations()
+    if topic not in equations:
+        raise HTTPException(status_code=404, detail=f"Equation {topic} not found")
+    eq = equations[topic]
+    return EquationResponse(
+        name=eq.name,
+        latex=eq.latex,
+        description=eq.description,
+        history=eq.history,
+        citations=eq.citations,
+        source_line=eq.source_line,
+        concepts=eq.concepts,
+    )
+
+
+@app.get("/api/equations/diffusion", response_model=dict[str, EquationResponse])
+async def list_diffusion_equations(
+    explain: bool = False,
+) -> dict[str, EquationResponse]:
+    """List all diffusion model equations."""
+    equations = get_diff_equations()
+    return {
+        name: EquationResponse(
+            name=eq.name,
+            latex=eq.latex,
+            description=eq.description,
+            history=eq.history,
+            citations=eq.citations,
+            source_line=eq.source_line,
+            concepts=eq.concepts,
+        )
+        for name, eq in equations.items()
+    }
+
+
+@app.get("/api/equations/diffusion/{topic}", response_model=EquationResponse)
+async def get_diffusion_equation(topic: str) -> EquationResponse:
+    """Get a specific diffusion model equation."""
+    equations = get_diff_equations()
     if topic not in equations:
         raise HTTPException(status_code=404, detail=f"Equation {topic} not found")
     eq = equations[topic]
