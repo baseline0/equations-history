@@ -5,11 +5,11 @@ All core infrastructure and interactive visualizations complete.
 
 ---
 
-## Phase 5b: Polish & Extensions
+## Features
 
-- [ ] Lean formalization (optional): formal statements for key equations
-- [ ] Interactive derivations: step-by-step walkthroughs with exercises
-- [ ] Cross-linking: related equations, prerequisites, applications
-- [ ] Additional topics: RAG, reinforcement learning, attention variants
+- [ ] Lean formalization of key ML equations (optional). `docs/lean/` formalizes dynamical systems and circuits, not the 32 ML equations.
+- [ ] Interactive derivations: step-by-step walkthroughs with exercises. None exist yet.
+- [ ] Cross-linking: add prerequisite and application relation kinds. Related-equation links already exist in `shared_taxonomy/` (`RelationshipKind` has no prerequisite or application kinds).
+- [ ] Additional topics: RAG, reinforcement learning, attention variants. None exist yet.
 
 **Status:** Planned (no timeline)
