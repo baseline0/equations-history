@@ -1,5 +1,5 @@
 # Fleet Configuration for equations-history
-# See agent-tooling/docs/FLEET-CONFIG.md for details
+# See fleet-agents/docs/FLEET-CONFIG.md for details
 
 repository:
   name: "equations-history"
