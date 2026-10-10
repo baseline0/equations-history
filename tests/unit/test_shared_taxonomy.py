@@ -5,7 +5,11 @@ from equations_history.shared_taxonomy.models import (
     TaxonomyIdentifier,
     RelationshipKind,
     RelationshipStrength,
+    RelationshipType,
     ParameterMapping,
+    EquationTaxonomy,
+    MathematicalForm,
+    Relation,
 )
 from equations_history.shared_taxonomy.examples import (
     MECHANICAL_OSCILLATOR,
@@ -178,3 +182,54 @@ class TestRegistry:
         assert len(relations) > 0
         # The relation should appear in the list (possibly twice if bidirectional)
         assert any(r.source == MECHANICAL_OSCILLATOR and r.target == RLC_CIRCUIT for r in relations)
+
+
+class TestPrerequisiteAndApplicationKinds:
+    """Test the prerequisite and application relation kinds.
+
+    Uses a throwaway taxonomy rather than the registry so global state is untouched.
+    """
+
+    @staticmethod
+    def _relation_with_kind(kind: str) -> Relation:
+        """Build a relation between the two example equations with the given kind string."""
+        return Relation(
+            source=MECHANICAL_OSCILLATOR,
+            target=RLC_CIRCUIT,
+            relationship=RelationshipType(
+                kind=RelationshipKind(kind),
+                definition="Test relation.",
+                strength=RelationshipStrength.INFORMAL,
+            ),
+        )
+
+    @staticmethod
+    def _taxonomy_with(relation: Relation) -> EquationTaxonomy:
+        """Build an unregistered taxonomy holding one relation."""
+        return EquationTaxonomy(
+            identifier=MECHANICAL_OSCILLATOR,
+            mathematical_form=MathematicalForm(primary="ordinary_differential_equation"),
+            relations=[relation],
+        )
+
+    @pytest.mark.parametrize(
+        ("kind_value", "expected"),
+        [
+            ("prerequisite", RelationshipKind.PREREQUISITE),
+            ("application", RelationshipKind.APPLICATION),
+        ],
+    )
+    def test_valid_kind_is_accepted(self, kind_value: str, expected: RelationshipKind) -> None:
+        """A valid prerequisite or application relation is accepted and filterable by kind."""
+        relation = self._relation_with_kind(kind_value)
+        assert relation.relationship.kind == expected
+        assert relation.relationship.kind.value == kind_value
+
+        taxonomy = self._taxonomy_with(relation)
+        assert taxonomy.get_relations_by_kind(expected) == [relation]
+
+    @pytest.mark.parametrize("bad_kind", ["prerequisit", "Prerequisite", "applications", ""])
+    def test_invalid_kind_is_rejected(self, bad_kind: str) -> None:
+        """Misspelled or unknown kinds fail at the boundary instead of falling through."""
+        with pytest.raises(ValueError):
+            self._relation_with_kind(bad_kind)

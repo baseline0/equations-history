@@ -324,7 +324,9 @@ function formatRelationshipKind(kind) {
         'simulation': '→ Simulation',
         'shared_structure': '📐 Shared Structure',
         'shared_hamiltonian_pattern': '⚡ Hamiltonian Pattern',
-        'historical_relation': '📜 Historical'
+        'historical_relation': '📜 Historical',
+        'prerequisite': '📚 Prerequisite',
+        'application': '🛠 Application'
     };
     return labels[kind] || kind;
 }

@@ -22,6 +22,8 @@ class RelationshipKind(str, Enum):
     SHARED_STRUCTURE = "shared_structure"  # Both instantiate a more abstract model
     HISTORICAL_RELATION = "historical_relation"  # One influenced or generalized another
     SHARED_HAMILTONIAN_PATTERN = "shared_hamiltonian_pattern"  # Common energy structure
+    PREREQUISITE = "prerequisite"  # Source must be understood before target; source -> target
+    APPLICATION = "application"  # Source is applied to produce target's use case; source -> target
 
 
 class RelationshipStrength(str, Enum):
