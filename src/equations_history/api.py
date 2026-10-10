@@ -29,6 +29,7 @@ from equations_history.shared_taxonomy.models import (
     RelationshipKind,
     RelationshipStrength,
 )
+from equations_history.constants import REPO_ROOT
 
 app = FastAPI(
     title="equations-history API",
@@ -422,6 +423,6 @@ async def get_all_relations_summary() -> List[Dict[str, str]]:
 
 
 # Serve static files (web UI) — MUST be last so API routes take precedence
-web_dir = Path(__file__).parent.parent.parent / "web"
+web_dir = REPO_ROOT / "web"
 if web_dir.exists():
     app.mount("/", StaticFiles(directory=str(web_dir), html=True), name="static")
