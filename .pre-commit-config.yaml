@@ -1,6 +1,12 @@
 repos:
   - repo: local
     hooks:
+      - id: check-project-venv
+        name: "[P0] VIRTUAL_ENV must be this repo's .venv"
+        entry: bash ../fleet-base/scripts/check-project-venv.sh
+        language: system
+        pass_filenames: false
+        always_run: true
       - id: repo-root-pattern
         name: "[P1] Enforce REPO_ROOT pattern (no .parent outside constants.py)"
         entry: bash ../fleet-base/scripts/check-repo-root-pattern.sh
