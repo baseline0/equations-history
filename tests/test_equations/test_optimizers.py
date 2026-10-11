@@ -1,6 +1,5 @@
 """Tests for optimizer equations."""
 
-import pytest
 from equations_history.equations.optimizers import OptimizerEquations, get_all_equations
 
 

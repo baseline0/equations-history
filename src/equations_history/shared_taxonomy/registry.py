@@ -1,35 +1,32 @@
 """Registry: central lookup for equation taxonomies and relationships."""
 
-from typing import Optional, List, Dict
-from .models import TaxonomyIdentifier, EquationTaxonomy, Relation
 from .examples import (
-    MECHANICAL_OSCILLATOR_TAXONOMY,
-    RLC_CIRCUIT_TAXONOMY,
     MECHANICAL_OSCILLATOR,
+    MECHANICAL_OSCILLATOR_TAXONOMY,
     RLC_CIRCUIT,
-    MECH_RLC_RELATION,
+    RLC_CIRCUIT_TAXONOMY,
 )
-
+from .models import EquationTaxonomy, Relation, TaxonomyIdentifier
 
 # Central registry: all known taxonomies indexed by full identifier
-EQUATION_REGISTRY: Dict[str, EquationTaxonomy] = {
+EQUATION_REGISTRY: dict[str, EquationTaxonomy] = {
     MECHANICAL_OSCILLATOR.full_id(): MECHANICAL_OSCILLATOR_TAXONOMY,
     RLC_CIRCUIT.full_id(): RLC_CIRCUIT_TAXONOMY,
 }
 
 
-def get_equation(identifier: TaxonomyIdentifier) -> Optional[EquationTaxonomy]:
+def get_equation(identifier: TaxonomyIdentifier) -> EquationTaxonomy | None:
     """Retrieve taxonomy for an equation by identifier."""
     return EQUATION_REGISTRY.get(identifier.full_id())
 
 
-def get_relations(identifier: TaxonomyIdentifier) -> List[Relation]:
+def get_relations(identifier: TaxonomyIdentifier) -> list[Relation]:
     """Get all relations for an equation."""
     taxonomy = get_equation(identifier)
     return taxonomy.relations if taxonomy else []
 
 
-def get_related_equations(identifier: TaxonomyIdentifier) -> List[TaxonomyIdentifier]:
+def get_related_equations(identifier: TaxonomyIdentifier) -> list[TaxonomyIdentifier]:
     """Get identifiers of equations related to the given one."""
     relations = get_relations(identifier)
     related = []
@@ -51,22 +48,22 @@ def unregister_equation(identifier: TaxonomyIdentifier) -> None:
     EQUATION_REGISTRY.pop(identifier.full_id(), None)
 
 
-def list_equations() -> List[EquationTaxonomy]:
+def list_equations() -> list[EquationTaxonomy]:
     """List all registered equations."""
     return list(EQUATION_REGISTRY.values())
 
 
-def list_equations_by_domain(domain: str) -> List[EquationTaxonomy]:
+def list_equations_by_domain(domain: str) -> list[EquationTaxonomy]:
     """List all equations in a specific domain."""
     return [tax for tax in EQUATION_REGISTRY.values() if tax.domain == domain]
 
 
-def list_equations_by_family(family: str) -> List[EquationTaxonomy]:
+def list_equations_by_family(family: str) -> list[EquationTaxonomy]:
     """List all equations in a specific family."""
     return [tax for tax in EQUATION_REGISTRY.values() if tax.identifier.family == family]
 
 
-def list_all_relations() -> List[Relation]:
+def list_all_relations() -> list[Relation]:
     """List all documented cross-domain relationships."""
     relations = []
     for taxonomy in EQUATION_REGISTRY.values():
@@ -75,10 +72,8 @@ def list_all_relations() -> List[Relation]:
 
 
 def find_shortest_path(
-    start: TaxonomyIdentifier,
-    end: TaxonomyIdentifier,
-    max_depth: int = 3
-) -> Optional[List[TaxonomyIdentifier]]:
+    start: TaxonomyIdentifier, end: TaxonomyIdentifier, max_depth: int = 3
+) -> list[TaxonomyIdentifier] | None:
     """
     Find shortest path of relationships between two equations.
     Uses breadth-first search.
@@ -100,10 +95,10 @@ def find_shortest_path(
         related = get_related_equations(current)
         for next_id in related:
             if next_id.full_id() == end.full_id():
-                return path + [next_id]
+                return [*path, next_id]
 
             if next_id.full_id() not in visited:
                 visited.add(next_id.full_id())
-                queue.append((next_id, path + [next_id]))
+                queue.append((next_id, [*path, next_id]))
 
     return None

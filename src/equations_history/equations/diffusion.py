@@ -4,13 +4,15 @@ Source of truth for diffusion model mathematical definitions. Each equation
 includes narrative context (history, citations, practical use cases).
 """
 
-import sympy as sp
 from dataclasses import dataclass
+
+import sympy as sp
 
 
 @dataclass
 class Equation:
     """Container for an equation with metadata."""
+
     name: str
     latex: str
     description: str
@@ -46,9 +48,7 @@ class DiffusionEquations:
         """
         return Equation(
             name="Diffusion Forward Process (Markov)",
-            latex=(
-                r"q(x_t | x_{t-1}) = \mathcal{N}(x_t; \sqrt{1 - \beta_t} x_{t-1}, \beta_t I)"
-            ),
+            latex=(r"q(x_t | x_{t-1}) = \mathcal{N}(x_t; \sqrt{1 - \beta_t} x_{t-1}, \beta_t I)"),
             description=(
                 "Each step: add noise with variance β_t while scaling previous state by √(1-β_t). "
                 "Forms a Markov chain from x_0 (data) to x_T ≈ N(0,I) (noise)."
@@ -63,8 +63,7 @@ class DiffusionEquations:
                 "This enables learning via reverse denoising."
             ),
             citations=[
-                "Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. "
-                "arXiv:2006.11239.",
+                "Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. arXiv:2006.11239.",
                 "Song, Y., & Ermon, S. (2019). Generative modeling by estimating gradients of the data distribution. "
                 "NeurIPS.",
             ],
@@ -101,8 +100,7 @@ class DiffusionEquations:
                 "This linearity is crucial for efficient training via noise prediction."
             ),
             citations=[
-                "Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. "
-                "arXiv:2006.11239.",
+                "Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. arXiv:2006.11239.",
             ],
             source_line=60,
             concepts=["forward process", "closed form", "cumulative noise", "direct sampling"],
@@ -119,9 +117,7 @@ class DiffusionEquations:
         """
         return Equation(
             name="Diffusion Reverse Process",
-            latex=(
-                r"p_\theta(x_{t-1} | x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \Sigma_\theta(x_t, t))"
-            ),
+            latex=(r"p_\theta(x_{t-1} | x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \Sigma_\theta(x_t, t))"),
             description=(
                 "Learned reverse step: predict mean μ_θ and covariance Σ_θ at time t. "
                 "Starting from x_T ≈ N(0,I), iteratively denoise: x_T → x_{T-1} → ... → x_0."
@@ -135,8 +131,7 @@ class DiffusionEquations:
                 "which is much more stable and data-efficient than direct density estimation."
             ),
             citations=[
-                "Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. "
-                "arXiv:2006.11239.",
+                "Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. arXiv:2006.11239.",
             ],
             source_line=80,
             concepts=["diffusion", "reverse process", "denoising", "generation"],
@@ -171,8 +166,7 @@ class DiffusionEquations:
                 "This simplification was critical to diffusion models' practical success."
             ),
             citations=[
-                "Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. "
-                "arXiv:2006.11239.",
+                "Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. arXiv:2006.11239.",
             ],
             source_line=100,
             concepts=["diffusion", "training objective", "noise prediction", "denoising"],
@@ -245,8 +239,7 @@ class DiffusionEquations:
                 "Different schedules (linear, quadratic, cosine) trade off step count against numerical stability."
             ),
             citations=[
-                "Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. "
-                "arXiv:2006.11239.",
+                "Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. arXiv:2006.11239.",
                 "Nichol, A. Q., & Dhariwal, P. (2021). Improved denoising diffusion probabilistic models. ICML.",
             ],
             source_line=140,
@@ -282,8 +275,7 @@ class DiffusionEquations:
                 "This approach is simpler and has become the standard in many diffusion-based systems."
             ),
             citations=[
-                "Ho, S., & Salimans, T. (2021). Classifier-free diffusion guidance. "
-                "arXiv:2207.12598.",
+                "Ho, S., & Salimans, T. (2021). Classifier-free diffusion guidance. arXiv:2207.12598.",
                 "Dhariwal, P., & Nichol, A. Q. (2021). Diffusion models beat GANs on image synthesis. ICML.",
             ],
             source_line=160,

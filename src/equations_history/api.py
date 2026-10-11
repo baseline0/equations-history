@@ -7,29 +7,26 @@ Auto-generated from Typer CLI commands. Endpoints mirror the CLI structure:
 """
 
 from fastapi import FastAPI, HTTPException
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
-from pathlib import Path
-from typing import List, Dict, Optional
+
+from equations_history.constants import REPO_ROOT
 from equations_history.equations.autoencoders import get_all_equations as get_ae_equations
 from equations_history.equations.bert import get_all_equations as get_bert_equations
+from equations_history.equations.diffusion import get_all_equations as get_diff_equations
+from equations_history.equations.loss_functions import get_all_equations as get_loss_equations
 from equations_history.equations.optimizers import get_all_equations as get_opt_equations
 from equations_history.equations.regularization import get_all_equations as get_reg_equations
-from equations_history.equations.loss_functions import get_all_equations as get_loss_equations
-from equations_history.equations.diffusion import get_all_equations as get_diff_equations
-from equations_history.shared_taxonomy.registry import (
-    get_equation as get_taxonomy,
-    get_related_equations,
-    list_all_relations,
-)
 from equations_history.shared_taxonomy.models import (
     TaxonomyIdentifier,
-    RelationshipKind,
-    RelationshipStrength,
 )
-from equations_history.constants import REPO_ROOT
+from equations_history.shared_taxonomy.registry import (
+    get_equation as get_taxonomy,
+)
+from equations_history.shared_taxonomy.registry import (
+    list_all_relations,
+)
 
 app = FastAPI(
     title="equations-history API",
@@ -49,6 +46,7 @@ app.add_middleware(
 
 class EquationResponse(BaseModel):
     """API response for an equation."""
+
     name: str
     latex: str
     description: str
@@ -60,47 +58,51 @@ class EquationResponse(BaseModel):
 
 class ParameterMappingResponse(BaseModel):
     """Parameter correspondence between two systems."""
+
     source_param: str
     target_param: str
     source_name: str
     target_name: str
     interpretation: str
-    normalized_form: Optional[str] = None
-    units_source: Optional[str] = None
-    units_target: Optional[str] = None
+    normalized_form: str | None = None
+    units_source: str | None = None
+    units_target: str | None = None
 
 
 class RelationshipTypeResponse(BaseModel):
     """Specification of a relationship."""
+
     kind: str
     definition: str
     strength: str
-    formal_proof: Optional[str] = None
-    formal_proof_url: Optional[str] = None
+    formal_proof: str | None = None
+    formal_proof_url: str | None = None
     notes: str = ""
 
 
 class RelatedEquationResponse(BaseModel):
     """A related equation with mapping and relationship details."""
+
     target_domain: str
     target_family: str
     target_name: str
     target_full_id: str
     relationship: RelationshipTypeResponse
-    parameter_mapping: Dict[str, ParameterMappingResponse]
-    normalized_form_source: Optional[str] = None
-    normalized_form_target: Optional[str] = None
+    parameter_mapping: dict[str, ParameterMappingResponse]
+    normalized_form_source: str | None = None
+    normalized_form_target: str | None = None
     notes: str = ""
 
 
 class TaxonomyResponse(BaseModel):
     """Taxonomic classification of an equation."""
-    mathematical_form: Dict[str, Optional[str]] = Field(default_factory=dict)
-    physical_role: List[str] = Field(default_factory=list)
-    structural_features: List[str] = Field(default_factory=list)
+
+    mathematical_form: dict[str, str | None] = Field(default_factory=dict)
+    physical_role: list[str] = Field(default_factory=list)
+    structural_features: list[str] = Field(default_factory=list)
     domain: str
-    structural_families: List[str] = Field(default_factory=list)
-    related_equations: List[RelatedEquationResponse] = Field(default_factory=list)
+    structural_families: list[str] = Field(default_factory=list)
+    related_equations: list[RelatedEquationResponse] = Field(default_factory=list)
 
 
 @app.get("/health")
@@ -341,6 +343,7 @@ async def get_diffusion_equation(topic: str) -> EquationResponse:
 # Taxonomy Endpoints (Phase 3b)
 # ============================================================================
 
+
 @app.get("/api/taxonomy/{domain}/{family}/{name}", response_model=TaxonomyResponse)
 async def get_equation_taxonomy(domain: str, family: str, name: str) -> TaxonomyResponse:
     """Get taxonomic classification for an equation."""
@@ -351,7 +354,7 @@ async def get_equation_taxonomy(domain: str, family: str, name: str) -> Taxonomy
         raise HTTPException(status_code=404, detail=f"Taxonomy not found for {identifier.full_id()}")
 
     # Build related equations response
-    related_list: List[RelatedEquationResponse] = []
+    related_list: list[RelatedEquationResponse] = []
     for relation in taxonomy.relations:
         target = relation.target if relation.source.full_id() == identifier.full_id() else relation.source
 
@@ -406,8 +409,8 @@ async def get_equation_taxonomy(domain: str, family: str, name: str) -> Taxonomy
     )
 
 
-@app.get("/api/relations/all", response_model=List[Dict[str, str]])
-async def get_all_relations_summary() -> List[Dict[str, str]]:
+@app.get("/api/relations/all", response_model=list[dict[str, str]])
+async def get_all_relations_summary() -> list[dict[str, str]]:
     """Get summary of all documented cross-domain relationships."""
     relations = list_all_relations()
     return [
@@ -416,7 +419,9 @@ async def get_all_relations_summary() -> List[Dict[str, str]]:
             "target": relation.target.full_id(),
             "kind": relation.relationship.kind.value,
             "strength": relation.relationship.strength.value,
-            "description": relation.relationship.definition[:200] + "..." if len(relation.relationship.definition) > 200 else relation.relationship.definition,
+            "description": relation.relationship.definition[:200] + "..."
+            if len(relation.relationship.definition) > 200
+            else relation.relationship.definition,
         }
         for relation in relations
     ]

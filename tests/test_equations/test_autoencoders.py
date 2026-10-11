@@ -1,6 +1,5 @@
 """Tests for autoencoder equations."""
 
-import pytest
 from equations_history.equations.autoencoders import AutoencoderEquations, get_all_equations
 
 

@@ -4,13 +4,15 @@ Source of truth for BERT mathematical definitions. Includes attention mechanism,
 positional embeddings, and pretraining losses.
 """
 
-import sympy as sp
 from dataclasses import dataclass
+
+import sympy as sp
 
 
 @dataclass
 class Equation:
     """Container for an equation with metadata."""
+
     name: str
     latex: str
     description: str
@@ -58,8 +60,7 @@ class BERTEquations:
                 "without it, attention weights in high dimensions tend to produce vanishing gradients."
             ),
             citations=[
-                "Vaswani, A., Shazeer, N., Parmar, N., et al. (2017). "
-                "Attention is All You Need. NeurIPS.",
+                "Vaswani, A., Shazeer, N., Parmar, N., et al. (2017). Attention is All You Need. NeurIPS.",
             ],
             source_line=30,
             concepts=["attention", "self-attention", "transformer", "mechanism"],
@@ -91,8 +92,7 @@ class BERTEquations:
                 "This parallel processing is key to BERT's expressiveness."
             ),
             citations=[
-                "Vaswani, A., Shazeer, N., Parmar, N., et al. (2017). "
-                "Attention is All You Need. NeurIPS.",
+                "Vaswani, A., Shazeer, N., Parmar, N., et al. (2017). Attention is All You Need. NeurIPS.",
             ],
             source_line=55,
             concepts=["multi-head", "subspace", "representation"],
@@ -124,8 +124,7 @@ class BERTEquations:
                 "(absolute position embeddings), which are simpler and often equally effective for BERT's pretraining setup."
             ),
             citations=[
-                "Vaswani, A., Shazeer, N., Parmar, N., et al. (2017). "
-                "Attention is All You Need. NeurIPS.",
+                "Vaswani, A., Shazeer, N., Parmar, N., et al. (2017). Attention is All You Need. NeurIPS.",
                 "Devlin, J., Chang, M-W., Lee, K., & Toutanova, K. (2018). "
                 "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. "
                 "arXiv:1810.04805.",

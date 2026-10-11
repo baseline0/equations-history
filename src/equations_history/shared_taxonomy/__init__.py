@@ -13,13 +13,13 @@ Used by:
 """
 
 from .models import (
-    TaxonomyIdentifier,
-    StructuralFamily,
-    RelationshipType,
     ParameterMapping,
     Relation,
+    RelationshipType,
+    StructuralFamily,
+    TaxonomyIdentifier,
 )
-from .registry import get_equation, get_relations, EQUATION_REGISTRY
+from .registry import EQUATION_REGISTRY, get_equation, get_relations
 
 __all__ = [
     "TaxonomyIdentifier",

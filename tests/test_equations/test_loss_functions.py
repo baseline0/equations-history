@@ -1,6 +1,5 @@
 """Tests for loss function equations."""
 
-import pytest
 from equations_history.equations.loss_functions import LossFunctionEquations, get_all_equations
 
 

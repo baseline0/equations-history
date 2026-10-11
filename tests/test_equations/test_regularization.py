@@ -1,6 +1,5 @@
 """Tests for regularization equations."""
 
-import pytest
 from equations_history.equations.regularization import RegularizationEquations, get_all_equations
 
 

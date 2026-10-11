@@ -1,6 +1,5 @@
 """Tests for BERT equations."""
 
-import pytest
 from equations_history.equations.bert import BERTEquations, get_all_equations
 
 

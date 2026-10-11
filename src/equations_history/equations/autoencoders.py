@@ -4,13 +4,15 @@ Source of truth for autoencoder mathematical definitions. Each equation
 includes narrative context (history, citations, practical use cases).
 """
 
-import sympy as sp
 from dataclasses import dataclass
+
+import sympy as sp
 
 
 @dataclass
 class Equation:
     """Container for an equation with metadata."""
+
     name: str
     latex: str
     description: str
@@ -43,9 +45,7 @@ class AutoencoderEquations:
 
         Source: autoencoders.py:40
         """
-        # Symbolic form (simplified): z = σ(W_e * x + b_e)
-        sigma = sp.Function("sigma")  # Activation function placeholder
-        encoder_expr = sigma(AutoencoderEquations.W_e * AutoencoderEquations.x + AutoencoderEquations.b_e)
+        # Symbolic form (simplified): z = sigma(W_e * x + b_e)
 
         return Equation(
             name="Deterministic Encoder",
@@ -74,9 +74,6 @@ class AutoencoderEquations:
 
         Source: autoencoders.py:55
         """
-        sigma = sp.Function("sigma")
-        decoder_expr = sigma(AutoencoderEquations.W_d * AutoencoderEquations.z + AutoencoderEquations.b_d)
-
         return Equation(
             name="Deterministic Decoder",
             latex=r"\hat{x} = g_\theta(z)",
@@ -86,10 +83,7 @@ class AutoencoderEquations:
                 "the autoencoder bottleneck: information must flow through the small "
                 "latent dimension z, forcing compression."
             ),
-            citations=[
-                "LeCun, Y., Bengio, Y., & Hinton, G. (2015). "
-                "Deep learning. Nature, 521(7553), 436-444."
-            ],
+            citations=["LeCun, Y., Bengio, Y., & Hinton, G. (2015). Deep learning. Nature, 521(7553), 436-444."],
             source_line=55,
             concepts=["decoder", "reconstruction", "symmetry"],
         )
@@ -102,8 +96,6 @@ class AutoencoderEquations:
 
         Source: autoencoders.py:70
         """
-        mse = sp.Rational(1, 2) * (AutoencoderEquations.x - AutoencoderEquations.x_hat) ** 2
-
         return Equation(
             name="MSE Reconstruction Loss",
             latex=r"\mathcal{L}_\text{MSE}(x, \hat{x}) = \frac{1}{2} \|x - \hat{x}\|_2^2",
@@ -130,11 +122,6 @@ class AutoencoderEquations:
         Source: autoencoders.py:85
         """
         # BCE: -sum(x * log(x_hat) + (1-x) * log(1-x_hat))
-        bce_expr = -(
-            AutoencoderEquations.x * sp.log(AutoencoderEquations.x_hat)
-            + (1 - AutoencoderEquations.x) * sp.log(1 - AutoencoderEquations.x_hat)
-        )
-
         return Equation(
             name="Binary Cross-Entropy Loss",
             latex=r"\mathcal{L}_\text{BCE}(x, \hat{x}) = -\sum_i [x_i \log \hat{x}_i + (1-x_i)\log(1-\hat{x}_i)]",
@@ -145,8 +132,7 @@ class AutoencoderEquations:
                 "when data is normalized to [0,1]."
             ),
             citations=[
-                "Bishop, C. M. (2006). Pattern Recognition and Machine Learning. "
-                "Springer. Chapter 5 (Neural Networks)."
+                "Bishop, C. M. (2006). Pattern Recognition and Machine Learning. Springer. Chapter 5 (Neural Networks)."
             ],
             source_line=85,
             concepts=["loss", "cross-entropy", "binary data"],
@@ -177,8 +163,7 @@ class AutoencoderEquations:
                 "The KL term shapes the latent distribution toward a prior, enabling generation and interpolation."
             ),
             citations=[
-                "Kingma, D. P., & Welling, M. (2013). "
-                "Auto-encoding variational Bayes. arXiv:1312.6114.",
+                "Kingma, D. P., & Welling, M. (2013). Auto-encoding variational Bayes. arXiv:1312.6114.",
                 "Rezende, D. J., Mohamed, S., & Wierstra, D. (2014). "
                 "Stochastic backpropagation and approximate inference in deep generative models. ICML.",
             ],
@@ -211,8 +196,7 @@ class AutoencoderEquations:
                 "to the prior, which is essential for generation and latent interpolation."
             ),
             citations=[
-                "Kingma, D. P., & Welling, M. (2013). "
-                "Auto-encoding variational Bayes. arXiv:1312.6114.",
+                "Kingma, D. P., & Welling, M. (2013). Auto-encoding variational Bayes. arXiv:1312.6114.",
             ],
             source_line=125,
             concepts=["KL divergence", "Gaussian", "regularization", "latent distribution"],
@@ -239,10 +223,7 @@ class AutoencoderEquations:
                 "By rewriting z = μ + σ⊙ε, we move the randomness to the input ε (which doesn't depend on parameters), "
                 "making z differentiable w.r.t. μ and σ. This enables end-to-end training of VAEs."
             ),
-            citations=[
-                "Kingma, D. P., & Welling, M. (2013). "
-                "Auto-encoding variational Bayes. arXiv:1312.6114."
-            ],
+            citations=["Kingma, D. P., & Welling, M. (2013). Auto-encoding variational Bayes. arXiv:1312.6114."],
             source_line=145,
             concepts=["gradient flow", "sampling", "backpropagation", "stochastic"],
         )

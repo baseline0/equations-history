@@ -81,23 +81,24 @@ Example (src/equations_history/equations/autoencoders.py):
 import sympy as sp
 
 # Symbols
-x = sp.Symbol('x', real=True)  # Input
-z = sp.Symbol('z', real=True)  # Latent code
+x = sp.Symbol("x", real=True)  # Input
+z = sp.Symbol("z", real=True)  # Latent code
 # ... etc
+
 
 class AutoencoderEquations:
     """Deterministic autoencoder definitions."""
-    
+
     @staticmethod
     def encoder():
         """Encoder: z = f_φ(x).
-        
+
         Source: model.py:42
         History: From early work on autoencoders (Hinton, Salakhutdinov 2006)
         """
         # Return SymPy expression
         pass
-    
+
     # ... more methods
 ```
 

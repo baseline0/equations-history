@@ -4,13 +4,15 @@ Source of truth for regularization mathematical definitions. Each equation
 includes narrative context (history, citations, practical use cases).
 """
 
-import sympy as sp
 from dataclasses import dataclass
+
+import sympy as sp
 
 
 @dataclass
 class Equation:
     """Container for an equation with metadata."""
+
     name: str
     latex: str
     description: str
@@ -150,12 +152,9 @@ class RegularizationEquations:
         """
         return Equation(
             name="Batch Normalization (Normalization)",
-            latex=(
-                r"\hat{x}_i = \frac{x_i - \mu_{\text{batch}}}{\sqrt{\sigma_{\text{batch}}^2 + \epsilon}}"
-            ),
+            latex=(r"\hat{x}_i = \frac{x_i - \mu_{\text{batch}}}{\sqrt{\sigma_{\text{batch}}^2 + \epsilon}}"),
             description=(
-                "Normalize using batch mean μ_batch and batch variance σ²_batch. "
-                "Small ε prevents division by zero."
+                "Normalize using batch mean μ_batch and batch variance σ²_batch. Small ε prevents division by zero."
             ),
             history=(
                 "Batch Normalization was introduced by Ioffe & Szegedy (2015) as a breakthrough technique. "
@@ -185,8 +184,7 @@ class RegularizationEquations:
             name="Batch Normalization (Scale and Shift)",
             latex=r"y_i = \gamma \hat{x}_i + \beta",
             description=(
-                "Apply learnable scale γ and shift β. Allows network to learn "
-                "the optimal level of normalization."
+                "Apply learnable scale γ and shift β. Allows network to learn the optimal level of normalization."
             ),
             history=(
                 "The learnable parameters γ (scale) and β (shift) are crucial to batch norm's flexibility. "
@@ -215,9 +213,7 @@ class RegularizationEquations:
         """
         return Equation(
             name="Batch Normalization (Inference)",
-            latex=(
-                r"\hat{x}_i = \frac{x_i - \mu_{\text{running}}}{\sqrt{\sigma_{\text{running}}^2 + \epsilon}}"
-            ),
+            latex=(r"\hat{x}_i = \frac{x_i - \mu_{\text{running}}}{\sqrt{\sigma_{\text{running}}^2 + \epsilon}}"),
             description=(
                 "Use running mean μ_running and running variance σ²_running. "
                 "These are exponential moving averages updated during training."

@@ -12,20 +12,20 @@ Commands mirror the equation structure:
 """
 
 import typer
-from typing import Optional
+
 from equations_history.equations.autoencoders import get_all_equations as get_ae_equations
 from equations_history.equations.bert import get_all_equations as get_bert_equations
+from equations_history.equations.diffusion import get_all_equations as get_diff_equations
+from equations_history.equations.loss_functions import get_all_equations as get_loss_equations
 from equations_history.equations.optimizers import get_all_equations as get_opt_equations
 from equations_history.equations.regularization import get_all_equations as get_reg_equations
-from equations_history.equations.loss_functions import get_all_equations as get_loss_equations
-from equations_history.equations.diffusion import get_all_equations as get_diff_equations
 
 app = typer.Typer(help="equations-history: traceable, code-grounded equation narratives for learning ML math")
 
 
 @app.command()
 def autoencoder(
-    topic: Optional[str] = typer.Argument(None, help="Specific equation (encoder, decoder, mse_loss, vae_elbo, etc.)"),
+    topic: str | None = typer.Argument(None, help="Specific equation (encoder, decoder, mse_loss, vae_elbo, etc.)"),
     explain: bool = typer.Option(False, "--explain", help="Show all equations with full narrative"),
     citations: bool = typer.Option(False, "--citations", help="Include citations for each equation"),
 ) -> None:
@@ -35,7 +35,7 @@ def autoencoder(
     if explain:
         # Show all equations with full narrative
         for name, eq in equations.items():
-            typer.echo(f"\n{'='*70}")
+            typer.echo(f"\n{'=' * 70}")
             typer.echo(f"Name: {eq.name}")
             typer.echo(f"LaTeX: {eq.latex}")
             typer.echo(f"Description: {eq.description}")
@@ -63,7 +63,7 @@ def autoencoder(
         else:
             typer.echo(f"Unknown topic: {topic}", err=True)
             typer.echo("Available topics:", err=True)
-            for name in equations.keys():
+            for name in equations:
                 typer.echo(f"  - {name}", err=True)
             raise typer.Exit(1)
     else:
@@ -76,7 +76,7 @@ def autoencoder(
 
 @app.command()
 def bert(
-    topic: Optional[str] = typer.Argument(None, help="Specific equation (attention, mlm, nsp, etc.)"),
+    topic: str | None = typer.Argument(None, help="Specific equation (attention, mlm, nsp, etc.)"),
     explain: bool = typer.Option(False, "--explain", help="Show all equations with full narrative"),
     citations: bool = typer.Option(False, "--citations", help="Include citations for each equation"),
 ) -> None:
@@ -86,7 +86,7 @@ def bert(
     if explain:
         # Show all equations with full narrative
         for name, eq in equations.items():
-            typer.echo(f"\n{'='*70}")
+            typer.echo(f"\n{'=' * 70}")
             typer.echo(f"Name: {eq.name}")
             typer.echo(f"LaTeX: {eq.latex}")
             typer.echo(f"Description: {eq.description}")
@@ -114,7 +114,7 @@ def bert(
         else:
             typer.echo(f"Unknown topic: {topic}", err=True)
             typer.echo("Available topics:", err=True)
-            for name in equations.keys():
+            for name in equations:
                 typer.echo(f"  - {name}", err=True)
             raise typer.Exit(1)
     else:
@@ -127,7 +127,7 @@ def bert(
 
 @app.command()
 def optimizers(
-    topic: Optional[str] = typer.Argument(None, help="Specific equation (sgd_update, momentum_update, adam_update, etc.)"),
+    topic: str | None = typer.Argument(None, help="Specific equation (sgd_update, momentum_update, adam_update, etc.)"),
     explain: bool = typer.Option(False, "--explain", help="Show all equations with full narrative"),
     citations: bool = typer.Option(False, "--citations", help="Include citations for each equation"),
 ) -> None:
@@ -137,7 +137,7 @@ def optimizers(
     if explain:
         # Show all equations with full narrative
         for name, eq in equations.items():
-            typer.echo(f"\n{'='*70}")
+            typer.echo(f"\n{'=' * 70}")
             typer.echo(f"Name: {eq.name}")
             typer.echo(f"LaTeX: {eq.latex}")
             typer.echo(f"Description: {eq.description}")
@@ -165,7 +165,7 @@ def optimizers(
         else:
             typer.echo(f"Unknown topic: {topic}", err=True)
             typer.echo("Available topics:", err=True)
-            for name in equations.keys():
+            for name in equations:
                 typer.echo(f"  - {name}", err=True)
             raise typer.Exit(1)
     else:
@@ -178,7 +178,9 @@ def optimizers(
 
 @app.command()
 def regularization(
-    topic: Optional[str] = typer.Argument(None, help="Specific equation (dropout_training, l2_regularization, batch_normalization_normalize, etc.)"),
+    topic: str | None = typer.Argument(
+        None, help="Specific equation (dropout_training, l2_regularization, batch_normalization_normalize, etc.)"
+    ),
     explain: bool = typer.Option(False, "--explain", help="Show all equations with full narrative"),
     citations: bool = typer.Option(False, "--citations", help="Include citations for each equation"),
 ) -> None:
@@ -188,7 +190,7 @@ def regularization(
     if explain:
         # Show all equations with full narrative
         for name, eq in equations.items():
-            typer.echo(f"\n{'='*70}")
+            typer.echo(f"\n{'=' * 70}")
             typer.echo(f"Name: {eq.name}")
             typer.echo(f"LaTeX: {eq.latex}")
             typer.echo(f"Description: {eq.description}")
@@ -216,7 +218,7 @@ def regularization(
         else:
             typer.echo(f"Unknown topic: {topic}", err=True)
             typer.echo("Available topics:", err=True)
-            for name in equations.keys():
+            for name in equations:
                 typer.echo(f"  - {name}", err=True)
             raise typer.Exit(1)
     else:
@@ -229,7 +231,9 @@ def regularization(
 
 @app.command()
 def loss_functions(
-    topic: Optional[str] = typer.Argument(None, help="Specific equation (cross_entropy_binary, kl_divergence, wasserstein_distance, etc.)"),
+    topic: str | None = typer.Argument(
+        None, help="Specific equation (cross_entropy_binary, kl_divergence, wasserstein_distance, etc.)"
+    ),
     explain: bool = typer.Option(False, "--explain", help="Show all equations with full narrative"),
     citations: bool = typer.Option(False, "--citations", help="Include citations for each equation"),
 ) -> None:
@@ -239,7 +243,7 @@ def loss_functions(
     if explain:
         # Show all equations with full narrative
         for name, eq in equations.items():
-            typer.echo(f"\n{'='*70}")
+            typer.echo(f"\n{'=' * 70}")
             typer.echo(f"Name: {eq.name}")
             typer.echo(f"LaTeX: {eq.latex}")
             typer.echo(f"Description: {eq.description}")
@@ -267,7 +271,7 @@ def loss_functions(
         else:
             typer.echo(f"Unknown topic: {topic}", err=True)
             typer.echo("Available topics:", err=True)
-            for name in equations.keys():
+            for name in equations:
                 typer.echo(f"  - {name}", err=True)
             raise typer.Exit(1)
     else:
@@ -280,7 +284,9 @@ def loss_functions(
 
 @app.command()
 def diffusion(
-    topic: Optional[str] = typer.Argument(None, help="Specific equation (forward_process_markov, reverse_process, noise_prediction_objective, etc.)"),
+    topic: str | None = typer.Argument(
+        None, help="Specific equation (forward_process_markov, reverse_process, noise_prediction_objective, etc.)"
+    ),
     explain: bool = typer.Option(False, "--explain", help="Show all equations with full narrative"),
     citations: bool = typer.Option(False, "--citations", help="Include citations for each equation"),
 ) -> None:
@@ -290,7 +296,7 @@ def diffusion(
     if explain:
         # Show all equations with full narrative
         for name, eq in equations.items():
-            typer.echo(f"\n{'='*70}")
+            typer.echo(f"\n{'=' * 70}")
             typer.echo(f"Name: {eq.name}")
             typer.echo(f"LaTeX: {eq.latex}")
             typer.echo(f"Description: {eq.description}")
@@ -318,7 +324,7 @@ def diffusion(
         else:
             typer.echo(f"Unknown topic: {topic}", err=True)
             typer.echo("Available topics:", err=True)
-            for name in equations.keys():
+            for name in equations:
                 typer.echo(f"  - {name}", err=True)
             raise typer.Exit(1)
     else:
@@ -332,49 +338,49 @@ def diffusion(
 @app.command()
 def list_all() -> None:
     """List all available equations across all topics."""
-    typer.echo("\n" + "="*70)
+    typer.echo("\n" + "=" * 70)
     typer.echo("AUTOENCODERS")
-    typer.echo("="*70)
+    typer.echo("=" * 70)
     ae_eqs = get_ae_equations()
     for name, eq in ae_eqs.items():
         typer.echo(f"\n  {name}: {eq.name}")
         typer.echo(f"    {eq.description}")
 
-    typer.echo("\n" + "="*70)
+    typer.echo("\n" + "=" * 70)
     typer.echo("BERT")
-    typer.echo("="*70)
+    typer.echo("=" * 70)
     bert_eqs = get_bert_equations()
     for name, eq in bert_eqs.items():
         typer.echo(f"\n  {name}: {eq.name}")
         typer.echo(f"    {eq.description}")
 
-    typer.echo("\n" + "="*70)
+    typer.echo("\n" + "=" * 70)
     typer.echo("OPTIMIZERS")
-    typer.echo("="*70)
+    typer.echo("=" * 70)
     opt_eqs = get_opt_equations()
     for name, eq in opt_eqs.items():
         typer.echo(f"\n  {name}: {eq.name}")
         typer.echo(f"    {eq.description}")
 
-    typer.echo("\n" + "="*70)
+    typer.echo("\n" + "=" * 70)
     typer.echo("REGULARIZATION")
-    typer.echo("="*70)
+    typer.echo("=" * 70)
     reg_eqs = get_reg_equations()
     for name, eq in reg_eqs.items():
         typer.echo(f"\n  {name}: {eq.name}")
         typer.echo(f"    {eq.description}")
 
-    typer.echo("\n" + "="*70)
+    typer.echo("\n" + "=" * 70)
     typer.echo("LOSS FUNCTIONS")
-    typer.echo("="*70)
+    typer.echo("=" * 70)
     loss_eqs = get_loss_equations()
     for name, eq in loss_eqs.items():
         typer.echo(f"\n  {name}: {eq.name}")
         typer.echo(f"    {eq.description}")
 
-    typer.echo("\n" + "="*70)
+    typer.echo("\n" + "=" * 70)
     typer.echo("DIFFUSION MODELS")
-    typer.echo("="*70)
+    typer.echo("=" * 70)
     diff_eqs = get_diff_equations()
     for name, eq in diff_eqs.items():
         typer.echo(f"\n  {name}: {eq.name}")

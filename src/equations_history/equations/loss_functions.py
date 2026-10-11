@@ -4,13 +4,15 @@ Source of truth for loss function mathematical definitions. Each equation
 includes narrative context (history, citations, practical use cases).
 """
 
-import sympy as sp
 from dataclasses import dataclass
+
+import sympy as sp
 
 
 @dataclass
 class Equation:
     """Container for an equation with metadata."""
+
     name: str
     latex: str
     description: str
@@ -119,10 +121,7 @@ class LossFunctionEquations:
                 r"\mathrm{KL}(p \| q) = \sum_x p(x) \log \frac{p(x)}{q(x)} = "
                 r"\mathbb{E}_{x \sim p}\left[\log p(x) - \log q(x)\right]"
             ),
-            description=(
-                "Expected log-ratio of true and predicted probabilities. "
-                "Non-negative; zero only when p = q."
-            ),
+            description=("Expected log-ratio of true and predicted probabilities. Non-negative; zero only when p = q."),
             history=(
                 "KL divergence was introduced by Kullback & Leibler (1951) in information theory. "
                 "It measures how much information is lost when approximating true distribution p "

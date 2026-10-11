@@ -1,6 +1,5 @@
 """Tests for diffusion model equations."""
 
-import pytest
 from equations_history.equations.diffusion import DiffusionEquations, get_all_equations
 
 

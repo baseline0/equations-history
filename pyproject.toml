@@ -28,7 +28,6 @@ dev = [
     "pytest>=7.4",
     "pytest-cov>=4.1",
     "mypy>=1.7",
-    "ruff>=0.1.0",
 ]
 
 [project.scripts]
@@ -41,15 +40,18 @@ warn_return_any = true
 warn_unused_configs = true
 
 [tool.ruff]
-line-length = 100
+line-length = 120
 target-version = "py313"
+exclude = [".venv", ".git", "__pycache__", "dist", "build", ".pytest_cache", ".mypy_cache", ".ruff_cache"]
+# Markdown is not ruff territory: ruff 0.16 would reformat Python snippets inside it.
+extend-exclude = ["*.md"]
 
 [tool.ruff.lint]
-select = ["E", "F", "W", "I", "N", "UP"]
-ignore = ["E501"]  # line-length handled by formatter
+select = ["E", "W", "F", "I", "UP", "C4", "N", "RUF", "SIM", "TID"]
+ignore = ["E501", "SIM105", "N818", "RUF001", "RUF002", "RUF022"]
 
-[tool.ruff.lint.isort]
-known-first-party = ["equations_history"]
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"argparse".msg = "Use typer for CLIs (fleet mandate)."
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -59,4 +61,5 @@ addopts = "-v --tb=short"
 dev = [
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
+    "ruff==0.16.8",
 ]

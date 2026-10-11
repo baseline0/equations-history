@@ -117,6 +117,7 @@ Follow the Phase 1 pattern:
 # 1. Create src/equations_history/equations/topic.py
 from equations_history.core import Equation
 
+
 class TopicEquations:
     @staticmethod
     def equation_name() -> Equation:
@@ -127,8 +128,9 @@ class TopicEquations:
             history="Why was this discovered? How did it evolve?",
             citations=["Author (Year). Title. Journal."],
             source_line=42,  # Line in this file
-            concepts=["tag1", "tag2"]
+            concepts=["tag1", "tag2"],
         )
+
 
 # 2. Add to CLI (src/equations_history/cli.py)
 # 3. Add to taxonomy (src/equations_history/shared_taxonomy/examples.py)

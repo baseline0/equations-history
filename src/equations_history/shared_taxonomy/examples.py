@@ -1,32 +1,25 @@
 """Concrete taxonomy examples: mechanical oscillator ↔ RLC circuit."""
 
 from .models import (
-    TaxonomyIdentifier,
     EquationTaxonomy,
+    MathematicalForm,
+    ParameterMapping,
     Relation,
-    RelationshipType,
     RelationshipKind,
     RelationshipStrength,
-    ParameterMapping,
-    MathematicalForm,
+    RelationshipType,
+    TaxonomyIdentifier,
 )
-
 
 # ============================================================================
 # Identifiers
 # ============================================================================
 
 MECHANICAL_OSCILLATOR = TaxonomyIdentifier(
-    domain="mechanics",
-    family="damped_oscillator",
-    name="mechanical_damped_oscillator"
+    domain="mechanics", family="damped_oscillator", name="mechanical_damped_oscillator"
 )
 
-RLC_CIRCUIT = TaxonomyIdentifier(
-    domain="electrical",
-    family="rlc",
-    name="rlc_circuit"
-)
+RLC_CIRCUIT = TaxonomyIdentifier(domain="electrical", family="rlc", name="rlc_circuit")
 
 
 # ============================================================================
@@ -40,33 +33,16 @@ MECHANICAL_OSCILLATOR_TAXONOMY = EquationTaxonomy(
         order=2,
         linearity="linear",
         time_dependence="time_invariant",
-        variables="continuous"
+        variables="continuous",
     ),
-    physical_role=[
-        "state_evolution",
-        "forced",
-        "dissipative"
-    ],
-    structural_features=[
-        "energy_storage",
-        "energy_dissipation",
-        "input_output",
-        "feedback_compatible"
-    ],
+    physical_role=["state_evolution", "forced", "dissipative"],
+    structural_features=["energy_storage", "energy_dissipation", "input_output", "feedback_compatible"],
     domain="mechanics",
-    structural_families=[
-        "LinearTimeInvariantSecondOrder",
-        "DissipativeSystem",
-        "PortHamiltonianSystem"
-    ],
+    structural_families=["LinearTimeInvariantSecondOrder", "DissipativeSystem", "PortHamiltonianSystem"],
     discovered_by="Classical mechanics tradition",
     year_discovered=None,  # Ancient
-    references=[
-        "Newton's second law (1687)",
-        "Hooke's law (1660s)",
-        "Stokes drag (1845)"
-    ],
-    notes="Fundamental model in mechanical engineering. Foundation for understanding vibration, shock absorbers, seismic isolation."
+    references=["Newton's second law (1687)", "Hooke's law (1660s)", "Stokes drag (1845)"],
+    notes="Fundamental model in mechanical engineering. Foundation for understanding vibration, shock absorbers, seismic isolation.",
 )
 
 
@@ -77,33 +53,16 @@ RLC_CIRCUIT_TAXONOMY = EquationTaxonomy(
         order=2,
         linearity="linear",
         time_dependence="time_invariant",
-        variables="continuous"
+        variables="continuous",
     ),
-    physical_role=[
-        "state_evolution",
-        "forced",
-        "dissipative"
-    ],
-    structural_features=[
-        "energy_storage",
-        "energy_dissipation",
-        "input_output",
-        "feedback_compatible"
-    ],
+    physical_role=["state_evolution", "forced", "dissipative"],
+    structural_features=["energy_storage", "energy_dissipation", "input_output", "feedback_compatible"],
     domain="electrical",
-    structural_families=[
-        "LinearTimeInvariantSecondOrder",
-        "DissipativeSystem",
-        "PortHamiltonianSystem"
-    ],
+    structural_families=["LinearTimeInvariantSecondOrder", "DissipativeSystem", "PortHamiltonianSystem"],
     discovered_by="Electrical circuit analysis tradition",
     year_discovered=None,
-    references=[
-        "Ohm's law (1827)",
-        "Faraday's law (1831)",
-        "Circuit analysis (19th century onward)"
-    ],
-    notes="Fundamental model in electrical engineering. Basis for filters, resonant circuits, oscillators."
+    references=["Ohm's law (1827)", "Faraday's law (1831)", "Circuit analysis (19th century onward)"],
+    notes="Fundamental model in electrical engineering. Basis for filters, resonant circuits, oscillators.",
 )
 
 
@@ -120,7 +79,7 @@ MECH_RLC_PARAMETER_MAPPING = {
         interpretation="Inertia (mass) corresponds to inductance; both resist change in velocity/current",
         normalized_form="Both enter as coefficient of highest-order derivative",
         units_source="kg",
-        units_target="H"
+        units_target="H",
     ),
     "damping_resistance": ParameterMapping(
         source_param="c",
@@ -130,7 +89,7 @@ MECH_RLC_PARAMETER_MAPPING = {
         interpretation="Mechanical damping (friction) corresponds to resistance; both dissipate energy proportional to velocity/current",
         normalized_form="Both multiplied by first derivative of state variable",
         units_source="N·s/m",
-        units_target="Ω"
+        units_target="Ω",
     ),
     "stiffness_capacitance": ParameterMapping(
         source_param="k",
@@ -140,7 +99,7 @@ MECH_RLC_PARAMETER_MAPPING = {
         interpretation="Spring stiffness corresponds to 1/C; both provide restoring force/voltage proportional to displacement/charge",
         normalized_form="Both enter without derivative (0th-order term)",
         units_source="N/m",
-        units_target="1/F"
+        units_target="1/F",
     ),
     "forcing_voltage": ParameterMapping(
         source_param="F(t)",
@@ -150,7 +109,7 @@ MECH_RLC_PARAMETER_MAPPING = {
         interpretation="External force input corresponds to voltage input",
         normalized_form="Both appear as forcing term on right-hand side",
         units_source="N",
-        units_target="V"
+        units_target="V",
     ),
     "displacement_charge": ParameterMapping(
         source_param="x",
@@ -160,7 +119,7 @@ MECH_RLC_PARAMETER_MAPPING = {
         interpretation="Position of mass corresponds to charge on capacitor",
         normalized_form="Both are the state variable being integrated",
         units_source="m",
-        units_target="C"
+        units_target="C",
     ),
     "velocity_current": ParameterMapping(
         source_param="ẋ",
@@ -170,7 +129,7 @@ MECH_RLC_PARAMETER_MAPPING = {
         interpretation="Velocity of mass corresponds to electrical current",
         normalized_form="Both are first derivative of state",
         units_source="m/s",
-        units_target="A"
+        units_target="A",
     ),
 }
 
@@ -190,7 +149,7 @@ MECH_RLC_RELATION = Relation(
         strength=RelationshipStrength.PROVEN_EQUIVALENCE,
         formal_proof="math_trace.theorems.mechanical_rlc_normalized_state_space_equivalence",
         formal_proof_url="https://github.com/baseline0/math-trace/blob/main/src/DynamicalSystem.lean",
-        notes="This is a canonical example of domain-independent structure. Both systems are instances of port-Hamiltonian systems."
+        notes="This is a canonical example of domain-independent structure. Both systems are instances of port-Hamiltonian systems.",
     ),
     parameter_mapping=MECH_RLC_PARAMETER_MAPPING,
     normalized_form_source=r"m\ddot{x} + c\dot{x} + kx = F(t)",
@@ -209,7 +168,7 @@ MECH_RLC_RELATION = Relation(
         "Paynter, H. M. (1961). Analysis and design of engineering systems. MIT Press. (Bond graphs)",
         "Kalman, R. E., Falb, P. L., & Arbib, M. A. (1969). Topics in mathematical systems theory. McGraw-Hill. (State-space theory)",
         "van der Schaft, A. (2017). Port-Hamiltonian differential-algebraic systems. Springer. (Unified framework)",
-    ]
+    ],
 )
 
 

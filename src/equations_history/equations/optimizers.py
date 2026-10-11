@@ -4,13 +4,15 @@ Source of truth for optimizer mathematical definitions. Each equation
 includes narrative context (history, citations, practical use cases).
 """
 
-import sympy as sp
 from dataclasses import dataclass
+
+import sympy as sp
 
 
 @dataclass
 class Equation:
     """Container for an equation with metadata."""
+
     name: str
     latex: str
     description: str
@@ -80,8 +82,7 @@ class OptimizerEquations:
                 r"\theta_{t+1} = \theta_t - \alpha m_t"
             ),
             description=(
-                "Maintain exponential moving average of gradients; update with scaled momentum. "
-                "Typical β ≈ 0.9."
+                "Maintain exponential moving average of gradients; update with scaled momentum. Typical β ≈ 0.9."
             ),
             history=(
                 "Momentum was introduced by Qian (1999) and has been a standard technique "
@@ -213,9 +214,7 @@ class OptimizerEquations:
         """
         return Equation(
             name="Adam Parameter Update",
-            latex=(
-                r"\theta_{t+1} = \theta_t - \alpha \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon}"
-            ),
+            latex=(r"\theta_{t+1} = \theta_t - \alpha \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon}"),
             description=(
                 "Update parameters with learning rate scaled by normalized second moment. "
                 "Provides per-parameter adaptive learning rates and momentum simultaneously."

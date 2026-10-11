@@ -1,30 +1,30 @@
 """Tests for shared_taxonomy module."""
 
 import pytest
+
+from equations_history.shared_taxonomy.examples import (
+    MECH_RLC_RELATION,
+    MECHANICAL_OSCILLATOR,
+    MECHANICAL_OSCILLATOR_TAXONOMY,
+    RLC_CIRCUIT,
+    RLC_CIRCUIT_TAXONOMY,
+)
 from equations_history.shared_taxonomy.models import (
-    TaxonomyIdentifier,
-    RelationshipKind,
-    RelationshipStrength,
-    RelationshipType,
-    ParameterMapping,
     EquationTaxonomy,
     MathematicalForm,
     Relation,
-)
-from equations_history.shared_taxonomy.examples import (
-    MECHANICAL_OSCILLATOR,
-    RLC_CIRCUIT,
-    MECHANICAL_OSCILLATOR_TAXONOMY,
-    RLC_CIRCUIT_TAXONOMY,
-    MECH_RLC_RELATION,
+    RelationshipKind,
+    RelationshipStrength,
+    RelationshipType,
+    TaxonomyIdentifier,
 )
 from equations_history.shared_taxonomy.registry import (
     get_equation,
-    get_relations,
     get_related_equations,
+    get_relations,
+    list_all_relations,
     list_equations,
     list_equations_by_domain,
-    list_all_relations,
 )
 
 

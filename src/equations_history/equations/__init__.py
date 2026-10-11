@@ -2,10 +2,10 @@
 
 from .autoencoders import AutoencoderEquations
 from .bert import BERTEquations
+from .diffusion import DiffusionEquations
+from .loss_functions import LossFunctionEquations
 from .optimizers import OptimizerEquations
 from .regularization import RegularizationEquations
-from .loss_functions import LossFunctionEquations
-from .diffusion import DiffusionEquations
 
 __all__ = [
     "AutoencoderEquations",
