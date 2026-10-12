@@ -55,3 +55,7 @@ set shell := ["bash", "-c"]
 
 @help:
     uv run learn --help
+
+# Unit tests: the gate the pre-push hook runs (fleet hook standard, fleet_base.hook_standard R4)
+test-unit:
+    just test
