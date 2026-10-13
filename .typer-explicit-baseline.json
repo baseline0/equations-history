@@ -1,0 +1,22 @@
+{
+  "violations": [
+    "src/equations_history/cli.py::autoencoder::citations::optional-option",
+    "src/equations_history/cli.py::autoencoder::explain::optional-option",
+    "src/equations_history/cli.py::autoencoder::topic::optional-type",
+    "src/equations_history/cli.py::bert::citations::optional-option",
+    "src/equations_history/cli.py::bert::explain::optional-option",
+    "src/equations_history/cli.py::bert::topic::optional-type",
+    "src/equations_history/cli.py::diffusion::citations::optional-option",
+    "src/equations_history/cli.py::diffusion::explain::optional-option",
+    "src/equations_history/cli.py::diffusion::topic::optional-type",
+    "src/equations_history/cli.py::loss_functions::citations::optional-option",
+    "src/equations_history/cli.py::loss_functions::explain::optional-option",
+    "src/equations_history/cli.py::loss_functions::topic::optional-type",
+    "src/equations_history/cli.py::optimizers::citations::optional-option",
+    "src/equations_history/cli.py::optimizers::explain::optional-option",
+    "src/equations_history/cli.py::optimizers::topic::optional-type",
+    "src/equations_history/cli.py::regularization::citations::optional-option",
+    "src/equations_history/cli.py::regularization::explain::optional-option",
+    "src/equations_history/cli.py::regularization::topic::optional-type"
+  ]
+}
