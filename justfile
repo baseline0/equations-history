@@ -1,5 +1,7 @@
 # equations-history: Task automation
 
+import 'just/fleet-clean.just'
+
 set shell := ["bash", "-c"]
 
 @default:
@@ -46,12 +48,6 @@ set shell := ["bash", "-c"]
         exit 1
     fi
     git commit -m "$msg"
-
-@clean:
-    find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
-    find . -type d -name .pytest_cache -exec rm -rf {} + 2>/dev/null || true
-    find . -type d -name .mypy_cache -exec rm -rf {} + 2>/dev/null || true
-    rm -rf .ruff_cache/
 
 @help:
     uv run learn --help
