@@ -1,5 +1,7 @@
 # equations-history: Task automation
 
+import 'just/repo-push.just'
+
 import 'just/fleet-clean.just'
 
 set shell := ["bash", "-c"]
