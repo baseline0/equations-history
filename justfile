@@ -23,6 +23,10 @@ set shell := ["bash", "-c"]
     uv run mypy src/ --strict
     uv run ruff check src/ tests/
 
+# Pyright ratchet: fails if any file has more errors than pyright-baseline.json records
+@check-types:
+    fleet ratchet --action check
+
 @serve:
     uv run uvicorn equations_history.api:app --reload --host 0.0.0.0 --port 8000
 
