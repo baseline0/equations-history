@@ -11,6 +11,8 @@ Commands mirror the equation structure:
   learn diffusion                # List all diffusion model equations
 """
 
+from enum import StrEnum
+
 import typer
 
 from equations_history.equations.autoencoders import get_all_equations as get_ae_equations
@@ -20,19 +22,37 @@ from equations_history.equations.loss_functions import get_all_equations as get_
 from equations_history.equations.optimizers import get_all_equations as get_opt_equations
 from equations_history.equations.regularization import get_all_equations as get_reg_equations
 
+
+class Toggle(StrEnum):
+    """Explicit boolean value for a command option: `--name true` or `--name false`."""
+
+    TRUE = "true"
+    FALSE = "false"
+
+
 app = typer.Typer(help="equations-history: traceable, code-grounded equation narratives for learning ML math")
 
 
 @app.command()
 def autoencoder(
-    topic: str | None = typer.Argument(None, help="Specific equation (encoder, decoder, mse_loss, vae_elbo, etc.)"),
-    explain: bool = typer.Option(False, "--explain", help="Show all equations with full narrative"),
-    citations: bool = typer.Option(False, "--citations", help="Include citations for each equation"),
+    topic: str = typer.Option(
+        ...,
+        "--topic",
+        help="Specific equation (encoder, decoder, mse_loss, vae_elbo, etc.), or all to list every topic",
+    ),
+    explain: Toggle = typer.Option(
+        ...,
+        "--explain",
+        help="true: show all equations with full narrative; false: show one topic or list them",
+    ),
+    citations: Toggle = typer.Option(
+        ..., "--citations", help="true: include citations for each equation; false: omit them"
+    ),
 ) -> None:
     """Autoencoder equations: deterministic and variational."""
     equations = get_ae_equations()
 
-    if explain:
+    if explain is Toggle.TRUE:
         # Show all equations with full narrative
         for name, eq in equations.items():
             typer.echo(f"\n{'=' * 70}")
@@ -40,13 +60,13 @@ def autoencoder(
             typer.echo(f"LaTeX: {eq.latex}")
             typer.echo(f"Description: {eq.description}")
             typer.echo(f"History: {eq.history}")
-            if citations:
+            if citations is Toggle.TRUE:
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
             typer.echo(f"Source line: {eq.source_line}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
-    elif topic:
+    elif topic != "all":
         # Show specific equation
         if topic in equations:
             eq = equations[topic]
@@ -54,7 +74,7 @@ def autoencoder(
             typer.echo(f"LaTeX: {eq.latex}")
             typer.echo(f"Description: {eq.description}")
             typer.echo(f"History: {eq.history}")
-            if citations:
+            if citations is Toggle.TRUE:
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
@@ -76,14 +96,22 @@ def autoencoder(
 
 @app.command()
 def bert(
-    topic: str | None = typer.Argument(None, help="Specific equation (attention, mlm, nsp, etc.)"),
-    explain: bool = typer.Option(False, "--explain", help="Show all equations with full narrative"),
-    citations: bool = typer.Option(False, "--citations", help="Include citations for each equation"),
+    topic: str = typer.Option(
+        ..., "--topic", help="Specific equation (attention, mlm, nsp, etc.), or all to list every topic"
+    ),
+    explain: Toggle = typer.Option(
+        ...,
+        "--explain",
+        help="true: show all equations with full narrative; false: show one topic or list them",
+    ),
+    citations: Toggle = typer.Option(
+        ..., "--citations", help="true: include citations for each equation; false: omit them"
+    ),
 ) -> None:
     """BERT equations: scaled dot-product attention and masked language modeling."""
     equations = get_bert_equations()
 
-    if explain:
+    if explain is Toggle.TRUE:
         # Show all equations with full narrative
         for name, eq in equations.items():
             typer.echo(f"\n{'=' * 70}")
@@ -91,13 +119,13 @@ def bert(
             typer.echo(f"LaTeX: {eq.latex}")
             typer.echo(f"Description: {eq.description}")
             typer.echo(f"History: {eq.history}")
-            if citations:
+            if citations is Toggle.TRUE:
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
             typer.echo(f"Source line: {eq.source_line}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
-    elif topic:
+    elif topic != "all":
         # Show specific equation
         if topic in equations:
             eq = equations[topic]
@@ -105,7 +133,7 @@ def bert(
             typer.echo(f"LaTeX: {eq.latex}")
             typer.echo(f"Description: {eq.description}")
             typer.echo(f"History: {eq.history}")
-            if citations:
+            if citations is Toggle.TRUE:
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
@@ -127,14 +155,24 @@ def bert(
 
 @app.command()
 def optimizers(
-    topic: str | None = typer.Argument(None, help="Specific equation (sgd_update, momentum_update, adam_update, etc.)"),
-    explain: bool = typer.Option(False, "--explain", help="Show all equations with full narrative"),
-    citations: bool = typer.Option(False, "--citations", help="Include citations for each equation"),
+    topic: str = typer.Option(
+        ...,
+        "--topic",
+        help="Specific equation (sgd_update, momentum_update, adam_update, etc.), or all to list every topic",
+    ),
+    explain: Toggle = typer.Option(
+        ...,
+        "--explain",
+        help="true: show all equations with full narrative; false: show one topic or list them",
+    ),
+    citations: Toggle = typer.Option(
+        ..., "--citations", help="true: include citations for each equation; false: omit them"
+    ),
 ) -> None:
     """Optimizer equations: SGD, momentum, and Adam."""
     equations = get_opt_equations()
 
-    if explain:
+    if explain is Toggle.TRUE:
         # Show all equations with full narrative
         for name, eq in equations.items():
             typer.echo(f"\n{'=' * 70}")
@@ -142,13 +180,13 @@ def optimizers(
             typer.echo(f"LaTeX: {eq.latex}")
             typer.echo(f"Description: {eq.description}")
             typer.echo(f"History: {eq.history}")
-            if citations:
+            if citations is Toggle.TRUE:
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
             typer.echo(f"Source line: {eq.source_line}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
-    elif topic:
+    elif topic != "all":
         # Show specific equation
         if topic in equations:
             eq = equations[topic]
@@ -156,7 +194,7 @@ def optimizers(
             typer.echo(f"LaTeX: {eq.latex}")
             typer.echo(f"Description: {eq.description}")
             typer.echo(f"History: {eq.history}")
-            if citations:
+            if citations is Toggle.TRUE:
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
@@ -178,16 +216,24 @@ def optimizers(
 
 @app.command()
 def regularization(
-    topic: str | None = typer.Argument(
-        None, help="Specific equation (dropout_training, l2_regularization, batch_normalization_normalize, etc.)"
+    topic: str = typer.Option(
+        ...,
+        "--topic",
+        help="Specific equation (dropout_training, l2_regularization, batch_normalization_normalize, etc.), or all to list every topic",
     ),
-    explain: bool = typer.Option(False, "--explain", help="Show all equations with full narrative"),
-    citations: bool = typer.Option(False, "--citations", help="Include citations for each equation"),
+    explain: Toggle = typer.Option(
+        ...,
+        "--explain",
+        help="true: show all equations with full narrative; false: show one topic or list them",
+    ),
+    citations: Toggle = typer.Option(
+        ..., "--citations", help="true: include citations for each equation; false: omit them"
+    ),
 ) -> None:
     """Regularization equations: dropout, L2 penalty, and batch normalization."""
     equations = get_reg_equations()
 
-    if explain:
+    if explain is Toggle.TRUE:
         # Show all equations with full narrative
         for name, eq in equations.items():
             typer.echo(f"\n{'=' * 70}")
@@ -195,13 +241,13 @@ def regularization(
             typer.echo(f"LaTeX: {eq.latex}")
             typer.echo(f"Description: {eq.description}")
             typer.echo(f"History: {eq.history}")
-            if citations:
+            if citations is Toggle.TRUE:
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
             typer.echo(f"Source line: {eq.source_line}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
-    elif topic:
+    elif topic != "all":
         # Show specific equation
         if topic in equations:
             eq = equations[topic]
@@ -209,7 +255,7 @@ def regularization(
             typer.echo(f"LaTeX: {eq.latex}")
             typer.echo(f"Description: {eq.description}")
             typer.echo(f"History: {eq.history}")
-            if citations:
+            if citations is Toggle.TRUE:
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
@@ -231,16 +277,24 @@ def regularization(
 
 @app.command()
 def loss_functions(
-    topic: str | None = typer.Argument(
-        None, help="Specific equation (cross_entropy_binary, kl_divergence, wasserstein_distance, etc.)"
+    topic: str = typer.Option(
+        ...,
+        "--topic",
+        help="Specific equation (cross_entropy_binary, kl_divergence, wasserstein_distance, etc.), or all to list every topic",
     ),
-    explain: bool = typer.Option(False, "--explain", help="Show all equations with full narrative"),
-    citations: bool = typer.Option(False, "--citations", help="Include citations for each equation"),
+    explain: Toggle = typer.Option(
+        ...,
+        "--explain",
+        help="true: show all equations with full narrative; false: show one topic or list them",
+    ),
+    citations: Toggle = typer.Option(
+        ..., "--citations", help="true: include citations for each equation; false: omit them"
+    ),
 ) -> None:
     """Loss function equations: cross-entropy, KL divergence, and Wasserstein distance."""
     equations = get_loss_equations()
 
-    if explain:
+    if explain is Toggle.TRUE:
         # Show all equations with full narrative
         for name, eq in equations.items():
             typer.echo(f"\n{'=' * 70}")
@@ -248,13 +302,13 @@ def loss_functions(
             typer.echo(f"LaTeX: {eq.latex}")
             typer.echo(f"Description: {eq.description}")
             typer.echo(f"History: {eq.history}")
-            if citations:
+            if citations is Toggle.TRUE:
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
             typer.echo(f"Source line: {eq.source_line}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
-    elif topic:
+    elif topic != "all":
         # Show specific equation
         if topic in equations:
             eq = equations[topic]
@@ -262,7 +316,7 @@ def loss_functions(
             typer.echo(f"LaTeX: {eq.latex}")
             typer.echo(f"Description: {eq.description}")
             typer.echo(f"History: {eq.history}")
-            if citations:
+            if citations is Toggle.TRUE:
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
@@ -284,16 +338,24 @@ def loss_functions(
 
 @app.command()
 def diffusion(
-    topic: str | None = typer.Argument(
-        None, help="Specific equation (forward_process_markov, reverse_process, noise_prediction_objective, etc.)"
+    topic: str = typer.Option(
+        ...,
+        "--topic",
+        help="Specific equation (forward_process_markov, reverse_process, noise_prediction_objective, etc.), or all to list every topic",
     ),
-    explain: bool = typer.Option(False, "--explain", help="Show all equations with full narrative"),
-    citations: bool = typer.Option(False, "--citations", help="Include citations for each equation"),
+    explain: Toggle = typer.Option(
+        ...,
+        "--explain",
+        help="true: show all equations with full narrative; false: show one topic or list them",
+    ),
+    citations: Toggle = typer.Option(
+        ..., "--citations", help="true: include citations for each equation; false: omit them"
+    ),
 ) -> None:
     """Diffusion model equations: forward process, reverse process, and score matching."""
     equations = get_diff_equations()
 
-    if explain:
+    if explain is Toggle.TRUE:
         # Show all equations with full narrative
         for name, eq in equations.items():
             typer.echo(f"\n{'=' * 70}")
@@ -301,13 +363,13 @@ def diffusion(
             typer.echo(f"LaTeX: {eq.latex}")
             typer.echo(f"Description: {eq.description}")
             typer.echo(f"History: {eq.history}")
-            if citations:
+            if citations is Toggle.TRUE:
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
             typer.echo(f"Source line: {eq.source_line}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
-    elif topic:
+    elif topic != "all":
         # Show specific equation
         if topic in equations:
             eq = equations[topic]
@@ -315,7 +377,7 @@ def diffusion(
             typer.echo(f"LaTeX: {eq.latex}")
             typer.echo(f"Description: {eq.description}")
             typer.echo(f"History: {eq.history}")
-            if citations:
+            if citations is Toggle.TRUE:
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")

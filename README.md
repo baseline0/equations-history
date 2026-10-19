@@ -9,7 +9,7 @@ Think of this as a "history of equations" told through code, narrative, and (eve
 - **Practical use** (where this equation appears in ML)
 
 Available as:
-- 📟 **CLI** (for quick lookups: `learn autoencoder --explain`)
+- 📟 **CLI** (for quick lookups: `learn autoencoder --topic all --explain true --citations false`)
 - 🌐 **Web UI** (for visual learning with sliders and plots—Phase 2)
 - 📚 **Static narratives** (for deep reading)
 
@@ -23,13 +23,13 @@ uv sync
 uv run learn list-all
 
 # Explain autoencoders (with full narrative)
-uv run learn autoencoder --explain
+uv run learn autoencoder --topic all --explain true --citations false
 
 # Get a specific equation
-uv run learn autoencoder encoder
+uv run learn autoencoder --topic deterministic_encoder --explain false --citations false
 
 # Show BERT attention mechanism
-uv run learn bert scaled_dot_product_attention --citations
+uv run learn bert --topic scaled_dot_product_attention --explain false --citations true
 
 # Start the web server (Phase 2)
 just serve
@@ -93,10 +93,10 @@ This preserves **traceability**: every formula points back to a specific line in
 ### For Terminal Lovers
 ```bash
 # Quick lookup
-uv run learn autoencoder encoder
+uv run learn autoencoder --topic deterministic_encoder --explain false --citations false
 
 # Detailed explanation with citations
-uv run learn bert attention --citations
+uv run learn bert --topic scaled_dot_product_attention --explain false --citations true
 
 # List all topics
 uv run learn list-all
