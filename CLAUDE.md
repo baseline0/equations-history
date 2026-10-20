@@ -93,7 +93,7 @@ class AutoencoderEquations:
     def encoder():
         """Encoder: z = f_φ(x).
 
-        Source: model.py:42
+        Source: model.py
         History: From early work on autoencoders (Hinton, Salakhutdinov 2006)
         """
         # Return SymPy expression

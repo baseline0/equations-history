@@ -12,7 +12,7 @@ from equations_history.core import Equation
 class OptimizerEquations:
     """Optimizer definitions: stochastic gradient descent, momentum, and Adam."""
 
-    # Symbols (source: optimizers.py:30)
+    # Symbols (source: optimizers.py)
     theta = sp.Symbol("theta", real=True)  # Parameters
     theta_t = sp.Symbol(r"\theta_t", real=True)  # Parameters at step t
     g_t = sp.Symbol("g_t", real=True)  # Gradient at step t
@@ -29,7 +29,7 @@ class OptimizerEquations:
 
         The most basic optimization algorithm: subtract the gradient scaled by learning rate.
 
-        Source: optimizers.py:40
+        Source: optimizers.py
         """
         return Equation(
             id="optimizers.sgd_update",
@@ -60,7 +60,7 @@ class OptimizerEquations:
         Accelerates convergence by maintaining a velocity term that builds up
         in consistent descent directions.
 
-        Source: optimizers.py:60
+        Source: optimizers.py
         """
         return Equation(
             id="optimizers.momentum_update",
@@ -96,7 +96,7 @@ class OptimizerEquations:
         Compute gradient at a point ahead in momentum direction,
         providing better curvature awareness.
 
-        Source: optimizers.py:80
+        Source: optimizers.py
         """
         return Equation(
             id="optimizers.nesterov_momentum",
@@ -132,7 +132,7 @@ class OptimizerEquations:
         Maintain exponential moving averages of gradients (first moment)
         and squared gradients (second moment).
 
-        Source: optimizers.py:105
+        Source: optimizers.py
         """
         return Equation(
             id="optimizers.adam_biased_moments",
@@ -164,7 +164,7 @@ class OptimizerEquations:
         Correct for initialization bias in early iterations since moments
         start at zero.
 
-        Source: optimizers.py:125
+        Source: optimizers.py
         """
         return Equation(
             id="optimizers.adam_bias_correction",
@@ -197,7 +197,7 @@ class OptimizerEquations:
         Final update rule using bias-corrected moments and per-parameter
         adaptive learning rate.
 
-        Source: optimizers.py:145
+        Source: optimizers.py
         """
         return Equation(
             id="optimizers.adam_update",

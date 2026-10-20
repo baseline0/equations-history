@@ -30,7 +30,7 @@ class BERTEquations:
 
         Attention(Q, K, V) = softmax(Q * K^T / sqrt(d_k)) * V
 
-        Source: bert.py:30
+        Source: bert.py
         """
         return Equation(
             id="bert.scaled_dot_product_attention",
@@ -60,7 +60,7 @@ class BERTEquations:
         MultiHead(Q, K, V) = Concat(head_1, ..., head_h) * W^O
         head_i = Attention(Q * W_i^Q, K * W_i^K, V * W_i^V)
 
-        Source: bert.py:55
+        Source: bert.py
         """
         return Equation(
             id="bert.multi_head_attention",
@@ -92,7 +92,7 @@ class BERTEquations:
         PE(t, 2i) = sin(t / 10000^(2i/d_model))
         PE(t, 2i+1) = cos(t / 10000^(2i/d_model))
 
-        Source: bert.py:80
+        Source: bert.py
         """
         return Equation(
             id="bert.positional_encoding",
@@ -126,7 +126,7 @@ class BERTEquations:
 
         L_MLM = -sum_{t in masked} log P(x_t | x_{-t}; θ)
 
-        Source: bert.py:105
+        Source: bert.py
         """
         return Equation(
             id="bert.masked_language_modeling_loss",
@@ -158,7 +158,7 @@ class BERTEquations:
 
         L_NSP = -[y * log P(IsNext) + (1-y) * log P(NotNext)]
 
-        Source: bert.py:130
+        Source: bert.py
         """
         return Equation(
             id="bert.next_sentence_prediction_loss",
@@ -193,7 +193,7 @@ class BERTEquations:
 
         L_BERT = L_MLM + L_NSP
 
-        Source: bert.py:155
+        Source: bert.py
         """
         return Equation(
             id="bert.bert_total_pretraining_loss",
@@ -223,7 +223,7 @@ class BERTEquations:
 
         y = softmax(W_task * [CLS] + b_task)
 
-        Source: bert.py:175
+        Source: bert.py
         """
         return Equation(
             id="bert.bert_fine_tuning",

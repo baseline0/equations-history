@@ -12,7 +12,7 @@ from equations_history.core import Equation
 class RegularizationEquations:
     """Regularization definitions: dropout, L2 penalty, and batch normalization."""
 
-    # Symbols (source: regularization.py:30)
+    # Symbols (source: regularization.py)
     x = sp.Symbol("x", real=True)  # Input
     y = sp.Symbol("y", real=True)  # Output
     L = sp.Symbol("L", real=True)  # Loss
@@ -32,7 +32,7 @@ class RegularizationEquations:
         Randomly drop units to prevent co-adaptation and encourage redundancy
         in learned representations.
 
-        Source: regularization.py:40
+        Source: regularization.py
         """
         return Equation(
             id="regularization.dropout_training",
@@ -69,7 +69,7 @@ class RegularizationEquations:
         At test time, use all activations without dropout. This approximates
         averaging predictions from all sub-networks trained during dropout.
 
-        Source: regularization.py:60
+        Source: regularization.py
         """
         return Equation(
             id="regularization.dropout_inference",
@@ -97,7 +97,7 @@ class RegularizationEquations:
         Add squared weight norm to loss to encourage small, distributed
         weight values and improve generalization.
 
-        Source: regularization.py:80
+        Source: regularization.py
         """
         return Equation(
             id="regularization.l2_regularization",
@@ -135,7 +135,7 @@ class RegularizationEquations:
         Normalize layer inputs to zero mean and unit variance using
         batch statistics during training.
 
-        Source: regularization.py:105
+        Source: regularization.py
         """
         return Equation(
             id="regularization.batch_normalization_normalize",
@@ -165,7 +165,7 @@ class RegularizationEquations:
         Apply learnable scale and shift parameters to allow the network
         to undo normalization if beneficial.
 
-        Source: regularization.py:125
+        Source: regularization.py
         """
         return Equation(
             id="regularization.batch_normalization_scale_shift",
@@ -196,7 +196,7 @@ class RegularizationEquations:
         At test time, use exponential moving average of batch statistics
         accumulated during training instead of batch statistics.
 
-        Source: regularization.py:145
+        Source: regularization.py
         """
         return Equation(
             id="regularization.batch_normalization_inference",

@@ -12,7 +12,7 @@ from equations_history.core import Equation
 class DiffusionEquations:
     """Diffusion model definitions: forward process, reverse process, score matching."""
 
-    # Symbols (source: diffusion.py:30)
+    # Symbols (source: diffusion.py)
     x = sp.Symbol("x", real=True)  # Data (x_0)
     x_t = sp.Symbol("x_t", real=True)  # Noisy data at time t
     z = sp.Symbol("z", real=True)  # Standard Gaussian noise
@@ -31,7 +31,7 @@ class DiffusionEquations:
         Gradually add Gaussian noise to data according to a schedule β_t.
         At t=0: clean data; at t=T: pure noise.
 
-        Source: diffusion.py:40
+        Source: diffusion.py
         """
         return Equation(
             id="diffusion.forward_process_markov",
@@ -65,7 +65,7 @@ class DiffusionEquations:
         Express x_t as a function of x_0 and cumulative noise. Enables
         efficient sampling at any time step without iterating.
 
-        Source: diffusion.py:60
+        Source: diffusion.py
         """
         return Equation(
             id="diffusion.forward_process_closed_form",
@@ -100,7 +100,7 @@ class DiffusionEquations:
         Reverse the forward process by learning to predict noise and remove it
         at each step, starting from pure noise and recovering data.
 
-        Source: diffusion.py:80
+        Source: diffusion.py
         """
         return Equation(
             id="diffusion.reverse_process",
@@ -131,7 +131,7 @@ class DiffusionEquations:
         Train a network to predict the Gaussian noise ε added during the forward
         process. This is equivalent to maximum likelihood under certain conditions.
 
-        Source: diffusion.py:100
+        Source: diffusion.py
         """
         return Equation(
             id="diffusion.noise_prediction_objective",
@@ -166,7 +166,7 @@ class DiffusionEquations:
         Train a network s_θ to predict the score ∇_x log p_t(x_t), which
         points toward high-probability regions and enables sampling.
 
-        Source: diffusion.py:120
+        Source: diffusion.py
         """
         return Equation(
             id="diffusion.score_matching",
@@ -204,7 +204,7 @@ class DiffusionEquations:
         Choose schedule β_t to control the diffusion process. Linear, quadratic,
         and learned schedules are used in practice.
 
-        Source: diffusion.py:140
+        Source: diffusion.py
         """
         return Equation(
             id="diffusion.variance_schedule",
@@ -240,7 +240,7 @@ class DiffusionEquations:
         Use conditional and unconditional score predictions to guide generation
         toward a condition without needing a separate classifier.
 
-        Source: diffusion.py:160
+        Source: diffusion.py
         """
         return Equation(
             id="diffusion.classifier_free_guidance",

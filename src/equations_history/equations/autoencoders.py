@@ -12,7 +12,7 @@ from equations_history.core import Equation
 class AutoencoderEquations:
     """Autoencoder definitions: deterministic and variational."""
 
-    # Symbols (source: autoencoders.py:30)
+    # Symbols (source: autoencoders.py)
     x = sp.Symbol("x", real=True)  # Input vector
     z = sp.Symbol("z", real=True)  # Latent code
     x_hat = sp.Symbol(r"\hat{x}", real=True)  # Reconstructed output
@@ -30,7 +30,7 @@ class AutoencoderEquations:
         The encoder maps input x to latent code z via a parameterized function.
         In practice, this is a neural network with weights φ.
 
-        Source: autoencoders.py:40
+        Source: autoencoders.py
         """
         # Symbolic form (simplified): z = sigma(W_e * x + b_e)
 
@@ -59,7 +59,7 @@ class AutoencoderEquations:
 
         The decoder reconstructs input from latent code z.
 
-        Source: autoencoders.py:55
+        Source: autoencoders.py
         """
         return Equation(
             id="autoencoders.deterministic_decoder",
@@ -81,7 +81,7 @@ class AutoencoderEquations:
 
         For real-valued inputs (e.g., images), measure reconstruction error as MSE.
 
-        Source: autoencoders.py:70
+        Source: autoencoders.py
         """
         return Equation(
             id="autoencoders.mse_reconstruction_loss",
@@ -106,7 +106,7 @@ class AutoencoderEquations:
 
         For binary/normalized inputs (e.g., pixel values in [0,1]), use BCE.
 
-        Source: autoencoders.py:85
+        Source: autoencoders.py
         """
         # BCE: -sum(x * log(x_hat) + (1-x) * log(1-x_hat))
         return Equation(
@@ -131,7 +131,7 @@ class AutoencoderEquations:
 
         The VAE optimizes a variational lower bound on log-likelihood.
 
-        Source: autoencoders.py:105
+        Source: autoencoders.py
         """
         return Equation(
             id="autoencoders.vae_elbo",
@@ -164,7 +164,7 @@ class AutoencoderEquations:
 
         Closed-form KL(q_φ(z|x) || p(z)) when both are Gaussians.
 
-        Source: autoencoders.py:125
+        Source: autoencoders.py
         """
         return Equation(
             id="autoencoders.vae_kl_divergence_gaussian",
@@ -195,7 +195,7 @@ class AutoencoderEquations:
 
         z = μ(x) + σ(x) ⊙ ε, where ε ~ N(0, I).
 
-        Source: autoencoders.py:145
+        Source: autoencoders.py
         """
         return Equation(
             id="autoencoders.reparameterization_trick",

@@ -12,7 +12,7 @@ from equations_history.core import Equation
 class LossFunctionEquations:
     """Loss function definitions: cross-entropy, KL divergence, and Wasserstein."""
 
-    # Symbols (source: loss_functions.py:30)
+    # Symbols (source: loss_functions.py)
     y = sp.Symbol("y", real=True)  # True label (or distribution)
     y_hat = sp.Symbol(r"\hat{y}", real=True)  # Predicted label (or distribution)
     p = sp.Symbol("p", real=True, positive=True)  # Probability distribution
@@ -29,7 +29,7 @@ class LossFunctionEquations:
         Measures divergence between predicted and true binary probabilities.
         Commonly used for binary classification and sigmoid-activated outputs.
 
-        Source: loss_functions.py:40
+        Source: loss_functions.py
         """
         return Equation(
             id="loss_functions.cross_entropy_binary",
@@ -66,7 +66,7 @@ class LossFunctionEquations:
         Measures divergence between predicted and true categorical distributions.
         Commonly used with softmax output activations.
 
-        Source: loss_functions.py:60
+        Source: loss_functions.py
         """
         return Equation(
             id="loss_functions.cross_entropy_multiclass",
@@ -100,7 +100,7 @@ class LossFunctionEquations:
         Measures how much one probability distribution differs from another.
         Used in variational inference and information theory.
 
-        Source: loss_functions.py:80
+        Source: loss_functions.py
         """
         return Equation(
             id="loss_functions.kl_divergence",
@@ -134,7 +134,7 @@ class LossFunctionEquations:
         Symmetric version of KL divergence; ranges from 0 to 1 (in bits).
         Used when asymmetry of KL is undesirable.
 
-        Source: loss_functions.py:105
+        Source: loss_functions.py
         """
         return Equation(
             id="loss_functions.jensen_shannon_divergence",
@@ -170,7 +170,7 @@ class LossFunctionEquations:
         Minimum cost to transform one probability distribution into another.
         Geometrically motivated; more stable gradients than KL.
 
-        Source: loss_functions.py:130
+        Source: loss_functions.py
         """
         return Equation(
             id="loss_functions.wasserstein_distance",
@@ -210,7 +210,7 @@ class LossFunctionEquations:
         Practical computation of Wasserstein distance for finite sample sets
         using assignment/flow optimization.
 
-        Source: loss_functions.py:155
+        Source: loss_functions.py
         """
         return Equation(
             id="loss_functions.earth_mover_distance_discrete",

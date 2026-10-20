@@ -17,7 +17,7 @@ class EntropyEquations:
     def entropy() -> Equation:
         """Shannon entropy: expected surprisal of a discrete random variable X.
 
-        Source: entropy.py:31
+        Source: entropy.py
         """
         return Equation(
             id="entropy.entropy",
@@ -39,7 +39,7 @@ class EntropyEquations:
     def conditional_entropy() -> Equation:
         """Conditional entropy: remaining uncertainty in X once Y is known.
 
-        Source: entropy.py:53
+        Source: entropy.py
         """
         return Equation(
             id="entropy.conditional_entropy",
@@ -60,7 +60,7 @@ class EntropyEquations:
     def joint_entropy() -> Equation:
         """Joint entropy: uncertainty of the pair (X, Y).
 
-        Source: entropy.py:74
+        Source: entropy.py
         """
         return Equation(
             id="entropy.joint_entropy",
@@ -83,7 +83,7 @@ class EntropyEquations:
     def mutual_information() -> Equation:
         """Mutual information: reduction in uncertainty of X from knowing Y.
 
-        Source: entropy.py:97
+        Source: entropy.py
         """
         return Equation(
             id="entropy.mutual_information",
@@ -106,7 +106,7 @@ class EntropyEquations:
     def relative_entropy() -> Equation:
         """Relative entropy (KL divergence) between distributions P and Q.
 
-        Source: entropy.py:120
+        Source: entropy.py
         """
         return Equation(
             id="entropy.relative_entropy",
@@ -132,7 +132,7 @@ class EntropyEquations:
     def jensens_inequality() -> Equation:
         """Jensen's inequality: convex (concave) f applied to an expectation.
 
-        Source: entropy.py:146
+        Source: entropy.py
         """
         return Equation(
             id="entropy.jensens_inequality",
