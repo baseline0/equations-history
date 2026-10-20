@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "equations-history/contracts/tex_manifest.schema.json",
+  "title": "TeX source manifest (producer: math-trace, per-paper manifest.json)",
+  "type": "object",
+  "required": ["paper_id", "status", "licence", "url", "sha256", "extracted", "rejected", "retrieved_at"],
+  "properties": {
+    "paper_id": {"type": "string", "pattern": "^[0-9]{4}\\.[0-9]{4,5}v[0-9]+$"},
+    "status": {"type": "string"},
+    "licence": {"type": "string"},
+    "url": {"type": "string"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "extracted": {"type": "array"},
+    "rejected": {"type": "array"},
+    "retrieved_at": {"type": "string", "format": "date-time"}
+  }
+}
