@@ -4,14 +4,13 @@ The metadata classes hold LaTeX and narrative only, so these tests evaluate the
 same formulas numerically on small discrete distributions.
 """
 
-import inspect
 import math
 import random
 
 import pytest
 
-from equations_history.equations import entropy as entropy_module
 from equations_history.equations.entropy import EntropyEquations, get_all_equations
+from test_equations.source_check import assert_source_is_equation_call
 
 
 def shannon(p: list[float]) -> float:
@@ -140,12 +139,10 @@ def test_jensens_inequality_cites_jensen_1906() -> None:
     assert any("Jensen" in c and "1906" in c for c in eq.citations)
 
 
-def test_source_lines_match_method_definitions() -> None:
-    """Each equation's source_line points at its method's def line in the module."""
-    source_lines = inspect.getsource(entropy_module).splitlines()
-    for name, eq in get_all_equations().items():
-        def_line = next(i for i, line in enumerate(source_lines, 1) if f"def {name}()" in line)
-        assert eq.source_line == def_line
+def test_source_points_at_equation_call() -> None:
+    """Each equation's computed source resolves to its own Equation( call."""
+    for eq in get_all_equations().values():
+        assert_source_is_equation_call(eq)
 
 
 def test_get_all_equations_returns_six_topics() -> None:

@@ -5,21 +5,7 @@ Source of truth for information-theoretic definitions. Each equation includes
 narrative context (history, citations, practical use cases).
 """
 
-from dataclasses import dataclass
-
-
-@dataclass
-class Equation:
-    """Container for an equation with metadata."""
-
-    name: str
-    latex: str
-    description: str
-    history: str
-    citations: list[str]
-    source_line: int
-    concepts: list[str]
-
+from equations_history.core import Equation
 
 COVER_THOMAS = "Cover, T. M., & Thomas, J. A. (2006). Elements of Information Theory (2nd ed.). Wiley."
 
@@ -34,6 +20,7 @@ class EntropyEquations:
         Source: entropy.py:31
         """
         return Equation(
+            id="entropy.entropy",
             name="Entropy",
             latex=r"H(X) = -\sum_x p(x) \log p(x)",
             description=(
@@ -45,7 +32,6 @@ class EntropyEquations:
                 "in A Mathematical Theory of Communication."
             ),
             citations=[COVER_THOMAS],
-            source_line=31,
             concepts=["entropy", "information theory", "uncertainty", "surprisal"],
         )
 
@@ -56,6 +42,7 @@ class EntropyEquations:
         Source: entropy.py:53
         """
         return Equation(
+            id="entropy.conditional_entropy",
             name="Conditional Entropy",
             latex=r"H(X \mid Y) = -\sum_{x,y} p(x,y) \log p(x \mid y)",
             description=(
@@ -66,7 +53,6 @@ class EntropyEquations:
                 "It is the quantity that the chain rule H(X,Y) = H(Y) + H(X|Y) decomposes into."
             ),
             citations=[COVER_THOMAS],
-            source_line=53,
             concepts=["conditional entropy", "information theory", "chain rule"],
         )
 
@@ -77,6 +63,7 @@ class EntropyEquations:
         Source: entropy.py:74
         """
         return Equation(
+            id="entropy.joint_entropy",
             name="Joint Entropy",
             latex=r"H(X,Y) = -\sum_{x,y} p(x,y) \log p(x,y)",
             description=(
@@ -89,7 +76,6 @@ class EntropyEquations:
                 "in information theory."
             ),
             citations=[COVER_THOMAS],
-            source_line=74,
             concepts=["joint entropy", "information theory", "chain rule"],
         )
 
@@ -100,6 +86,7 @@ class EntropyEquations:
         Source: entropy.py:97
         """
         return Equation(
+            id="entropy.mutual_information",
             name="Mutual Information",
             latex=(r"I(X;Y) = H(X) - H(X \mid Y) = \sum_{x,y} p(x,y) \log \frac{p(x,y)}{p(x)\,p(y)}"),
             description=(
@@ -112,7 +99,6 @@ class EntropyEquations:
                 "is later used in information bottleneck formulations."
             ),
             citations=[COVER_THOMAS],
-            source_line=97,
             concepts=["mutual information", "information theory", "independence", "information bottleneck"],
         )
 
@@ -123,6 +109,7 @@ class EntropyEquations:
         Source: entropy.py:120
         """
         return Equation(
+            id="entropy.relative_entropy",
             name="Relative Entropy (KL Divergence)",
             latex=r"D(P \| Q) = \sum_x P(x) \log \frac{P(x)}{Q(x)}",
             description=(
@@ -138,7 +125,6 @@ class EntropyEquations:
                 "The Annals of Mathematical Statistics, 22(1), 79-86.",
                 COVER_THOMAS,
             ],
-            source_line=120,
             concepts=["relative entropy", "KL divergence", "information theory", "non-negativity"],
         )
 
@@ -149,6 +135,7 @@ class EntropyEquations:
         Source: entropy.py:146
         """
         return Equation(
+            id="entropy.jensens_inequality",
             name="Jensen's Inequality",
             latex=r"f\left(\mathbb{E}[X]\right) \le \mathbb{E}\left[f(X)\right] \quad (f \text{ convex})",
             description=(
@@ -164,7 +151,6 @@ class EntropyEquations:
                 "moyennes. Acta Mathematica, 30, 175-193.",
                 COVER_THOMAS,
             ],
-            source_line=146,
             concepts=["Jensen's inequality", "convexity", "concavity", "expectation", "variational bound"],
         )
 

@@ -1,6 +1,7 @@
 """Tests for BERT equations."""
 
 from equations_history.equations.bert import BERTEquations, get_all_equations
+from test_equations.source_check import assert_source_is_equation_call
 
 
 def test_scaled_dot_product_attention() -> None:
@@ -10,7 +11,7 @@ def test_scaled_dot_product_attention() -> None:
     assert "softmax" in eq.latex
     assert "QK" in eq.latex or "K^\\top" in eq.latex
     assert "attention" in eq.concepts
-    assert eq.source_line == 30
+    assert_source_is_equation_call(eq)
 
 
 def test_multi_head_attention() -> None:
@@ -19,7 +20,7 @@ def test_multi_head_attention() -> None:
     assert "Multi" in eq.name and "Head" in eq.name
     assert "Concat" in eq.latex or "concat" in eq.latex
     assert "multi-head" in eq.concepts
-    assert eq.source_line == 55
+    assert_source_is_equation_call(eq)
 
 
 def test_positional_encoding() -> None:
@@ -29,7 +30,7 @@ def test_positional_encoding() -> None:
     assert "sin" in eq.latex or "sin" in eq.description
     assert "cos" in eq.latex or "cos" in eq.description
     assert "position" in eq.concepts
-    assert eq.source_line == 80
+    assert_source_is_equation_call(eq)
 
 
 def test_masked_language_modeling_loss() -> None:
@@ -38,7 +39,7 @@ def test_masked_language_modeling_loss() -> None:
     assert "MLM" in eq.name
     assert "masked" in eq.latex or "masked" in eq.description
     assert "masked language modeling" in eq.concepts
-    assert eq.source_line == 105
+    assert_source_is_equation_call(eq)
 
 
 def test_next_sentence_prediction_loss() -> None:
@@ -47,7 +48,7 @@ def test_next_sentence_prediction_loss() -> None:
     assert "NSP" in eq.name
     assert "IsNext" in eq.latex or "NotNext" in eq.latex
     assert "NSP" in eq.concepts
-    assert eq.source_line == 130
+    assert_source_is_equation_call(eq)
 
 
 def test_bert_total_pretraining_loss() -> None:
@@ -57,7 +58,7 @@ def test_bert_total_pretraining_loss() -> None:
     assert "MLM" in eq.latex
     assert "NSP" in eq.latex
     assert "pretraining" in eq.concepts
-    assert eq.source_line == 155
+    assert_source_is_equation_call(eq)
 
 
 def test_bert_fine_tuning() -> None:
@@ -66,7 +67,7 @@ def test_bert_fine_tuning() -> None:
     assert "Fine" in eq.name or "fine-tuning" in eq.name.lower()
     assert "CLS" in eq.latex or "[CLS]" in eq.latex
     assert "fine-tuning" in eq.concepts or "transfer learning" in eq.concepts
-    assert eq.source_line == 175
+    assert_source_is_equation_call(eq)
 
 
 def test_get_all_equations() -> None:
@@ -91,5 +92,5 @@ def test_equation_metadata_completeness() -> None:
         assert eq.description, f"{name} missing description"
         assert eq.history, f"{name} missing history"
         assert eq.citations, f"{name} missing citations"
-        assert eq.source_line > 0, f"{name} missing source_line"
+        assert_source_is_equation_call(eq)
         assert eq.concepts, f"{name} missing concepts"

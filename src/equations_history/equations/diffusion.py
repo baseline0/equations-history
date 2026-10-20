@@ -4,22 +4,9 @@ Source of truth for diffusion model mathematical definitions. Each equation
 includes narrative context (history, citations, practical use cases).
 """
 
-from dataclasses import dataclass
-
 import sympy as sp
 
-
-@dataclass
-class Equation:
-    """Container for an equation with metadata."""
-
-    name: str
-    latex: str
-    description: str
-    history: str
-    citations: list[str]
-    source_line: int
-    concepts: list[str]
+from equations_history.core import Equation
 
 
 class DiffusionEquations:
@@ -47,6 +34,7 @@ class DiffusionEquations:
         Source: diffusion.py:40
         """
         return Equation(
+            id="diffusion.forward_process_markov",
             name="Diffusion Forward Process (Markov)",
             latex=(r"q(x_t | x_{t-1}) = \mathcal{N}(x_t; \sqrt{1 - \beta_t} x_{t-1}, \beta_t I)"),
             description=(
@@ -67,7 +55,6 @@ class DiffusionEquations:
                 "Song, Y., & Ermon, S. (2019). Generative modeling by estimating gradients of the data distribution. "
                 "NeurIPS.",
             ],
-            source_line=40,
             concepts=["diffusion", "forward process", "Markov chain", "noise schedule"],
         )
 
@@ -81,6 +68,7 @@ class DiffusionEquations:
         Source: diffusion.py:60
         """
         return Equation(
+            id="diffusion.forward_process_closed_form",
             name="Forward Process (Closed Form)",
             latex=(
                 r"x_t = \sqrt{\bar{\alpha}_t} x_0 + \sqrt{1 - \bar{\alpha}_t} \epsilon, "
@@ -102,7 +90,6 @@ class DiffusionEquations:
             citations=[
                 "Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. arXiv:2006.11239.",
             ],
-            source_line=60,
             concepts=["forward process", "closed form", "cumulative noise", "direct sampling"],
         )
 
@@ -116,6 +103,7 @@ class DiffusionEquations:
         Source: diffusion.py:80
         """
         return Equation(
+            id="diffusion.reverse_process",
             name="Diffusion Reverse Process",
             latex=(r"p_\theta(x_{t-1} | x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \Sigma_\theta(x_t, t))"),
             description=(
@@ -133,7 +121,6 @@ class DiffusionEquations:
             citations=[
                 "Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. arXiv:2006.11239.",
             ],
-            source_line=80,
             concepts=["diffusion", "reverse process", "denoising", "generation"],
         )
 
@@ -147,6 +134,7 @@ class DiffusionEquations:
         Source: diffusion.py:100
         """
         return Equation(
+            id="diffusion.noise_prediction_objective",
             name="Noise Prediction Objective",
             latex=(
                 r"\mathcal{L}_{\text{simple}} = \mathbb{E}_{x_0, t, \epsilon} "
@@ -168,7 +156,6 @@ class DiffusionEquations:
             citations=[
                 "Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. arXiv:2006.11239.",
             ],
-            source_line=100,
             concepts=["diffusion", "training objective", "noise prediction", "denoising"],
         )
 
@@ -182,6 +169,7 @@ class DiffusionEquations:
         Source: diffusion.py:120
         """
         return Equation(
+            id="diffusion.score_matching",
             name="Score Matching Objective",
             latex=(
                 r"\mathcal{L}_{\text{score}} = \mathbb{E}_{t, x_0, \epsilon} "
@@ -206,7 +194,6 @@ class DiffusionEquations:
                 "Song, Y., Sohl-Dickstein, J., Kingma, D. P., Kumar, A., Ermon, S., & Poole, B. (2021). "
                 "Score-based generative modeling through stochastic differential equations. ICLR.",
             ],
-            source_line=120,
             concepts=["score matching", "score function", "gradient of log probability", "Langevin"],
         )
 
@@ -220,6 +207,7 @@ class DiffusionEquations:
         Source: diffusion.py:140
         """
         return Equation(
+            id="diffusion.variance_schedule",
             name="Variance Schedule",
             latex=(
                 r"\beta_t \in \mathbb{R}_{>0}, \quad \text{e.g. } "
@@ -242,7 +230,6 @@ class DiffusionEquations:
                 "Ho, J., Jain, A., & Abbeel, P. (2020). Denoising diffusion probabilistic models. arXiv:2006.11239.",
                 "Nichol, A. Q., & Dhariwal, P. (2021). Improved denoising diffusion probabilistic models. ICML.",
             ],
-            source_line=140,
             concepts=["variance schedule", "noise schedule", "hyperparameter", "diffusion rate"],
         )
 
@@ -256,6 +243,7 @@ class DiffusionEquations:
         Source: diffusion.py:160
         """
         return Equation(
+            id="diffusion.classifier_free_guidance",
             name="Classifier-Free Guidance",
             latex=(
                 r"\hat{\epsilon}_\theta(x_t, t, c) = \epsilon_\theta(x_t, t, \emptyset) + "
@@ -278,7 +266,6 @@ class DiffusionEquations:
                 "Ho, S., & Salimans, T. (2021). Classifier-free diffusion guidance. arXiv:2207.12598.",
                 "Dhariwal, P., & Nichol, A. Q. (2021). Diffusion models beat GANs on image synthesis. ICML.",
             ],
-            source_line=160,
             concepts=["classifier-free guidance", "conditional generation", "conditioning", "guidance strength"],
         )
 

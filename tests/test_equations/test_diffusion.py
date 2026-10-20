@@ -1,6 +1,7 @@
 """Tests for diffusion model equations."""
 
 from equations_history.equations.diffusion import DiffusionEquations, get_all_equations
+from test_equations.source_check import assert_source_is_equation_call
 
 
 def test_forward_process_markov_equation() -> None:
@@ -9,7 +10,7 @@ def test_forward_process_markov_equation() -> None:
     assert eq.name == "Diffusion Forward Process (Markov)"
     assert "beta" in eq.latex or r"\beta" in eq.latex
     assert "mathcal{N}" in eq.latex
-    assert eq.source_line == 40
+    assert_source_is_equation_call(eq)
     assert "diffusion" in eq.concepts
     assert "forward process" in eq.concepts
     assert len(eq.citations) > 0
@@ -22,7 +23,7 @@ def test_forward_process_closed_form_equation() -> None:
     assert "alpha" in eq.latex or r"\alpha" in eq.latex
     assert "bar" in eq.latex or r"\bar" in eq.latex
     assert "epsilon" in eq.latex
-    assert eq.source_line == 60
+    assert_source_is_equation_call(eq)
     assert "forward process" in eq.concepts
     assert len(eq.citations) > 0
 
@@ -34,7 +35,7 @@ def test_reverse_process_equation() -> None:
     assert "p_" in eq.latex or "p_{" in eq.latex
     assert "mu" in eq.latex or r"\mu" in eq.latex
     assert "Sigma" in eq.latex or r"\Sigma" in eq.latex
-    assert eq.source_line == 80
+    assert_source_is_equation_call(eq)
     assert "reverse process" in eq.concepts or "diffusion" in eq.concepts
     assert len(eq.citations) > 0
 
@@ -45,7 +46,7 @@ def test_noise_prediction_objective_equation() -> None:
     assert eq.name == "Noise Prediction Objective"
     assert "epsilon" in eq.latex
     assert "mathcal{L}" in eq.latex or "L" in eq.latex
-    assert eq.source_line == 100
+    assert_source_is_equation_call(eq)
     assert "diffusion" in eq.concepts or "noise prediction" in eq.concepts
     assert len(eq.citations) > 0
 
@@ -57,7 +58,7 @@ def test_score_matching_equation() -> None:
     assert "score" in eq.name.lower()
     assert "s_" in eq.latex or "s_{" in eq.latex
     assert "mathcal{L}" in eq.latex  # Loss function
-    assert eq.source_line == 120
+    assert_source_is_equation_call(eq)
     assert "score matching" in eq.concepts or "score function" in eq.concepts
     assert len(eq.citations) > 0
 
@@ -67,7 +68,7 @@ def test_variance_schedule_equation() -> None:
     eq = DiffusionEquations.variance_schedule()
     assert eq.name == "Variance Schedule"
     assert "beta" in eq.latex or r"\beta" in eq.latex
-    assert eq.source_line == 140
+    assert_source_is_equation_call(eq)
     assert "variance schedule" in eq.concepts or "noise schedule" in eq.concepts
     assert len(eq.citations) > 0
 
@@ -78,7 +79,7 @@ def test_classifier_free_guidance_equation() -> None:
     assert eq.name == "Classifier-Free Guidance"
     assert "epsilon" in eq.latex
     assert "hat" in eq.latex or r"\hat" in eq.latex
-    assert eq.source_line == 160
+    assert_source_is_equation_call(eq)
     # Check that at least one concept contains "guidance" or "classifier"
     concept_str = " ".join(eq.concepts).lower()
     assert "guidance" in concept_str or "classifier" in concept_str
@@ -107,7 +108,7 @@ def test_equation_metadata_completeness() -> None:
         assert eq.description, f"{name} missing description"
         assert eq.history, f"{name} missing history"
         assert eq.citations, f"{name} missing citations"
-        assert eq.source_line > 0, f"{name} missing valid source_line"
+        assert_source_is_equation_call(eq)
         assert len(eq.concepts) > 0, f"{name} missing concepts"
 
 

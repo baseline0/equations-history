@@ -4,22 +4,9 @@ Source of truth for autoencoder mathematical definitions. Each equation
 includes narrative context (history, citations, practical use cases).
 """
 
-from dataclasses import dataclass
-
 import sympy as sp
 
-
-@dataclass
-class Equation:
-    """Container for an equation with metadata."""
-
-    name: str
-    latex: str
-    description: str
-    history: str
-    citations: list[str]
-    source_line: int
-    concepts: list[str]
+from equations_history.core import Equation
 
 
 class AutoencoderEquations:
@@ -48,6 +35,7 @@ class AutoencoderEquations:
         # Symbolic form (simplified): z = sigma(W_e * x + b_e)
 
         return Equation(
+            id="autoencoders.deterministic_encoder",
             name="Deterministic Encoder",
             latex=r"z = f_\phi(x)",
             description="Encoder maps input x to latent code z",
@@ -62,7 +50,6 @@ class AutoencoderEquations:
                 "Rumelhart, D. E., Hinton, G. E., & Williams, R. J. (1986). "
                 "Learning representations by back-propagating errors. Nature.",
             ],
-            source_line=40,
             concepts=["encoder", "bottleneck", "dimensionality reduction"],
         )
 
@@ -75,6 +62,7 @@ class AutoencoderEquations:
         Source: autoencoders.py:55
         """
         return Equation(
+            id="autoencoders.deterministic_decoder",
             name="Deterministic Decoder",
             latex=r"\hat{x} = g_\theta(z)",
             description="Decoder reconstructs input x from latent code z",
@@ -84,7 +72,6 @@ class AutoencoderEquations:
                 "latent dimension z, forcing compression."
             ),
             citations=["LeCun, Y., Bengio, Y., & Hinton, G. (2015). Deep learning. Nature, 521(7553), 436-444."],
-            source_line=55,
             concepts=["decoder", "reconstruction", "symmetry"],
         )
 
@@ -97,6 +84,7 @@ class AutoencoderEquations:
         Source: autoencoders.py:70
         """
         return Equation(
+            id="autoencoders.mse_reconstruction_loss",
             name="MSE Reconstruction Loss",
             latex=r"\mathcal{L}_\text{MSE}(x, \hat{x}) = \frac{1}{2} \|x - \hat{x}\|_2^2",
             description="Quadratic error between input and reconstruction",
@@ -109,7 +97,6 @@ class AutoencoderEquations:
                 "Goodfellow, I., Bengio, Y., & Courville, A. (2016). "
                 "Deep Learning. MIT Press. Chapter 14 (Autoencoders)."
             ],
-            source_line=70,
             concepts=["loss", "reconstruction error", "continuous data"],
         )
 
@@ -123,6 +110,7 @@ class AutoencoderEquations:
         """
         # BCE: -sum(x * log(x_hat) + (1-x) * log(1-x_hat))
         return Equation(
+            id="autoencoders.bce_reconstruction_loss",
             name="Binary Cross-Entropy Loss",
             latex=r"\mathcal{L}_\text{BCE}(x, \hat{x}) = -\sum_i [x_i \log \hat{x}_i + (1-x_i)\log(1-\hat{x}_i)]",
             description="Cross-entropy error for binary/normalized inputs",
@@ -134,7 +122,6 @@ class AutoencoderEquations:
             citations=[
                 "Bishop, C. M. (2006). Pattern Recognition and Machine Learning. Springer. Chapter 5 (Neural Networks)."
             ],
-            source_line=85,
             concepts=["loss", "cross-entropy", "binary data"],
         )
 
@@ -147,6 +134,7 @@ class AutoencoderEquations:
         Source: autoencoders.py:105
         """
         return Equation(
+            id="autoencoders.vae_elbo",
             name="VAE ELBO (Evidence Lower Bound)",
             latex=(
                 r"\text{ELBO}(x) = \mathbb{E}_{q_\phi(z|x)}\big[\log p_\theta(x|z)\big] "
@@ -167,7 +155,6 @@ class AutoencoderEquations:
                 "Rezende, D. J., Mohamed, S., & Wierstra, D. (2014). "
                 "Stochastic backpropagation and approximate inference in deep generative models. ICML.",
             ],
-            source_line=105,
             concepts=["VAE", "generative model", "variational inference", "ELBO"],
         )
 
@@ -180,6 +167,7 @@ class AutoencoderEquations:
         Source: autoencoders.py:125
         """
         return Equation(
+            id="autoencoders.vae_kl_divergence_gaussian",
             name="VAE KL Divergence (Gaussian)",
             latex=(
                 r"\mathrm{KL}\big(q_\phi(z|x) \| p(z)\big) = "
@@ -198,7 +186,6 @@ class AutoencoderEquations:
             citations=[
                 "Kingma, D. P., & Welling, M. (2013). Auto-encoding variational Bayes. arXiv:1312.6114.",
             ],
-            source_line=125,
             concepts=["KL divergence", "Gaussian", "regularization", "latent distribution"],
         )
 
@@ -211,6 +198,7 @@ class AutoencoderEquations:
         Source: autoencoders.py:145
         """
         return Equation(
+            id="autoencoders.reparameterization_trick",
             name="Reparameterization Trick",
             latex=r"z = \mu_\phi(x) + \sigma_\phi(x) \odot \epsilon, \quad \epsilon \sim \mathcal{N}(0, I)",
             description=(
@@ -224,7 +212,6 @@ class AutoencoderEquations:
                 "making z differentiable w.r.t. μ and σ. This enables end-to-end training of VAEs."
             ),
             citations=["Kingma, D. P., & Welling, M. (2013). Auto-encoding variational Bayes. arXiv:1312.6114."],
-            source_line=145,
             concepts=["gradient flow", "sampling", "backpropagation", "stochastic"],
         )
 

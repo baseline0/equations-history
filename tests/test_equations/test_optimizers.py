@@ -1,6 +1,7 @@
 """Tests for optimizer equations."""
 
 from equations_history.equations.optimizers import OptimizerEquations, get_all_equations
+from test_equations.source_check import assert_source_is_equation_call
 
 
 def test_sgd_update_equation() -> None:
@@ -8,7 +9,7 @@ def test_sgd_update_equation() -> None:
     eq = OptimizerEquations.sgd_update()
     assert eq.name == "Stochastic Gradient Descent (SGD)"
     assert "theta" in eq.latex or r"\theta" in eq.latex
-    assert eq.source_line == 40
+    assert_source_is_equation_call(eq)
     assert "optimizer" in eq.concepts
     assert len(eq.citations) > 0
 
@@ -18,7 +19,7 @@ def test_momentum_update_equation() -> None:
     eq = OptimizerEquations.momentum_update()
     assert eq.name == "Momentum Update"
     assert "m_t" in eq.latex or "m_{t-1}" in eq.latex
-    assert eq.source_line == 60
+    assert_source_is_equation_call(eq)
     assert "momentum" in eq.concepts
     assert len(eq.citations) > 0
 
@@ -28,7 +29,7 @@ def test_nesterov_momentum_equation() -> None:
     eq = OptimizerEquations.nesterov_momentum()
     assert eq.name == "Nesterov Momentum"
     assert "tilde" in eq.latex or r"\tilde" in eq.latex
-    assert eq.source_line == 80
+    assert_source_is_equation_call(eq)
     assert "Nesterov" in eq.concepts or "look-ahead" in eq.concepts
     assert len(eq.citations) > 0
 
@@ -39,7 +40,7 @@ def test_adam_biased_moments_equation() -> None:
     assert eq.name == "Adam Moment Estimates (Biased)"
     assert "m_t" in eq.latex
     assert "v_t" in eq.latex
-    assert eq.source_line == 105
+    assert_source_is_equation_call(eq)
     assert "Adam" in eq.concepts
     assert len(eq.citations) > 0
 
@@ -49,7 +50,7 @@ def test_adam_bias_correction_equation() -> None:
     eq = OptimizerEquations.adam_bias_correction()
     assert eq.name == "Adam Bias Correction"
     assert "hat" in eq.latex or r"\hat" in eq.latex
-    assert eq.source_line == 125
+    assert_source_is_equation_call(eq)
     assert "bias correction" in eq.concepts or "initialization bias" in eq.concepts
     assert len(eq.citations) > 0
 
@@ -59,7 +60,7 @@ def test_adam_update_equation() -> None:
     eq = OptimizerEquations.adam_update()
     assert eq.name == "Adam Parameter Update"
     assert "sqrt" in eq.latex or r"\sqrt" in eq.latex
-    assert eq.source_line == 145
+    assert_source_is_equation_call(eq)
     assert "Adam" in eq.concepts
     assert "adaptive learning rate" in eq.concepts
     assert len(eq.citations) > 0
@@ -86,7 +87,7 @@ def test_equation_metadata_completeness() -> None:
         assert eq.description, f"{name} missing description"
         assert eq.history, f"{name} missing history"
         assert eq.citations, f"{name} missing citations"
-        assert eq.source_line > 0, f"{name} missing valid source_line"
+        assert_source_is_equation_call(eq)
         assert len(eq.concepts) > 0, f"{name} missing concepts"
 
 

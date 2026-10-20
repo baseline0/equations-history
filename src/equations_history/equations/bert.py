@@ -4,22 +4,9 @@ Source of truth for BERT mathematical definitions. Includes attention mechanism,
 positional embeddings, and pretraining losses.
 """
 
-from dataclasses import dataclass
-
 import sympy as sp
 
-
-@dataclass
-class Equation:
-    """Container for an equation with metadata."""
-
-    name: str
-    latex: str
-    description: str
-    history: str
-    citations: list[str]
-    source_line: int
-    concepts: list[str]
+from equations_history.core import Equation
 
 
 class BERTEquations:
@@ -46,6 +33,7 @@ class BERTEquations:
         Source: bert.py:30
         """
         return Equation(
+            id="bert.scaled_dot_product_attention",
             name="Scaled Dot-Product Attention",
             latex=r"\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^\top}{\sqrt{d_k}}\right)V",
             description=(
@@ -62,7 +50,6 @@ class BERTEquations:
             citations=[
                 "Vaswani, A., Shazeer, N., Parmar, N., et al. (2017). Attention is All You Need. NeurIPS.",
             ],
-            source_line=30,
             concepts=["attention", "self-attention", "transformer", "mechanism"],
         )
 
@@ -76,6 +63,7 @@ class BERTEquations:
         Source: bert.py:55
         """
         return Equation(
+            id="bert.multi_head_attention",
             name="Multi-Head Attention",
             latex=(
                 r"\text{MultiHead}(Q,K,V) = \text{Concat}(\text{head}_1, \ldots, \text{head}_h)W^O, "
@@ -94,7 +82,6 @@ class BERTEquations:
             citations=[
                 "Vaswani, A., Shazeer, N., Parmar, N., et al. (2017). Attention is All You Need. NeurIPS.",
             ],
-            source_line=55,
             concepts=["multi-head", "subspace", "representation"],
         )
 
@@ -108,6 +95,7 @@ class BERTEquations:
         Source: bert.py:80
         """
         return Equation(
+            id="bert.positional_encoding",
             name="Positional Encoding (Sinusoidal)",
             latex=(
                 r"\text{PE}(t, 2i) = \sin\left(\frac{t}{10000^{2i/d_\text{model}}}\right), \quad "
@@ -129,7 +117,6 @@ class BERTEquations:
                 "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. "
                 "arXiv:1810.04805.",
             ],
-            source_line=80,
             concepts=["position", "embedding", "sequence order"],
         )
 
@@ -142,6 +129,7 @@ class BERTEquations:
         Source: bert.py:105
         """
         return Equation(
+            id="bert.masked_language_modeling_loss",
             name="Masked Language Modeling (MLM) Loss",
             latex=r"\mathcal{L}_\text{MLM} = -\sum_{t \in \text{masked}} \log P(x_t \mid x_{\setminus t}; \theta)",
             description=(
@@ -161,7 +149,6 @@ class BERTEquations:
                 "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. "
                 "arXiv:1810.04805.",
             ],
-            source_line=105,
             concepts=["masked language modeling", "pretraining", "bidirectional", "prediction"],
         )
 
@@ -174,6 +161,7 @@ class BERTEquations:
         Source: bert.py:130
         """
         return Equation(
+            id="bert.next_sentence_prediction_loss",
             name="Next Sentence Prediction (NSP) Loss",
             latex=(
                 r"\mathcal{L}_\text{NSP} = -[y \log p_\theta(\text{IsNext}) + "
@@ -196,7 +184,6 @@ class BERTEquations:
                 "Liu, Y., Ott, M., Goyal, N., et al. (2019). "
                 "RoBERTa: A Robustly Optimized BERT Pretraining Approach. arXiv:1907.11692.",
             ],
-            source_line=130,
             concepts=["NSP", "sentence prediction", "binary classification"],
         )
 
@@ -209,6 +196,7 @@ class BERTEquations:
         Source: bert.py:155
         """
         return Equation(
+            id="bert.bert_total_pretraining_loss",
             name="BERT Total Pretraining Loss",
             latex=r"\mathcal{L}_\text{BERT} = \mathcal{L}_\text{MLM} + \mathcal{L}_\text{NSP}",
             description=(
@@ -226,7 +214,6 @@ class BERTEquations:
                 "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. "
                 "arXiv:1810.04805.",
             ],
-            source_line=155,
             concepts=["pretraining", "loss", "combined objective"],
         )
 
@@ -239,6 +226,7 @@ class BERTEquations:
         Source: bert.py:175
         """
         return Equation(
+            id="bert.bert_fine_tuning",
             name="BERT Fine-Tuning (Pooled Representation)",
             latex=r"y = \text{softmax}(W_\text{task} \cdot [\text{CLS}] + b_\text{task})",
             description=(
@@ -258,7 +246,6 @@ class BERTEquations:
                 "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. "
                 "arXiv:1810.04805.",
             ],
-            source_line=175,
             concepts=["fine-tuning", "transfer learning", "classification", "downstream task"],
         )
 

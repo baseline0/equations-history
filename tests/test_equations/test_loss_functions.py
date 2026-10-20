@@ -1,6 +1,7 @@
 """Tests for loss function equations."""
 
 from equations_history.equations.loss_functions import LossFunctionEquations, get_all_equations
+from test_equations.source_check import assert_source_is_equation_call
 
 
 def test_cross_entropy_binary_equation() -> None:
@@ -9,7 +10,7 @@ def test_cross_entropy_binary_equation() -> None:
     assert eq.name == "Binary Cross-Entropy Loss"
     assert "log" in eq.latex
     assert "y_i" in eq.latex or "y" in eq.latex
-    assert eq.source_line == 40
+    assert_source_is_equation_call(eq)
     assert "cross-entropy" in eq.concepts
     assert len(eq.citations) > 0
 
@@ -20,7 +21,7 @@ def test_cross_entropy_multiclass_equation() -> None:
     assert eq.name == "Categorical Cross-Entropy Loss"
     assert "log" in eq.latex
     assert "sum" in eq.latex
-    assert eq.source_line == 60
+    assert_source_is_equation_call(eq)
     # Check that at least one concept contains "categorical" or "cross"
     concept_str = " ".join(eq.concepts).lower()
     assert "categorical" in concept_str or "cross" in concept_str
@@ -33,7 +34,7 @@ def test_kl_divergence_equation() -> None:
     assert eq.name == "Kullback-Leibler Divergence"
     assert "KL" in eq.latex
     assert "log" in eq.latex
-    assert eq.source_line == 80
+    assert_source_is_equation_call(eq)
     assert "KL divergence" in eq.concepts or "relative entropy" in eq.concepts
     assert len(eq.citations) > 0
 
@@ -44,7 +45,7 @@ def test_jensen_shannon_divergence_equation() -> None:
     assert eq.name == "Jensen-Shannon Divergence"
     assert "JS" in eq.latex
     assert "KL" in eq.latex
-    assert eq.source_line == 105
+    assert_source_is_equation_call(eq)
     # Check that at least one concept mentions Jensen-Shannon or symmetric
     concept_str = " ".join(eq.concepts).lower()
     assert "jensen" in concept_str or "symmetric" in concept_str
@@ -57,7 +58,7 @@ def test_wasserstein_distance_equation() -> None:
     assert eq.name == "Wasserstein Distance (1-Wasserstein)"
     assert "W_1" in eq.latex or "Wasserstein" in eq.description
     assert "inf" in eq.latex
-    assert eq.source_line == 130
+    assert_source_is_equation_call(eq)
     assert "Wasserstein" in eq.concepts or "optimal transport" in eq.concepts
     assert len(eq.citations) > 0
 
@@ -67,7 +68,7 @@ def test_earth_mover_distance_discrete_equation() -> None:
     eq = LossFunctionEquations.earth_mover_distance_discrete()
     assert eq.name == "Earth Mover's Distance (Discrete Approximation)"
     assert "bijection" in eq.latex or "phi" in eq.latex or r"\phi" in eq.latex
-    assert eq.source_line == 155
+    assert_source_is_equation_call(eq)
     assert "Wasserstein" in eq.concepts or "optimal assignment" in eq.concepts
     assert len(eq.citations) > 0
 
@@ -93,7 +94,7 @@ def test_equation_metadata_completeness() -> None:
         assert eq.description, f"{name} missing description"
         assert eq.history, f"{name} missing history"
         assert eq.citations, f"{name} missing citations"
-        assert eq.source_line > 0, f"{name} missing valid source_line"
+        assert_source_is_equation_call(eq)
         assert len(eq.concepts) > 0, f"{name} missing concepts"
 
 

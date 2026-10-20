@@ -1,6 +1,7 @@
 """Tests for regularization equations."""
 
 from equations_history.equations.regularization import RegularizationEquations, get_all_equations
+from test_equations.source_check import assert_source_is_equation_call
 
 
 def test_dropout_training_equation() -> None:
@@ -8,7 +9,7 @@ def test_dropout_training_equation() -> None:
     eq = RegularizationEquations.dropout_training()
     assert eq.name == "Dropout (Training)"
     assert "Bernoulli" in eq.latex or "m_i" in eq.latex
-    assert eq.source_line == 40
+    assert_source_is_equation_call(eq)
     assert "dropout" in eq.concepts
     assert len(eq.citations) > 0
 
@@ -18,7 +19,7 @@ def test_dropout_inference_equation() -> None:
     eq = RegularizationEquations.dropout_inference()
     assert eq.name == "Dropout (Inference)"
     assert "test" in eq.latex or "z" in eq.latex
-    assert eq.source_line == 60
+    assert_source_is_equation_call(eq)
     assert "dropout" in eq.concepts
     assert "inference" in eq.concepts
 
@@ -29,7 +30,7 @@ def test_l2_regularization_equation() -> None:
     assert eq.name == "L2 Regularization (Weight Decay)"
     assert "lambda" in eq.latex or r"\lambda" in eq.latex
     assert "W" in eq.latex
-    assert eq.source_line == 80
+    assert_source_is_equation_call(eq)
     assert "L2 regularization" in eq.concepts or "weight decay" in eq.concepts
     assert len(eq.citations) > 0
 
@@ -40,7 +41,7 @@ def test_batch_normalization_normalize_equation() -> None:
     assert eq.name == "Batch Normalization (Normalization)"
     assert "mu" in eq.latex or r"\mu" in eq.latex
     assert "sigma" in eq.latex or r"\sigma" in eq.latex
-    assert eq.source_line == 105
+    assert_source_is_equation_call(eq)
     assert "batch normalization" in eq.concepts
     assert len(eq.citations) > 0
 
@@ -51,7 +52,7 @@ def test_batch_normalization_scale_shift_equation() -> None:
     assert eq.name == "Batch Normalization (Scale and Shift)"
     assert "gamma" in eq.latex or r"\gamma" in eq.latex
     assert "beta" in eq.latex
-    assert eq.source_line == 125
+    assert_source_is_equation_call(eq)
     assert "batch normalization" in eq.concepts
     assert "learnable" in eq.concepts or "scale" in eq.concepts
 
@@ -61,7 +62,7 @@ def test_batch_normalization_inference_equation() -> None:
     eq = RegularizationEquations.batch_normalization_inference()
     assert eq.name == "Batch Normalization (Inference)"
     assert "running" in eq.latex
-    assert eq.source_line == 145
+    assert_source_is_equation_call(eq)
     assert "batch normalization" in eq.concepts
     assert "inference" in eq.concepts or "running statistics" in eq.concepts
 
@@ -86,7 +87,7 @@ def test_equation_metadata_completeness() -> None:
         assert eq.latex, f"{name} missing latex"
         assert eq.description, f"{name} missing description"
         assert eq.history, f"{name} missing history"
-        assert eq.source_line > 0, f"{name} missing valid source_line"
+        assert_source_is_equation_call(eq)
         assert len(eq.concepts) > 0, f"{name} missing concepts"
 
 

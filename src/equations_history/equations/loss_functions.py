@@ -4,22 +4,9 @@ Source of truth for loss function mathematical definitions. Each equation
 includes narrative context (history, citations, practical use cases).
 """
 
-from dataclasses import dataclass
-
 import sympy as sp
 
-
-@dataclass
-class Equation:
-    """Container for an equation with metadata."""
-
-    name: str
-    latex: str
-    description: str
-    history: str
-    citations: list[str]
-    source_line: int
-    concepts: list[str]
+from equations_history.core import Equation
 
 
 class LossFunctionEquations:
@@ -45,6 +32,7 @@ class LossFunctionEquations:
         Source: loss_functions.py:40
         """
         return Equation(
+            id="loss_functions.cross_entropy_binary",
             name="Binary Cross-Entropy Loss",
             latex=(
                 r"\mathcal{L}_{\text{BCE}} = -\frac{1}{N} \sum_{i=1}^{N} "
@@ -68,7 +56,6 @@ class LossFunctionEquations:
                 "LeCun, Y., Bottou, L., Orr, G. B., & Müller, K. R. (1998). Efficient BackProp. "
                 "In Neural Networks: Tricks of the Trade.",
             ],
-            source_line=40,
             concepts=["cross-entropy", "binary classification", "maximum likelihood", "logarithmic loss"],
         )
 
@@ -82,6 +69,7 @@ class LossFunctionEquations:
         Source: loss_functions.py:60
         """
         return Equation(
+            id="loss_functions.cross_entropy_multiclass",
             name="Categorical Cross-Entropy Loss",
             latex=(
                 r"\mathcal{L}_{\text{CCE}} = -\frac{1}{N} \sum_{i=1}^{N} \sum_{c=1}^{C} "
@@ -102,7 +90,6 @@ class LossFunctionEquations:
                 "Goodfellow, I., Bengio, Y., & Courville, A. (2016). Deep Learning. MIT Press. Chapter 6.",
                 "Bishop, C. M. (2006). Pattern Recognition and Machine Learning. Springer.",
             ],
-            source_line=60,
             concepts=["categorical cross-entropy", "multi-class classification", "softmax", "maximum likelihood"],
         )
 
@@ -116,6 +103,7 @@ class LossFunctionEquations:
         Source: loss_functions.py:80
         """
         return Equation(
+            id="loss_functions.kl_divergence",
             name="Kullback-Leibler Divergence",
             latex=(
                 r"\mathrm{KL}(p \| q) = \sum_x p(x) \log \frac{p(x)}{q(x)} = "
@@ -136,7 +124,6 @@ class LossFunctionEquations:
                 "Annals of Mathematical Statistics, 22(1), 79-86.",
                 "Cover, T. M., & Thomas, J. A. (2006). Elements of Information Theory (2nd ed.). Wiley-Interscience.",
             ],
-            source_line=80,
             concepts=["KL divergence", "relative entropy", "information theory", "distribution divergence"],
         )
 
@@ -150,6 +137,7 @@ class LossFunctionEquations:
         Source: loss_functions.py:105
         """
         return Equation(
+            id="loss_functions.jensen_shannon_divergence",
             name="Jensen-Shannon Divergence",
             latex=(
                 r"\mathrm{JS}(p \| q) = \frac{1}{2} \mathrm{KL}(p \| m) + \frac{1}{2} \mathrm{KL}(q \| m), "
@@ -172,7 +160,6 @@ class LossFunctionEquations:
                 "Endres, D. M., & Schindelin, J. E. (2003). A new metric for probability distributions. "
                 "IEEE Transactions on Information Theory, 49(7), 1858-1860.",
             ],
-            source_line=105,
             concepts=["Jensen-Shannon divergence", "symmetric divergence", "metric", "distribution comparison"],
         )
 
@@ -186,6 +173,7 @@ class LossFunctionEquations:
         Source: loss_functions.py:130
         """
         return Equation(
+            id="loss_functions.wasserstein_distance",
             name="Wasserstein Distance (1-Wasserstein)",
             latex=(
                 r"W_1(p, q) = \inf_{\gamma} \mathbb{E}_{(x,y) \sim \gamma}[\|x - y\|] = "
@@ -212,7 +200,6 @@ class LossFunctionEquations:
                 "Arjovsky, M., Chintala, S., & Bottou, L. (2017). Wasserstein GAN. arXiv:1701.07875.",
                 "Villani, C. (2008). Optimal Transport: Old and New. Springer-Verlag.",
             ],
-            source_line=130,
             concepts=["Wasserstein distance", "optimal transport", "Earth Mover's Distance", "coupling"],
         )
 
@@ -226,6 +213,7 @@ class LossFunctionEquations:
         Source: loss_functions.py:155
         """
         return Equation(
+            id="loss_functions.earth_mover_distance_discrete",
             name="Earth Mover's Distance (Discrete Approximation)",
             latex=(
                 r"W_p(P, Q) \approx \left( \min_{\phi \in \mathrm{bijections}} "
@@ -250,7 +238,6 @@ class LossFunctionEquations:
                 "Kolouri, S., Park, S. R., Thorpe, M., Slepčev, D., & Rohde, G. K. (2017). "
                 "Optimal mass transport: Signal processing and machine-learning applications. arXiv:1612.02964.",
             ],
-            source_line=155,
             concepts=["Wasserstein distance", "discrete approximation", "optimal assignment", "Hungarian algorithm"],
         )
 

@@ -4,22 +4,9 @@ Source of truth for optimizer mathematical definitions. Each equation
 includes narrative context (history, citations, practical use cases).
 """
 
-from dataclasses import dataclass
-
 import sympy as sp
 
-
-@dataclass
-class Equation:
-    """Container for an equation with metadata."""
-
-    name: str
-    latex: str
-    description: str
-    history: str
-    citations: list[str]
-    source_line: int
-    concepts: list[str]
+from equations_history.core import Equation
 
 
 class OptimizerEquations:
@@ -45,6 +32,7 @@ class OptimizerEquations:
         Source: optimizers.py:40
         """
         return Equation(
+            id="optimizers.sgd_update",
             name="Stochastic Gradient Descent (SGD)",
             latex=r"\theta_{t+1} = \theta_t - \alpha g_t",
             description="Update parameters by subtracting scaled gradient",
@@ -62,7 +50,6 @@ class OptimizerEquations:
                 "LeCun, Y., Bottou, L., Orr, G. B., & Müller, K. R. (1998). "
                 "Efficient BackProp. In Neural Networks: Tricks of the Trade.",
             ],
-            source_line=40,
             concepts=["optimizer", "gradient descent", "stochastic", "learning rate"],
         )
 
@@ -76,6 +63,7 @@ class OptimizerEquations:
         Source: optimizers.py:60
         """
         return Equation(
+            id="optimizers.momentum_update",
             name="Momentum Update",
             latex=(
                 r"m_t = \beta m_{t-1} + (1 - \beta) g_t \\ "
@@ -98,7 +86,6 @@ class OptimizerEquations:
                 "USSR Computational Mathematics and Mathematical Physics, 4(5), 1-17.",
                 "Goodfellow, I., Bengio, Y., & Courville, A. (2016). Deep Learning. MIT Press. Chapter 8.",
             ],
-            source_line=60,
             concepts=["momentum", "exponential moving average", "acceleration", "convergence"],
         )
 
@@ -112,6 +99,7 @@ class OptimizerEquations:
         Source: optimizers.py:80
         """
         return Equation(
+            id="optimizers.nesterov_momentum",
             name="Nesterov Momentum",
             latex=(
                 r"\tilde{\theta}_t = \theta_t - \alpha m_{t-1} \\ "
@@ -134,7 +122,6 @@ class OptimizerEquations:
                 "Sutskever, I., Martens, J., Dahl, G., & Hinton, G. (2013). "
                 "On the importance of initialization and momentum in deep learning. ICML.",
             ],
-            source_line=80,
             concepts=["Nesterov", "look-ahead", "momentum", "acceleration"],
         )
 
@@ -148,6 +135,7 @@ class OptimizerEquations:
         Source: optimizers.py:105
         """
         return Equation(
+            id="optimizers.adam_biased_moments",
             name="Adam Moment Estimates (Biased)",
             latex=(
                 r"m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_t \\ "
@@ -166,7 +154,6 @@ class OptimizerEquations:
             citations=[
                 "Kingma, D. P., & Ba, J. (2014). Adam: A method for stochastic optimization. arXiv:1412.6980.",
             ],
-            source_line=105,
             concepts=["Adam", "moment estimate", "adaptive learning rate", "exponential moving average"],
         )
 
@@ -180,6 +167,7 @@ class OptimizerEquations:
         Source: optimizers.py:125
         """
         return Equation(
+            id="optimizers.adam_bias_correction",
             name="Adam Bias Correction",
             latex=(
                 r"\hat{m}_t = \frac{m_t}{1 - \beta_1^t} \\ "
@@ -199,7 +187,6 @@ class OptimizerEquations:
             citations=[
                 "Kingma, D. P., & Ba, J. (2014). Adam: A method for stochastic optimization. arXiv:1412.6980.",
             ],
-            source_line=125,
             concepts=["bias correction", "initialization bias", "unbiased estimator"],
         )
 
@@ -213,6 +200,7 @@ class OptimizerEquations:
         Source: optimizers.py:145
         """
         return Equation(
+            id="optimizers.adam_update",
             name="Adam Parameter Update",
             latex=(r"\theta_{t+1} = \theta_t - \alpha \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon}"),
             description=(
@@ -231,7 +219,6 @@ class OptimizerEquations:
                 "Kingma, D. P., & Ba, J. (2014). Adam: A method for stochastic optimization. arXiv:1412.6980.",
                 "Goodfellow, I., Bengio, Y., & Courville, A. (2016). Deep Learning. MIT Press. Chapter 8.",
             ],
-            source_line=145,
             concepts=["Adam", "adaptive learning rate", "per-parameter scaling", "parameter update"],
         )
 

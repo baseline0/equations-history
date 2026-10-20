@@ -1,6 +1,7 @@
 """Tests for autoencoder equations."""
 
 from equations_history.equations.autoencoders import AutoencoderEquations, get_all_equations
+from test_equations.source_check import assert_source_is_equation_call
 
 
 def test_deterministic_encoder_equation() -> None:
@@ -8,7 +9,7 @@ def test_deterministic_encoder_equation() -> None:
     eq = AutoencoderEquations.deterministic_encoder()
     assert eq.name == "Deterministic Encoder"
     assert "f_phi" in eq.latex or "f_\\phi" in eq.latex
-    assert eq.source_line == 40
+    assert_source_is_equation_call(eq)
     assert "encoder" in eq.concepts
     assert len(eq.citations) > 0
 
@@ -18,7 +19,7 @@ def test_deterministic_decoder_equation() -> None:
     eq = AutoencoderEquations.deterministic_decoder()
     assert eq.name == "Deterministic Decoder"
     assert "g_theta" in eq.latex or "g_\\theta" in eq.latex
-    assert eq.source_line == 55
+    assert_source_is_equation_call(eq)
     assert "decoder" in eq.concepts
 
 
@@ -27,7 +28,7 @@ def test_mse_reconstruction_loss() -> None:
     eq = AutoencoderEquations.mse_reconstruction_loss()
     assert eq.name == "MSE Reconstruction Loss"
     assert "MSE" in eq.latex or "mse" in eq.latex.lower()
-    assert eq.source_line == 70
+    assert_source_is_equation_call(eq)
     assert "loss" in eq.concepts
 
 
@@ -36,7 +37,7 @@ def test_bce_reconstruction_loss() -> None:
     eq = AutoencoderEquations.bce_reconstruction_loss()
     assert eq.name == "Binary Cross-Entropy Loss"
     assert "BCE" in eq.latex or "log" in eq.latex
-    assert eq.source_line == 85
+    assert_source_is_equation_call(eq)
     assert "cross-entropy" in eq.concepts
 
 
@@ -47,7 +48,7 @@ def test_vae_elbo() -> None:
     assert "ELBO" in eq.latex
     assert "KL" in eq.latex
     assert "VAE" in eq.concepts
-    assert eq.source_line == 105
+    assert_source_is_equation_call(eq)
 
 
 def test_vae_kl_divergence_gaussian() -> None:
@@ -56,7 +57,7 @@ def test_vae_kl_divergence_gaussian() -> None:
     assert "KL" in eq.name
     assert "Gaussian" in eq.name
     assert "KL divergence" in eq.concepts
-    assert eq.source_line == 125
+    assert_source_is_equation_call(eq)
 
 
 def test_reparameterization_trick() -> None:
@@ -89,5 +90,5 @@ def test_equation_metadata_completeness() -> None:
         assert eq.description, f"{name} missing description"
         assert eq.history, f"{name} missing history"
         assert eq.citations, f"{name} missing citations"
-        assert eq.source_line > 0, f"{name} missing source_line"
+        assert_source_is_equation_call(eq)
         assert eq.concepts, f"{name} missing concepts"

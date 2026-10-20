@@ -4,22 +4,9 @@ Source of truth for regularization mathematical definitions. Each equation
 includes narrative context (history, citations, practical use cases).
 """
 
-from dataclasses import dataclass
-
 import sympy as sp
 
-
-@dataclass
-class Equation:
-    """Container for an equation with metadata."""
-
-    name: str
-    latex: str
-    description: str
-    history: str
-    citations: list[str]
-    source_line: int
-    concepts: list[str]
+from equations_history.core import Equation
 
 
 class RegularizationEquations:
@@ -48,6 +35,7 @@ class RegularizationEquations:
         Source: regularization.py:40
         """
         return Equation(
+            id="regularization.dropout_training",
             name="Dropout (Training)",
             latex=(
                 r"z = h \odot m, \quad m_i \sim \text{Bernoulli}(p) \\ "
@@ -71,7 +59,6 @@ class RegularizationEquations:
                 "Srivastava, N., Hinton, G., Krizhevsky, A., Sutskever, I., & Salakhutdinov, R. (2014). "
                 "Dropout: A simple way to prevent neural networks from overfitting. JMLR, 15, 1929-1958.",
             ],
-            source_line=40,
             concepts=["dropout", "regularization", "ensemble", "co-adaptation", "inverted dropout"],
         )
 
@@ -85,6 +72,7 @@ class RegularizationEquations:
         Source: regularization.py:60
         """
         return Equation(
+            id="regularization.dropout_inference",
             name="Dropout (Inference)",
             latex=r"z_{\text{test}} = h",
             description="At inference: use all activations (no dropout). Approximates ensemble averaging.",
@@ -99,7 +87,6 @@ class RegularizationEquations:
                 "Srivastava, N., Hinton, G., Krizhevsky, A., Sutskever, I., & Salakhutdinov, R. (2014). "
                 "Dropout: A simple way to prevent neural networks from overfitting. JMLR, 15, 1929-1958.",
             ],
-            source_line=60,
             concepts=["dropout", "inference", "ensemble averaging", "test time"],
         )
 
@@ -113,6 +100,7 @@ class RegularizationEquations:
         Source: regularization.py:80
         """
         return Equation(
+            id="regularization.l2_regularization",
             name="L2 Regularization (Weight Decay)",
             latex=(
                 r"\mathcal{L}_{\text{reg}} = \mathcal{L}(y, \hat{y}) + \frac{\lambda}{2} \|W\|_2^2 = "
@@ -137,7 +125,6 @@ class RegularizationEquations:
                 "LeCun, Y., Bottou, L., Orr, G. B., & Müller, K. R. (1998). Efficient BackProp. "
                 "In Neural Networks: Tricks of the Trade.",
             ],
-            source_line=80,
             concepts=["L2 regularization", "weight decay", "Tikhonov", "overfitting prevention"],
         )
 
@@ -151,6 +138,7 @@ class RegularizationEquations:
         Source: regularization.py:105
         """
         return Equation(
+            id="regularization.batch_normalization_normalize",
             name="Batch Normalization (Normalization)",
             latex=(r"\hat{x}_i = \frac{x_i - \mu_{\text{batch}}}{\sqrt{\sigma_{\text{batch}}^2 + \epsilon}}"),
             description=(
@@ -167,7 +155,6 @@ class RegularizationEquations:
                 "Ioffe, S., & Szegedy, C. (2015). Batch normalization: Accelerating deep network training "
                 "by reducing internal covariate shift. ICML.",
             ],
-            source_line=105,
             concepts=["batch normalization", "normalization", "covariate shift", "standardization"],
         )
 
@@ -181,6 +168,7 @@ class RegularizationEquations:
         Source: regularization.py:125
         """
         return Equation(
+            id="regularization.batch_normalization_scale_shift",
             name="Batch Normalization (Scale and Shift)",
             latex=r"y_i = \gamma \hat{x}_i + \beta",
             description=(
@@ -198,7 +186,6 @@ class RegularizationEquations:
                 "Ioffe, S., & Szegedy, C. (2015). Batch normalization: Accelerating deep network training "
                 "by reducing internal covariate shift. ICML.",
             ],
-            source_line=125,
             concepts=["batch normalization", "learnable parameters", "scale", "shift", "affine transformation"],
         )
 
@@ -212,6 +199,7 @@ class RegularizationEquations:
         Source: regularization.py:145
         """
         return Equation(
+            id="regularization.batch_normalization_inference",
             name="Batch Normalization (Inference)",
             latex=(r"\hat{x}_i = \frac{x_i - \mu_{\text{running}}}{\sqrt{\sigma_{\text{running}}^2 + \epsilon}}"),
             description=(
@@ -230,7 +218,6 @@ class RegularizationEquations:
                 "Ioffe, S., & Szegedy, C. (2015). Batch normalization: Accelerating deep network training "
                 "by reducing internal covariate shift. ICML.",
             ],
-            source_line=145,
             concepts=["batch normalization", "inference", "running statistics", "exponential moving average"],
         )
 
