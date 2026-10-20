@@ -1,5 +1,6 @@
 """Equation definitions in SymPy with narrative context."""
 
+# Importing each topic module runs its @equation decorators, which fill the registry.
 from .autoencoders import AutoencoderEquations
 from .bert import BERTEquations
 from .diffusion import DiffusionEquations

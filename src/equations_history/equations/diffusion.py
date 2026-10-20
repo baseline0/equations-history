@@ -7,6 +7,7 @@ includes narrative context (history, citations, practical use cases).
 import sympy as sp
 
 from equations_history.core import Equation
+from equations_history.registry import equation, equations_for
 
 
 class DiffusionEquations:
@@ -25,6 +26,7 @@ class DiffusionEquations:
     epsilon = sp.Symbol("epsilon", real=True)  # Predicted noise
 
     @staticmethod
+    @equation("diffusion")
     def forward_process_markov() -> Equation:
         """Diffusion forward process: Markov chain adding noise over T steps.
 
@@ -59,6 +61,7 @@ class DiffusionEquations:
         )
 
     @staticmethod
+    @equation("diffusion")
     def forward_process_closed_form() -> Equation:
         """Forward process in closed form: directly sample x_t from x_0.
 
@@ -94,6 +97,7 @@ class DiffusionEquations:
         )
 
     @staticmethod
+    @equation("diffusion")
     def reverse_process() -> Equation:
         """Diffusion reverse process: learned denoising to generate samples.
 
@@ -125,6 +129,7 @@ class DiffusionEquations:
         )
 
     @staticmethod
+    @equation("diffusion")
     def noise_prediction_objective() -> Equation:
         """Diffusion training objective: predict noise in q(x_t|x_0).
 
@@ -160,6 +165,7 @@ class DiffusionEquations:
         )
 
     @staticmethod
+    @equation("diffusion")
     def score_matching() -> Equation:
         """Score matching: learn the score function (gradient of log probability).
 
@@ -198,6 +204,7 @@ class DiffusionEquations:
         )
 
     @staticmethod
+    @equation("diffusion")
     def variance_schedule() -> Equation:
         """Variance schedule β_t: hyperparameter controlling noise at each step.
 
@@ -234,6 +241,7 @@ class DiffusionEquations:
         )
 
     @staticmethod
+    @equation("diffusion")
     def classifier_free_guidance() -> Equation:
         """Classifier-free guidance: condition generation without training a classifier.
 
@@ -273,12 +281,4 @@ class DiffusionEquations:
 # Convenience exports
 def get_all_equations() -> dict[str, Equation]:
     """Return all diffusion model equations."""
-    return {
-        "forward_process_markov": DiffusionEquations.forward_process_markov(),
-        "forward_process_closed_form": DiffusionEquations.forward_process_closed_form(),
-        "reverse_process": DiffusionEquations.reverse_process(),
-        "noise_prediction_objective": DiffusionEquations.noise_prediction_objective(),
-        "score_matching": DiffusionEquations.score_matching(),
-        "variance_schedule": DiffusionEquations.variance_schedule(),
-        "classifier_free_guidance": DiffusionEquations.classifier_free_guidance(),
-    }
+    return equations_for("diffusion")

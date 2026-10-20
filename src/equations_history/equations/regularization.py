@@ -7,6 +7,7 @@ includes narrative context (history, citations, practical use cases).
 import sympy as sp
 
 from equations_history.core import Equation
+from equations_history.registry import equation, equations_for
 
 
 class RegularizationEquations:
@@ -26,6 +27,7 @@ class RegularizationEquations:
     epsilon = sp.Symbol("epsilon", real=True, positive=True)  # Small constant for numerical stability
 
     @staticmethod
+    @equation("regularization")
     def dropout_training() -> Equation:
         """Dropout during training: randomly zero activations with probability (1-p).
 
@@ -63,6 +65,7 @@ class RegularizationEquations:
         )
 
     @staticmethod
+    @equation("regularization")
     def dropout_inference() -> Equation:
         """Dropout at inference: use all units (expectation over ensemble).
 
@@ -91,6 +94,7 @@ class RegularizationEquations:
         )
 
     @staticmethod
+    @equation("regularization")
     def l2_regularization() -> Equation:
         """L2 regularization (weight decay): penalize large weights.
 
@@ -129,6 +133,7 @@ class RegularizationEquations:
         )
 
     @staticmethod
+    @equation("regularization")
     def batch_normalization_normalize() -> Equation:
         """Batch Normalization: normalize activations by batch statistics.
 
@@ -159,6 +164,7 @@ class RegularizationEquations:
         )
 
     @staticmethod
+    @equation("regularization")
     def batch_normalization_scale_shift() -> Equation:
         """Batch Normalization: learnable affine transformation.
 
@@ -190,6 +196,7 @@ class RegularizationEquations:
         )
 
     @staticmethod
+    @equation("regularization")
     def batch_normalization_inference() -> Equation:
         """Batch Normalization at inference: use running statistics.
 
@@ -225,11 +232,4 @@ class RegularizationEquations:
 # Convenience exports
 def get_all_equations() -> dict[str, Equation]:
     """Return all regularization equations."""
-    return {
-        "dropout_training": RegularizationEquations.dropout_training(),
-        "dropout_inference": RegularizationEquations.dropout_inference(),
-        "l2_regularization": RegularizationEquations.l2_regularization(),
-        "batch_normalization_normalize": RegularizationEquations.batch_normalization_normalize(),
-        "batch_normalization_scale_shift": RegularizationEquations.batch_normalization_scale_shift(),
-        "batch_normalization_inference": RegularizationEquations.batch_normalization_inference(),
-    }
+    return equations_for("regularization")

@@ -7,6 +7,7 @@ includes narrative context (history, citations, practical use cases).
 import sympy as sp
 
 from equations_history.core import Equation
+from equations_history.registry import equation, equations_for
 
 
 class LossFunctionEquations:
@@ -23,6 +24,7 @@ class LossFunctionEquations:
     K = sp.Symbol("K", real=True, positive=True, integer=True)  # Number of samples (Wasserstein)
 
     @staticmethod
+    @equation("loss_functions")
     def cross_entropy_binary() -> Equation:
         """Binary Cross-Entropy: classification loss for binary outcomes.
 
@@ -60,6 +62,7 @@ class LossFunctionEquations:
         )
 
     @staticmethod
+    @equation("loss_functions")
     def cross_entropy_multiclass() -> Equation:
         """Categorical Cross-Entropy: classification loss for multi-class problems.
 
@@ -94,6 +97,7 @@ class LossFunctionEquations:
         )
 
     @staticmethod
+    @equation("loss_functions")
     def kl_divergence() -> Equation:
         """Kullback-Leibler (KL) Divergence: measure of probability distribution divergence.
 
@@ -128,6 +132,7 @@ class LossFunctionEquations:
         )
 
     @staticmethod
+    @equation("loss_functions")
     def jensen_shannon_divergence() -> Equation:
         """Jensen-Shannon Divergence: symmetric, bounded KL divergence.
 
@@ -164,6 +169,7 @@ class LossFunctionEquations:
         )
 
     @staticmethod
+    @equation("loss_functions")
     def wasserstein_distance() -> Equation:
         """Wasserstein Distance (Optimal Transport): Earth Mover's Distance.
 
@@ -204,6 +210,7 @@ class LossFunctionEquations:
         )
 
     @staticmethod
+    @equation("loss_functions")
     def earth_mover_distance_discrete() -> Equation:
         """Wasserstein Distance for discrete distributions: EMD approximation.
 
@@ -245,11 +252,4 @@ class LossFunctionEquations:
 # Convenience exports
 def get_all_equations() -> dict[str, Equation]:
     """Return all loss function equations."""
-    return {
-        "cross_entropy_binary": LossFunctionEquations.cross_entropy_binary(),
-        "cross_entropy_multiclass": LossFunctionEquations.cross_entropy_multiclass(),
-        "kl_divergence": LossFunctionEquations.kl_divergence(),
-        "jensen_shannon_divergence": LossFunctionEquations.jensen_shannon_divergence(),
-        "wasserstein_distance": LossFunctionEquations.wasserstein_distance(),
-        "earth_mover_distance_discrete": LossFunctionEquations.earth_mover_distance_discrete(),
-    }
+    return equations_for("loss_functions")

@@ -7,6 +7,7 @@ includes narrative context (history, citations, practical use cases).
 import sympy as sp
 
 from equations_history.core import Equation
+from equations_history.registry import equation, equations_for
 
 
 class AutoencoderEquations:
@@ -24,6 +25,7 @@ class AutoencoderEquations:
     b_d = sp.Symbol("b_d", real=False)  # Decoder bias
 
     @staticmethod
+    @equation("autoencoders")
     def deterministic_encoder() -> Equation:
         """Deterministic encoder: z = f_φ(x).
 
@@ -54,6 +56,7 @@ class AutoencoderEquations:
         )
 
     @staticmethod
+    @equation("autoencoders")
     def deterministic_decoder() -> Equation:
         """Deterministic decoder: x̂ = g_θ(z).
 
@@ -76,6 +79,7 @@ class AutoencoderEquations:
         )
 
     @staticmethod
+    @equation("autoencoders")
     def mse_reconstruction_loss() -> Equation:
         """Mean Squared Error reconstruction loss.
 
@@ -101,6 +105,7 @@ class AutoencoderEquations:
         )
 
     @staticmethod
+    @equation("autoencoders")
     def bce_reconstruction_loss() -> Equation:
         """Binary Cross-Entropy reconstruction loss.
 
@@ -126,6 +131,7 @@ class AutoencoderEquations:
         )
 
     @staticmethod
+    @equation("autoencoders")
     def vae_elbo() -> Equation:
         """Variational Autoencoder: Evidence Lower Bound (ELBO).
 
@@ -159,6 +165,7 @@ class AutoencoderEquations:
         )
 
     @staticmethod
+    @equation("autoencoders")
     def vae_kl_divergence_gaussian() -> Equation:
         """VAE KL divergence for Gaussian encoder and prior.
 
@@ -190,6 +197,7 @@ class AutoencoderEquations:
         )
 
     @staticmethod
+    @equation("autoencoders")
     def reparameterization_trick() -> Equation:
         """Reparameterization trick: enable gradient flow through sampling.
 
@@ -219,12 +227,4 @@ class AutoencoderEquations:
 # Convenience exports
 def get_all_equations() -> dict[str, Equation]:
     """Return all autoencoder equations."""
-    return {
-        "deterministic_encoder": AutoencoderEquations.deterministic_encoder(),
-        "deterministic_decoder": AutoencoderEquations.deterministic_decoder(),
-        "mse_reconstruction_loss": AutoencoderEquations.mse_reconstruction_loss(),
-        "bce_reconstruction_loss": AutoencoderEquations.bce_reconstruction_loss(),
-        "vae_elbo": AutoencoderEquations.vae_elbo(),
-        "vae_kl_divergence_gaussian": AutoencoderEquations.vae_kl_divergence_gaussian(),
-        "reparameterization_trick": AutoencoderEquations.reparameterization_trick(),
-    }
+    return equations_for("autoencoders")

@@ -7,6 +7,7 @@ includes narrative context (history, citations, practical use cases).
 import sympy as sp
 
 from equations_history.core import Equation
+from equations_history.registry import equation, equations_for
 
 
 class OptimizerEquations:
@@ -24,6 +25,7 @@ class OptimizerEquations:
     epsilon = sp.Symbol("epsilon", real=True, positive=True)  # Small constant for numerical stability
 
     @staticmethod
+    @equation("optimizers")
     def sgd_update() -> Equation:
         """Stochastic Gradient Descent (SGD) update rule.
 
@@ -54,6 +56,7 @@ class OptimizerEquations:
         )
 
     @staticmethod
+    @equation("optimizers")
     def momentum_update() -> Equation:
         """Momentum: accumulate exponential moving average of gradients.
 
@@ -90,6 +93,7 @@ class OptimizerEquations:
         )
 
     @staticmethod
+    @equation("optimizers")
     def nesterov_momentum() -> Equation:
         """Nesterov Momentum: look ahead before applying gradient.
 
@@ -126,6 +130,7 @@ class OptimizerEquations:
         )
 
     @staticmethod
+    @equation("optimizers")
     def adam_biased_moments() -> Equation:
         """Adam: biased first and second moment estimates.
 
@@ -158,6 +163,7 @@ class OptimizerEquations:
         )
 
     @staticmethod
+    @equation("optimizers")
     def adam_bias_correction() -> Equation:
         """Adam: bias correction for moment estimates.
 
@@ -191,6 +197,7 @@ class OptimizerEquations:
         )
 
     @staticmethod
+    @equation("optimizers")
     def adam_update() -> Equation:
         """Adam: parameter update with adaptive learning rate.
 
@@ -226,11 +233,4 @@ class OptimizerEquations:
 # Convenience exports
 def get_all_equations() -> dict[str, Equation]:
     """Return all optimizer equations."""
-    return {
-        "sgd_update": OptimizerEquations.sgd_update(),
-        "momentum_update": OptimizerEquations.momentum_update(),
-        "nesterov_momentum": OptimizerEquations.nesterov_momentum(),
-        "adam_biased_moments": OptimizerEquations.adam_biased_moments(),
-        "adam_bias_correction": OptimizerEquations.adam_bias_correction(),
-        "adam_update": OptimizerEquations.adam_update(),
-    }
+    return equations_for("optimizers")

@@ -6,6 +6,7 @@ narrative context (history, citations, practical use cases).
 """
 
 from equations_history.core import Equation
+from equations_history.registry import equation, equations_for
 
 COVER_THOMAS = "Cover, T. M., & Thomas, J. A. (2006). Elements of Information Theory (2nd ed.). Wiley."
 
@@ -14,6 +15,7 @@ class EntropyEquations:
     """Entropy and information definitions: H, H(X|Y), H(X,Y), I(X;Y), D(P||Q), Jensen."""
 
     @staticmethod
+    @equation("entropy")
     def entropy() -> Equation:
         """Shannon entropy: expected surprisal of a discrete random variable X.
 
@@ -36,6 +38,7 @@ class EntropyEquations:
         )
 
     @staticmethod
+    @equation("entropy")
     def conditional_entropy() -> Equation:
         """Conditional entropy: remaining uncertainty in X once Y is known.
 
@@ -57,6 +60,7 @@ class EntropyEquations:
         )
 
     @staticmethod
+    @equation("entropy")
     def joint_entropy() -> Equation:
         """Joint entropy: uncertainty of the pair (X, Y).
 
@@ -80,6 +84,7 @@ class EntropyEquations:
         )
 
     @staticmethod
+    @equation("entropy")
     def mutual_information() -> Equation:
         """Mutual information: reduction in uncertainty of X from knowing Y.
 
@@ -103,6 +108,7 @@ class EntropyEquations:
         )
 
     @staticmethod
+    @equation("entropy")
     def relative_entropy() -> Equation:
         """Relative entropy (KL divergence) between distributions P and Q.
 
@@ -129,6 +135,7 @@ class EntropyEquations:
         )
 
     @staticmethod
+    @equation("entropy")
     def jensens_inequality() -> Equation:
         """Jensen's inequality: convex (concave) f applied to an expectation.
 
@@ -158,11 +165,4 @@ class EntropyEquations:
 # Convenience exports
 def get_all_equations() -> dict[str, Equation]:
     """Return all entropy and information equations."""
-    return {
-        "entropy": EntropyEquations.entropy(),
-        "conditional_entropy": EntropyEquations.conditional_entropy(),
-        "joint_entropy": EntropyEquations.joint_entropy(),
-        "mutual_information": EntropyEquations.mutual_information(),
-        "relative_entropy": EntropyEquations.relative_entropy(),
-        "jensens_inequality": EntropyEquations.jensens_inequality(),
-    }
+    return equations_for("entropy")

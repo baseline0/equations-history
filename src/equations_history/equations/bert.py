@@ -7,6 +7,7 @@ positional embeddings, and pretraining losses.
 import sympy as sp
 
 from equations_history.core import Equation
+from equations_history.registry import equation, equations_for
 
 
 class BERTEquations:
@@ -25,6 +26,7 @@ class BERTEquations:
     t = sp.Symbol("t", positive=True, integer=True)  # Position
 
     @staticmethod
+    @equation("bert")
     def scaled_dot_product_attention() -> Equation:
         """Scaled dot-product attention mechanism.
 
@@ -54,6 +56,7 @@ class BERTEquations:
         )
 
     @staticmethod
+    @equation("bert")
     def multi_head_attention() -> Equation:
         """Multi-head attention: concatenate multiple attention heads.
 
@@ -86,6 +89,7 @@ class BERTEquations:
         )
 
     @staticmethod
+    @equation("bert")
     def positional_encoding() -> Equation:
         """Positional encoding: sine/cosine positional embeddings.
 
@@ -121,6 +125,7 @@ class BERTEquations:
         )
 
     @staticmethod
+    @equation("bert")
     def masked_language_modeling_loss() -> Equation:
         """Masked Language Modeling (MLM) loss.
 
@@ -153,6 +158,7 @@ class BERTEquations:
         )
 
     @staticmethod
+    @equation("bert")
     def next_sentence_prediction_loss() -> Equation:
         """Next Sentence Prediction (NSP) loss (original BERT).
 
@@ -188,6 +194,7 @@ class BERTEquations:
         )
 
     @staticmethod
+    @equation("bert")
     def bert_total_pretraining_loss() -> Equation:
         """Total BERT pretraining loss (combining MLM and NSP).
 
@@ -218,6 +225,7 @@ class BERTEquations:
         )
 
     @staticmethod
+    @equation("bert")
     def bert_fine_tuning() -> Equation:
         """Fine-tuning strategy: add task-specific layer on top of [CLS] token.
 
@@ -253,12 +261,4 @@ class BERTEquations:
 # Convenience exports
 def get_all_equations() -> dict[str, Equation]:
     """Return all BERT equations."""
-    return {
-        "scaled_dot_product_attention": BERTEquations.scaled_dot_product_attention(),
-        "multi_head_attention": BERTEquations.multi_head_attention(),
-        "positional_encoding": BERTEquations.positional_encoding(),
-        "masked_language_modeling_loss": BERTEquations.masked_language_modeling_loss(),
-        "next_sentence_prediction_loss": BERTEquations.next_sentence_prediction_loss(),
-        "bert_total_pretraining_loss": BERTEquations.bert_total_pretraining_loss(),
-        "bert_fine_tuning": BERTEquations.bert_fine_tuning(),
-    }
+    return equations_for("bert")
