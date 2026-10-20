@@ -6,18 +6,18 @@ Auto-generated from Typer CLI commands. Endpoints mirror the CLI structure:
   GET /api/equations?explain=true
 """
 
+from typing import NamedTuple
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
+# Importing the package registers every topic module's equations.
+import equations_history.equations  # noqa: F401
 from equations_history.constants import REPO_ROOT
-from equations_history.equations.autoencoders import get_all_equations as get_ae_equations
-from equations_history.equations.bert import get_all_equations as get_bert_equations
-from equations_history.equations.diffusion import get_all_equations as get_diff_equations
-from equations_history.equations.loss_functions import get_all_equations as get_loss_equations
-from equations_history.equations.optimizers import get_all_equations as get_opt_equations
-from equations_history.equations.regularization import get_all_equations as get_reg_equations
+from equations_history.core import Equation
+from equations_history.registry import equations_for, topics
 from equations_history.shared_taxonomy.models import (
     TaxonomyIdentifier,
 )
@@ -111,33 +111,30 @@ async def health() -> dict:
     return {"status": "ok"}
 
 
-@app.get("/api/equations/autoencoder", response_model=dict[str, EquationResponse])
-async def list_autoencoder_equations(
-    explain: bool = False,
-) -> dict[str, EquationResponse]:
-    """List all autoencoder equations."""
-    equations = get_ae_equations()
-    return {
-        name: EquationResponse(
-            name=eq.name,
-            latex=eq.latex,
-            description=eq.description,
-            history=eq.history,
-            citations=eq.citations,
-            source=eq.source_label,
-            concepts=eq.concepts,
-        )
-        for name, eq in equations.items()
-    }
+class ApiRoute(NamedTuple):
+    """HTTP route segment and handler naming for one registry topic."""
+
+    segment: str
+    stem: str
+    label: str
 
 
-@app.get("/api/equations/autoencoder/{topic}", response_model=EquationResponse)
-async def get_autoencoder_equation(topic: str) -> EquationResponse:
-    """Get a specific autoencoder equation."""
-    equations = get_ae_equations()
-    if topic not in equations:
-        raise HTTPException(status_code=404, detail=f"Equation {topic} not found")
-    eq = equations[topic]
+# Routes exist only for the topics listed here. entropy has no HTTP routes.
+API_ROUTES: dict[str, ApiRoute] = {
+    "autoencoders": ApiRoute(segment="autoencoder", stem="autoencoder", label="autoencoder"),
+    "bert": ApiRoute(segment="bert", stem="bert", label="BERT"),
+    "optimizers": ApiRoute(segment="optimizers", stem="optimizer", label="optimizer"),
+    "regularization": ApiRoute(segment="regularization", stem="regularization", label="regularization"),
+    "loss_functions": ApiRoute(segment="loss-functions", stem="loss_function", label="loss function"),
+    "diffusion": ApiRoute(segment="diffusion", stem="diffusion", label="diffusion model"),
+}
+
+if not set(API_ROUTES) <= set(topics()):
+    raise RuntimeError(f"API_ROUTES names unregistered topics: {sorted(set(API_ROUTES) - set(topics()))}")
+
+
+def _to_response(eq: Equation) -> EquationResponse:
+    """Build the API response for one equation."""
     return EquationResponse(
         name=eq.name,
         latex=eq.latex,
@@ -149,194 +146,28 @@ async def get_autoencoder_equation(topic: str) -> EquationResponse:
     )
 
 
-@app.get("/api/equations/bert", response_model=dict[str, EquationResponse])
-async def list_bert_equations(
-    explain: bool = False,
-) -> dict[str, EquationResponse]:
-    """List all BERT equations."""
-    equations = get_bert_equations()
-    return {
-        name: EquationResponse(
-            name=eq.name,
-            latex=eq.latex,
-            description=eq.description,
-            history=eq.history,
-            citations=eq.citations,
-            source=eq.source_label,
-            concepts=eq.concepts,
-        )
-        for name, eq in equations.items()
-    }
+def _add_topic_routes(topic_key: str, route: ApiRoute) -> None:
+    """Register the list and single-equation GET routes for one topic."""
+
+    async def list_equations(explain: bool = False) -> dict[str, EquationResponse]:
+        return {name: _to_response(eq) for name, eq in equations_for(topic_key).items()}
+
+    async def get_equation(topic: str) -> EquationResponse:
+        equations = equations_for(topic_key)
+        if topic not in equations:
+            raise HTTPException(status_code=404, detail=f"Equation {topic} not found")
+        return _to_response(equations[topic])
+
+    list_equations.__name__ = f"list_{route.stem}_equations"
+    list_equations.__doc__ = f"List all {route.label} equations."
+    get_equation.__name__ = f"get_{route.stem}_equation"
+    get_equation.__doc__ = f"Get a specific {route.label} equation."
+    app.get(f"/api/equations/{route.segment}", response_model=dict[str, EquationResponse])(list_equations)
+    app.get(f"/api/equations/{route.segment}/{{topic}}", response_model=EquationResponse)(get_equation)
 
 
-@app.get("/api/equations/bert/{topic}", response_model=EquationResponse)
-async def get_bert_equation(topic: str) -> EquationResponse:
-    """Get a specific BERT equation."""
-    equations = get_bert_equations()
-    if topic not in equations:
-        raise HTTPException(status_code=404, detail=f"Equation {topic} not found")
-    eq = equations[topic]
-    return EquationResponse(
-        name=eq.name,
-        latex=eq.latex,
-        description=eq.description,
-        history=eq.history,
-        citations=eq.citations,
-        source=eq.source_label,
-        concepts=eq.concepts,
-    )
-
-
-@app.get("/api/equations/optimizers", response_model=dict[str, EquationResponse])
-async def list_optimizer_equations(
-    explain: bool = False,
-) -> dict[str, EquationResponse]:
-    """List all optimizer equations."""
-    equations = get_opt_equations()
-    return {
-        name: EquationResponse(
-            name=eq.name,
-            latex=eq.latex,
-            description=eq.description,
-            history=eq.history,
-            citations=eq.citations,
-            source=eq.source_label,
-            concepts=eq.concepts,
-        )
-        for name, eq in equations.items()
-    }
-
-
-@app.get("/api/equations/optimizers/{topic}", response_model=EquationResponse)
-async def get_optimizer_equation(topic: str) -> EquationResponse:
-    """Get a specific optimizer equation."""
-    equations = get_opt_equations()
-    if topic not in equations:
-        raise HTTPException(status_code=404, detail=f"Equation {topic} not found")
-    eq = equations[topic]
-    return EquationResponse(
-        name=eq.name,
-        latex=eq.latex,
-        description=eq.description,
-        history=eq.history,
-        citations=eq.citations,
-        source=eq.source_label,
-        concepts=eq.concepts,
-    )
-
-
-@app.get("/api/equations/regularization", response_model=dict[str, EquationResponse])
-async def list_regularization_equations(
-    explain: bool = False,
-) -> dict[str, EquationResponse]:
-    """List all regularization equations."""
-    equations = get_reg_equations()
-    return {
-        name: EquationResponse(
-            name=eq.name,
-            latex=eq.latex,
-            description=eq.description,
-            history=eq.history,
-            citations=eq.citations,
-            source=eq.source_label,
-            concepts=eq.concepts,
-        )
-        for name, eq in equations.items()
-    }
-
-
-@app.get("/api/equations/regularization/{topic}", response_model=EquationResponse)
-async def get_regularization_equation(topic: str) -> EquationResponse:
-    """Get a specific regularization equation."""
-    equations = get_reg_equations()
-    if topic not in equations:
-        raise HTTPException(status_code=404, detail=f"Equation {topic} not found")
-    eq = equations[topic]
-    return EquationResponse(
-        name=eq.name,
-        latex=eq.latex,
-        description=eq.description,
-        history=eq.history,
-        citations=eq.citations,
-        source=eq.source_label,
-        concepts=eq.concepts,
-    )
-
-
-@app.get("/api/equations/loss-functions", response_model=dict[str, EquationResponse])
-async def list_loss_function_equations(
-    explain: bool = False,
-) -> dict[str, EquationResponse]:
-    """List all loss function equations."""
-    equations = get_loss_equations()
-    return {
-        name: EquationResponse(
-            name=eq.name,
-            latex=eq.latex,
-            description=eq.description,
-            history=eq.history,
-            citations=eq.citations,
-            source=eq.source_label,
-            concepts=eq.concepts,
-        )
-        for name, eq in equations.items()
-    }
-
-
-@app.get("/api/equations/loss-functions/{topic}", response_model=EquationResponse)
-async def get_loss_function_equation(topic: str) -> EquationResponse:
-    """Get a specific loss function equation."""
-    equations = get_loss_equations()
-    if topic not in equations:
-        raise HTTPException(status_code=404, detail=f"Equation {topic} not found")
-    eq = equations[topic]
-    return EquationResponse(
-        name=eq.name,
-        latex=eq.latex,
-        description=eq.description,
-        history=eq.history,
-        citations=eq.citations,
-        source=eq.source_label,
-        concepts=eq.concepts,
-    )
-
-
-@app.get("/api/equations/diffusion", response_model=dict[str, EquationResponse])
-async def list_diffusion_equations(
-    explain: bool = False,
-) -> dict[str, EquationResponse]:
-    """List all diffusion model equations."""
-    equations = get_diff_equations()
-    return {
-        name: EquationResponse(
-            name=eq.name,
-            latex=eq.latex,
-            description=eq.description,
-            history=eq.history,
-            citations=eq.citations,
-            source=eq.source_label,
-            concepts=eq.concepts,
-        )
-        for name, eq in equations.items()
-    }
-
-
-@app.get("/api/equations/diffusion/{topic}", response_model=EquationResponse)
-async def get_diffusion_equation(topic: str) -> EquationResponse:
-    """Get a specific diffusion model equation."""
-    equations = get_diff_equations()
-    if topic not in equations:
-        raise HTTPException(status_code=404, detail=f"Equation {topic} not found")
-    eq = equations[topic]
-    return EquationResponse(
-        name=eq.name,
-        latex=eq.latex,
-        description=eq.description,
-        history=eq.history,
-        citations=eq.citations,
-        source=eq.source_label,
-        concepts=eq.concepts,
-    )
+for _topic_key, _route in API_ROUTES.items():
+    _add_topic_routes(_topic_key, _route)
 
 
 # ============================================================================

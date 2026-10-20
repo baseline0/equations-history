@@ -10,19 +10,20 @@ Commands mirror the equation structure:
   learn loss-functions           # List all loss function equations
   learn diffusion                # List all diffusion model equations
   learn entropy                  # List all entropy and information equations
+
+The per-topic commands are generated from the equation registry. TOPIC_CLI holds
+only the presentation for each topic (command name, headings, help text).
 """
 
+from dataclasses import dataclass
 from enum import StrEnum
 
 import typer
 
-from equations_history.equations.autoencoders import get_all_equations as get_ae_equations
-from equations_history.equations.bert import get_all_equations as get_bert_equations
-from equations_history.equations.diffusion import get_all_equations as get_diff_equations
-from equations_history.equations.entropy import get_all_equations as get_entropy_equations
-from equations_history.equations.loss_functions import get_all_equations as get_loss_equations
-from equations_history.equations.optimizers import get_all_equations as get_opt_equations
-from equations_history.equations.regularization import get_all_equations as get_reg_equations
+# Importing the package registers every topic module's equations.
+import equations_history.equations  # noqa: F401
+from equations_history.core import Equation
+from equations_history.registry import equations_for, topics
 
 
 class Toggle(StrEnum):
@@ -32,56 +33,108 @@ class Toggle(StrEnum):
     FALSE = "false"
 
 
+@dataclass(frozen=True)
+class TopicCLI:
+    """How one registry topic is presented on the command line."""
+
+    command: str
+    heading: str
+    banner: str
+    summary: str
+    topic_help: str
+
+
+EXPLAIN_HELP = "true: show all equations with full narrative; false: show one topic or list them"
+CITATIONS_HELP = "true: include citations for each equation; false: omit them"
+
+# Display order: the order of the commands in --help and of the sections in list-all.
+TOPIC_CLI: dict[str, TopicCLI] = {
+    "autoencoders": TopicCLI(
+        command="autoencoder",
+        heading="Autoencoder Equations",
+        banner="AUTOENCODERS",
+        summary="Autoencoder equations: deterministic and variational.",
+        topic_help="Specific equation (encoder, decoder, mse_loss, vae_elbo, etc.), or all to list every topic",
+    ),
+    "bert": TopicCLI(
+        command="bert",
+        heading="BERT Equations",
+        banner="BERT",
+        summary="BERT equations: scaled dot-product attention and masked language modeling.",
+        topic_help="Specific equation (attention, mlm, nsp, etc.), or all to list every topic",
+    ),
+    "optimizers": TopicCLI(
+        command="optimizers",
+        heading="Optimizer Equations",
+        banner="OPTIMIZERS",
+        summary="Optimizer equations: SGD, momentum, and Adam.",
+        topic_help="Specific equation (sgd_update, momentum_update, adam_update, etc.), or all to list every topic",
+    ),
+    "regularization": TopicCLI(
+        command="regularization",
+        heading="Regularization Equations",
+        banner="REGULARIZATION",
+        summary="Regularization equations: dropout, L2 penalty, and batch normalization.",
+        topic_help="Specific equation (dropout_training, l2_regularization, batch_normalization_normalize, etc.), or all to list every topic",
+    ),
+    "loss_functions": TopicCLI(
+        command="loss-functions",
+        heading="Loss Function Equations",
+        banner="LOSS FUNCTIONS",
+        summary="Loss function equations: cross-entropy, KL divergence, and Wasserstein distance.",
+        topic_help="Specific equation (cross_entropy_binary, kl_divergence, wasserstein_distance, etc.), or all to list every topic",
+    ),
+    "diffusion": TopicCLI(
+        command="diffusion",
+        heading="Diffusion Model Equations",
+        banner="DIFFUSION MODELS",
+        summary="Diffusion model equations: forward process, reverse process, and score matching.",
+        topic_help="Specific equation (forward_process_markov, reverse_process, noise_prediction_objective, etc.), or all to list every topic",
+    ),
+    "entropy": TopicCLI(
+        command="entropy",
+        heading="Entropy & Information Equations",
+        banner="ENTROPY & INFORMATION",
+        summary="Entropy and information equations: entropy, mutual information, KL divergence, Jensen's inequality.",
+        topic_help="Specific equation (entropy, conditional_entropy, joint_entropy, mutual_information, relative_entropy, jensens_inequality), or all to list every topic",
+    ),
+}
+
+if set(TOPIC_CLI) != set(topics()):
+    raise RuntimeError(f"TOPIC_CLI must cover exactly the registered topics: {sorted(set(TOPIC_CLI) ^ set(topics()))}")
+
 app = typer.Typer(help="equations-history: traceable, code-grounded equation narratives for learning ML math")
 
 
-@app.command()
-def autoencoder(
-    topic: str = typer.Option(
-        ...,
-        "--topic",
-        help="Specific equation (encoder, decoder, mse_loss, vae_elbo, etc.), or all to list every topic",
-    ),
-    explain: Toggle = typer.Option(
-        ...,
-        "--explain",
-        help="true: show all equations with full narrative; false: show one topic or list them",
-    ),
-    citations: Toggle = typer.Option(
-        ..., "--citations", help="true: include citations for each equation; false: omit them"
-    ),
-) -> None:
-    """Autoencoder equations: deterministic and variational."""
-    equations = get_ae_equations()
+def _echo_equation(eq: Equation, citations: Toggle, leading_newline: bool) -> None:
+    """Print one equation's fields; citations only when requested."""
+    prefix = "\n" if leading_newline else ""
+    typer.echo(f"{prefix}Name: {eq.name}")
+    typer.echo(f"LaTeX: {eq.latex}")
+    typer.echo(f"Description: {eq.description}")
+    typer.echo(f"History: {eq.history}")
+    if citations is Toggle.TRUE:
+        typer.echo("Citations:")
+        for cite in eq.citations:
+            typer.echo(f"  - {cite}")
+    typer.echo(f"Source: {eq.source_label}")
+    typer.echo(f"Concepts: {', '.join(eq.concepts)}")
+
+
+def _show_topic(topic_key: str, topic: str, explain: Toggle, citations: Toggle) -> None:
+    """Generic handler behind every per-topic command."""
+    presentation = TOPIC_CLI[topic_key]
+    equations = equations_for(topic_key)
 
     if explain is Toggle.TRUE:
         # Show all equations with full narrative
-        for name, eq in equations.items():
+        for eq in equations.values():
             typer.echo(f"\n{'=' * 70}")
-            typer.echo(f"Name: {eq.name}")
-            typer.echo(f"LaTeX: {eq.latex}")
-            typer.echo(f"Description: {eq.description}")
-            typer.echo(f"History: {eq.history}")
-            if citations is Toggle.TRUE:
-                typer.echo("Citations:")
-                for cite in eq.citations:
-                    typer.echo(f"  - {cite}")
-            typer.echo(f"Source: {eq.source_label}")
-            typer.echo(f"Concepts: {', '.join(eq.concepts)}")
+            _echo_equation(eq, citations, leading_newline=False)
     elif topic != "all":
         # Show specific equation
         if topic in equations:
-            eq = equations[topic]
-            typer.echo(f"\nName: {eq.name}")
-            typer.echo(f"LaTeX: {eq.latex}")
-            typer.echo(f"Description: {eq.description}")
-            typer.echo(f"History: {eq.history}")
-            if citations is Toggle.TRUE:
-                typer.echo("Citations:")
-                for cite in eq.citations:
-                    typer.echo(f"  - {cite}")
-            typer.echo(f"Source: {eq.source_label}")
-            typer.echo(f"Concepts: {', '.join(eq.concepts)}")
+            _echo_equation(equations[topic], citations, leading_newline=True)
         else:
             typer.echo(f"Unknown topic: {topic}", err=True)
             typer.echo("Available topics:", err=True)
@@ -90,434 +143,44 @@ def autoencoder(
             raise typer.Exit(1)
     else:
         # List all equations
-        typer.echo("\nAutoencoder Equations:")
+        typer.echo(f"\n{presentation.heading}:")
         for name, eq in equations.items():
             typer.echo(f"\n  {name}: {eq.name}")
             typer.echo(f"    Description: {eq.description[:70]}...")
 
 
-@app.command()
-def bert(
-    topic: str = typer.Option(
-        ..., "--topic", help="Specific equation (attention, mlm, nsp, etc.), or all to list every topic"
-    ),
-    explain: Toggle = typer.Option(
-        ...,
-        "--explain",
-        help="true: show all equations with full narrative; false: show one topic or list them",
-    ),
-    citations: Toggle = typer.Option(
-        ..., "--citations", help="true: include citations for each equation; false: omit them"
-    ),
-) -> None:
-    """BERT equations: scaled dot-product attention and masked language modeling."""
-    equations = get_bert_equations()
+def _register_topic_command(topic_key: str, presentation: TopicCLI) -> None:
+    """Add the typer command for one topic; its options and help come from TOPIC_CLI."""
 
-    if explain is Toggle.TRUE:
-        # Show all equations with full narrative
-        for name, eq in equations.items():
-            typer.echo(f"\n{'=' * 70}")
-            typer.echo(f"Name: {eq.name}")
-            typer.echo(f"LaTeX: {eq.latex}")
-            typer.echo(f"Description: {eq.description}")
-            typer.echo(f"History: {eq.history}")
-            if citations is Toggle.TRUE:
-                typer.echo("Citations:")
-                for cite in eq.citations:
-                    typer.echo(f"  - {cite}")
-            typer.echo(f"Source: {eq.source_label}")
-            typer.echo(f"Concepts: {', '.join(eq.concepts)}")
-    elif topic != "all":
-        # Show specific equation
-        if topic in equations:
-            eq = equations[topic]
-            typer.echo(f"\nName: {eq.name}")
-            typer.echo(f"LaTeX: {eq.latex}")
-            typer.echo(f"Description: {eq.description}")
-            typer.echo(f"History: {eq.history}")
-            if citations is Toggle.TRUE:
-                typer.echo("Citations:")
-                for cite in eq.citations:
-                    typer.echo(f"  - {cite}")
-            typer.echo(f"Source: {eq.source_label}")
-            typer.echo(f"Concepts: {', '.join(eq.concepts)}")
-        else:
-            typer.echo(f"Unknown topic: {topic}", err=True)
-            typer.echo("Available topics:", err=True)
-            for name in equations:
-                typer.echo(f"  - {name}", err=True)
-            raise typer.Exit(1)
-    else:
-        # List all equations
-        typer.echo("\nBERT Equations:")
-        for name, eq in equations.items():
-            typer.echo(f"\n  {name}: {eq.name}")
-            typer.echo(f"    Description: {eq.description[:70]}...")
+    def command(
+        topic: str = typer.Option(..., "--topic", help=presentation.topic_help),
+        explain: Toggle = typer.Option(
+            ...,
+            "--explain",
+            help="true: show all equations with full narrative; false: show one topic or list them",
+        ),
+        citations: Toggle = typer.Option(..., "--citations", help=CITATIONS_HELP),
+    ) -> None:
+        _show_topic(topic_key, topic, explain, citations)
+
+    command.__doc__ = presentation.summary
+    app.command(name=presentation.command)(command)
 
 
-@app.command()
-def optimizers(
-    topic: str = typer.Option(
-        ...,
-        "--topic",
-        help="Specific equation (sgd_update, momentum_update, adam_update, etc.), or all to list every topic",
-    ),
-    explain: Toggle = typer.Option(
-        ...,
-        "--explain",
-        help="true: show all equations with full narrative; false: show one topic or list them",
-    ),
-    citations: Toggle = typer.Option(
-        ..., "--citations", help="true: include citations for each equation; false: omit them"
-    ),
-) -> None:
-    """Optimizer equations: SGD, momentum, and Adam."""
-    equations = get_opt_equations()
-
-    if explain is Toggle.TRUE:
-        # Show all equations with full narrative
-        for name, eq in equations.items():
-            typer.echo(f"\n{'=' * 70}")
-            typer.echo(f"Name: {eq.name}")
-            typer.echo(f"LaTeX: {eq.latex}")
-            typer.echo(f"Description: {eq.description}")
-            typer.echo(f"History: {eq.history}")
-            if citations is Toggle.TRUE:
-                typer.echo("Citations:")
-                for cite in eq.citations:
-                    typer.echo(f"  - {cite}")
-            typer.echo(f"Source: {eq.source_label}")
-            typer.echo(f"Concepts: {', '.join(eq.concepts)}")
-    elif topic != "all":
-        # Show specific equation
-        if topic in equations:
-            eq = equations[topic]
-            typer.echo(f"\nName: {eq.name}")
-            typer.echo(f"LaTeX: {eq.latex}")
-            typer.echo(f"Description: {eq.description}")
-            typer.echo(f"History: {eq.history}")
-            if citations is Toggle.TRUE:
-                typer.echo("Citations:")
-                for cite in eq.citations:
-                    typer.echo(f"  - {cite}")
-            typer.echo(f"Source: {eq.source_label}")
-            typer.echo(f"Concepts: {', '.join(eq.concepts)}")
-        else:
-            typer.echo(f"Unknown topic: {topic}", err=True)
-            typer.echo("Available topics:", err=True)
-            for name in equations:
-                typer.echo(f"  - {name}", err=True)
-            raise typer.Exit(1)
-    else:
-        # List all equations
-        typer.echo("\nOptimizer Equations:")
-        for name, eq in equations.items():
-            typer.echo(f"\n  {name}: {eq.name}")
-            typer.echo(f"    Description: {eq.description[:70]}...")
-
-
-@app.command()
-def regularization(
-    topic: str = typer.Option(
-        ...,
-        "--topic",
-        help="Specific equation (dropout_training, l2_regularization, batch_normalization_normalize, etc.), or all to list every topic",
-    ),
-    explain: Toggle = typer.Option(
-        ...,
-        "--explain",
-        help="true: show all equations with full narrative; false: show one topic or list them",
-    ),
-    citations: Toggle = typer.Option(
-        ..., "--citations", help="true: include citations for each equation; false: omit them"
-    ),
-) -> None:
-    """Regularization equations: dropout, L2 penalty, and batch normalization."""
-    equations = get_reg_equations()
-
-    if explain is Toggle.TRUE:
-        # Show all equations with full narrative
-        for name, eq in equations.items():
-            typer.echo(f"\n{'=' * 70}")
-            typer.echo(f"Name: {eq.name}")
-            typer.echo(f"LaTeX: {eq.latex}")
-            typer.echo(f"Description: {eq.description}")
-            typer.echo(f"History: {eq.history}")
-            if citations is Toggle.TRUE:
-                typer.echo("Citations:")
-                for cite in eq.citations:
-                    typer.echo(f"  - {cite}")
-            typer.echo(f"Source: {eq.source_label}")
-            typer.echo(f"Concepts: {', '.join(eq.concepts)}")
-    elif topic != "all":
-        # Show specific equation
-        if topic in equations:
-            eq = equations[topic]
-            typer.echo(f"\nName: {eq.name}")
-            typer.echo(f"LaTeX: {eq.latex}")
-            typer.echo(f"Description: {eq.description}")
-            typer.echo(f"History: {eq.history}")
-            if citations is Toggle.TRUE:
-                typer.echo("Citations:")
-                for cite in eq.citations:
-                    typer.echo(f"  - {cite}")
-            typer.echo(f"Source: {eq.source_label}")
-            typer.echo(f"Concepts: {', '.join(eq.concepts)}")
-        else:
-            typer.echo(f"Unknown topic: {topic}", err=True)
-            typer.echo("Available topics:", err=True)
-            for name in equations:
-                typer.echo(f"  - {name}", err=True)
-            raise typer.Exit(1)
-    else:
-        # List all equations
-        typer.echo("\nRegularization Equations:")
-        for name, eq in equations.items():
-            typer.echo(f"\n  {name}: {eq.name}")
-            typer.echo(f"    Description: {eq.description[:70]}...")
-
-
-@app.command()
-def loss_functions(
-    topic: str = typer.Option(
-        ...,
-        "--topic",
-        help="Specific equation (cross_entropy_binary, kl_divergence, wasserstein_distance, etc.), or all to list every topic",
-    ),
-    explain: Toggle = typer.Option(
-        ...,
-        "--explain",
-        help="true: show all equations with full narrative; false: show one topic or list them",
-    ),
-    citations: Toggle = typer.Option(
-        ..., "--citations", help="true: include citations for each equation; false: omit them"
-    ),
-) -> None:
-    """Loss function equations: cross-entropy, KL divergence, and Wasserstein distance."""
-    equations = get_loss_equations()
-
-    if explain is Toggle.TRUE:
-        # Show all equations with full narrative
-        for name, eq in equations.items():
-            typer.echo(f"\n{'=' * 70}")
-            typer.echo(f"Name: {eq.name}")
-            typer.echo(f"LaTeX: {eq.latex}")
-            typer.echo(f"Description: {eq.description}")
-            typer.echo(f"History: {eq.history}")
-            if citations is Toggle.TRUE:
-                typer.echo("Citations:")
-                for cite in eq.citations:
-                    typer.echo(f"  - {cite}")
-            typer.echo(f"Source: {eq.source_label}")
-            typer.echo(f"Concepts: {', '.join(eq.concepts)}")
-    elif topic != "all":
-        # Show specific equation
-        if topic in equations:
-            eq = equations[topic]
-            typer.echo(f"\nName: {eq.name}")
-            typer.echo(f"LaTeX: {eq.latex}")
-            typer.echo(f"Description: {eq.description}")
-            typer.echo(f"History: {eq.history}")
-            if citations is Toggle.TRUE:
-                typer.echo("Citations:")
-                for cite in eq.citations:
-                    typer.echo(f"  - {cite}")
-            typer.echo(f"Source: {eq.source_label}")
-            typer.echo(f"Concepts: {', '.join(eq.concepts)}")
-        else:
-            typer.echo(f"Unknown topic: {topic}", err=True)
-            typer.echo("Available topics:", err=True)
-            for name in equations:
-                typer.echo(f"  - {name}", err=True)
-            raise typer.Exit(1)
-    else:
-        # List all equations
-        typer.echo("\nLoss Function Equations:")
-        for name, eq in equations.items():
-            typer.echo(f"\n  {name}: {eq.name}")
-            typer.echo(f"    Description: {eq.description[:70]}...")
-
-
-@app.command()
-def diffusion(
-    topic: str = typer.Option(
-        ...,
-        "--topic",
-        help="Specific equation (forward_process_markov, reverse_process, noise_prediction_objective, etc.), or all to list every topic",
-    ),
-    explain: Toggle = typer.Option(
-        ...,
-        "--explain",
-        help="true: show all equations with full narrative; false: show one topic or list them",
-    ),
-    citations: Toggle = typer.Option(
-        ..., "--citations", help="true: include citations for each equation; false: omit them"
-    ),
-) -> None:
-    """Diffusion model equations: forward process, reverse process, and score matching."""
-    equations = get_diff_equations()
-
-    if explain is Toggle.TRUE:
-        # Show all equations with full narrative
-        for name, eq in equations.items():
-            typer.echo(f"\n{'=' * 70}")
-            typer.echo(f"Name: {eq.name}")
-            typer.echo(f"LaTeX: {eq.latex}")
-            typer.echo(f"Description: {eq.description}")
-            typer.echo(f"History: {eq.history}")
-            if citations is Toggle.TRUE:
-                typer.echo("Citations:")
-                for cite in eq.citations:
-                    typer.echo(f"  - {cite}")
-            typer.echo(f"Source: {eq.source_label}")
-            typer.echo(f"Concepts: {', '.join(eq.concepts)}")
-    elif topic != "all":
-        # Show specific equation
-        if topic in equations:
-            eq = equations[topic]
-            typer.echo(f"\nName: {eq.name}")
-            typer.echo(f"LaTeX: {eq.latex}")
-            typer.echo(f"Description: {eq.description}")
-            typer.echo(f"History: {eq.history}")
-            if citations is Toggle.TRUE:
-                typer.echo("Citations:")
-                for cite in eq.citations:
-                    typer.echo(f"  - {cite}")
-            typer.echo(f"Source: {eq.source_label}")
-            typer.echo(f"Concepts: {', '.join(eq.concepts)}")
-        else:
-            typer.echo(f"Unknown topic: {topic}", err=True)
-            typer.echo("Available topics:", err=True)
-            for name in equations:
-                typer.echo(f"  - {name}", err=True)
-            raise typer.Exit(1)
-    else:
-        # List all equations
-        typer.echo("\nDiffusion Model Equations:")
-        for name, eq in equations.items():
-            typer.echo(f"\n  {name}: {eq.name}")
-            typer.echo(f"    Description: {eq.description[:70]}...")
-
-
-@app.command()
-def entropy(
-    topic: str = typer.Option(
-        ...,
-        "--topic",
-        help="Specific equation (entropy, conditional_entropy, joint_entropy, mutual_information, relative_entropy, jensens_inequality), or all to list every topic",
-    ),
-    explain: Toggle = typer.Option(
-        ...,
-        "--explain",
-        help="true: show all equations with full narrative; false: show one topic or list them",
-    ),
-    citations: Toggle = typer.Option(
-        ..., "--citations", help="true: include citations for each equation; false: omit them"
-    ),
-) -> None:
-    """Entropy and information equations: entropy, mutual information, KL divergence, Jensen's inequality."""
-    equations = get_entropy_equations()
-
-    if explain is Toggle.TRUE:
-        # Show all equations with full narrative
-        for name, eq in equations.items():
-            typer.echo(f"\n{'=' * 70}")
-            typer.echo(f"Name: {eq.name}")
-            typer.echo(f"LaTeX: {eq.latex}")
-            typer.echo(f"Description: {eq.description}")
-            typer.echo(f"History: {eq.history}")
-            if citations is Toggle.TRUE:
-                typer.echo("Citations:")
-                for cite in eq.citations:
-                    typer.echo(f"  - {cite}")
-            typer.echo(f"Source: {eq.source_label}")
-            typer.echo(f"Concepts: {', '.join(eq.concepts)}")
-    elif topic != "all":
-        # Show specific equation
-        if topic in equations:
-            eq = equations[topic]
-            typer.echo(f"\nName: {eq.name}")
-            typer.echo(f"LaTeX: {eq.latex}")
-            typer.echo(f"Description: {eq.description}")
-            typer.echo(f"History: {eq.history}")
-            if citations is Toggle.TRUE:
-                typer.echo("Citations:")
-                for cite in eq.citations:
-                    typer.echo(f"  - {cite}")
-            typer.echo(f"Source: {eq.source_label}")
-            typer.echo(f"Concepts: {', '.join(eq.concepts)}")
-        else:
-            typer.echo(f"Unknown topic: {topic}", err=True)
-            typer.echo("Available topics:", err=True)
-            for name in equations:
-                typer.echo(f"  - {name}", err=True)
-            raise typer.Exit(1)
-    else:
-        # List all equations
-        typer.echo("\nEntropy & Information Equations:")
-        for name, eq in equations.items():
-            typer.echo(f"\n  {name}: {eq.name}")
-            typer.echo(f"    Description: {eq.description[:70]}...")
+for _topic_key, _presentation in TOPIC_CLI.items():
+    _register_topic_command(_topic_key, _presentation)
 
 
 @app.command()
 def list_all() -> None:
     """List all available equations across all topics."""
-    typer.echo("\n" + "=" * 70)
-    typer.echo("AUTOENCODERS")
-    typer.echo("=" * 70)
-    ae_eqs = get_ae_equations()
-    for name, eq in ae_eqs.items():
-        typer.echo(f"\n  {name}: {eq.name}")
-        typer.echo(f"    {eq.description}")
-
-    typer.echo("\n" + "=" * 70)
-    typer.echo("BERT")
-    typer.echo("=" * 70)
-    bert_eqs = get_bert_equations()
-    for name, eq in bert_eqs.items():
-        typer.echo(f"\n  {name}: {eq.name}")
-        typer.echo(f"    {eq.description}")
-
-    typer.echo("\n" + "=" * 70)
-    typer.echo("OPTIMIZERS")
-    typer.echo("=" * 70)
-    opt_eqs = get_opt_equations()
-    for name, eq in opt_eqs.items():
-        typer.echo(f"\n  {name}: {eq.name}")
-        typer.echo(f"    {eq.description}")
-
-    typer.echo("\n" + "=" * 70)
-    typer.echo("REGULARIZATION")
-    typer.echo("=" * 70)
-    reg_eqs = get_reg_equations()
-    for name, eq in reg_eqs.items():
-        typer.echo(f"\n  {name}: {eq.name}")
-        typer.echo(f"    {eq.description}")
-
-    typer.echo("\n" + "=" * 70)
-    typer.echo("LOSS FUNCTIONS")
-    typer.echo("=" * 70)
-    loss_eqs = get_loss_equations()
-    for name, eq in loss_eqs.items():
-        typer.echo(f"\n  {name}: {eq.name}")
-        typer.echo(f"    {eq.description}")
-
-    typer.echo("\n" + "=" * 70)
-    typer.echo("DIFFUSION MODELS")
-    typer.echo("=" * 70)
-    diff_eqs = get_diff_equations()
-    for name, eq in diff_eqs.items():
-        typer.echo(f"\n  {name}: {eq.name}")
-        typer.echo(f"    {eq.description}")
-
-    typer.echo("\n" + "=" * 70)
-    typer.echo("ENTROPY & INFORMATION")
-    typer.echo("=" * 70)
-    entropy_eqs = get_entropy_equations()
-    for name, ent_eq in entropy_eqs.items():
-        typer.echo(f"\n  {name}: {ent_eq.name}")
-        typer.echo(f"    {ent_eq.description}")
+    for topic_key, presentation in TOPIC_CLI.items():
+        typer.echo("\n" + "=" * 70)
+        typer.echo(presentation.banner)
+        typer.echo("=" * 70)
+        for name, eq in equations_for(topic_key).items():
+            typer.echo(f"\n  {name}: {eq.name}")
+            typer.echo(f"    {eq.description}")
 
 
 if __name__ == "__main__":
