@@ -162,10 +162,10 @@ async function displayEquation(key) {
 
             <div class="equation-metadata">
                 <div class="metadata-item">
-                    <div class="metadata-label">Source Line</div>
+                    <div class="metadata-label">Source</div>
                     <div class="metadata-value">
-                        <a href="#" class="source-link" data-line="${equation.source_line}">
-                            equations/${state.currentTopic}.py:${equation.source_line}
+                        <a href="#" class="source-link" data-line="${equation.source.split(':').pop()}">
+                            equations/${equation.source}
                         </a>
                     </div>
                 </div>

@@ -52,7 +52,7 @@ class EquationResponse(BaseModel):
     description: str
     history: str
     citations: list[str]
-    source_line: int
+    source: str
     concepts: list[str]
 
 
@@ -124,7 +124,7 @@ async def list_autoencoder_equations(
             description=eq.description,
             history=eq.history,
             citations=eq.citations,
-            source_line=eq.source_line,
+            source=eq.source_label,
             concepts=eq.concepts,
         )
         for name, eq in equations.items()
@@ -144,7 +144,7 @@ async def get_autoencoder_equation(topic: str) -> EquationResponse:
         description=eq.description,
         history=eq.history,
         citations=eq.citations,
-        source_line=eq.source_line,
+        source=eq.source_label,
         concepts=eq.concepts,
     )
 
@@ -162,7 +162,7 @@ async def list_bert_equations(
             description=eq.description,
             history=eq.history,
             citations=eq.citations,
-            source_line=eq.source_line,
+            source=eq.source_label,
             concepts=eq.concepts,
         )
         for name, eq in equations.items()
@@ -182,7 +182,7 @@ async def get_bert_equation(topic: str) -> EquationResponse:
         description=eq.description,
         history=eq.history,
         citations=eq.citations,
-        source_line=eq.source_line,
+        source=eq.source_label,
         concepts=eq.concepts,
     )
 
@@ -200,7 +200,7 @@ async def list_optimizer_equations(
             description=eq.description,
             history=eq.history,
             citations=eq.citations,
-            source_line=eq.source_line,
+            source=eq.source_label,
             concepts=eq.concepts,
         )
         for name, eq in equations.items()
@@ -220,7 +220,7 @@ async def get_optimizer_equation(topic: str) -> EquationResponse:
         description=eq.description,
         history=eq.history,
         citations=eq.citations,
-        source_line=eq.source_line,
+        source=eq.source_label,
         concepts=eq.concepts,
     )
 
@@ -238,7 +238,7 @@ async def list_regularization_equations(
             description=eq.description,
             history=eq.history,
             citations=eq.citations,
-            source_line=eq.source_line,
+            source=eq.source_label,
             concepts=eq.concepts,
         )
         for name, eq in equations.items()
@@ -258,7 +258,7 @@ async def get_regularization_equation(topic: str) -> EquationResponse:
         description=eq.description,
         history=eq.history,
         citations=eq.citations,
-        source_line=eq.source_line,
+        source=eq.source_label,
         concepts=eq.concepts,
     )
 
@@ -276,7 +276,7 @@ async def list_loss_function_equations(
             description=eq.description,
             history=eq.history,
             citations=eq.citations,
-            source_line=eq.source_line,
+            source=eq.source_label,
             concepts=eq.concepts,
         )
         for name, eq in equations.items()
@@ -296,7 +296,7 @@ async def get_loss_function_equation(topic: str) -> EquationResponse:
         description=eq.description,
         history=eq.history,
         citations=eq.citations,
-        source_line=eq.source_line,
+        source=eq.source_label,
         concepts=eq.concepts,
     )
 
@@ -314,7 +314,7 @@ async def list_diffusion_equations(
             description=eq.description,
             history=eq.history,
             citations=eq.citations,
-            source_line=eq.source_line,
+            source=eq.source_label,
             concepts=eq.concepts,
         )
         for name, eq in equations.items()
@@ -334,7 +334,7 @@ async def get_diffusion_equation(topic: str) -> EquationResponse:
         description=eq.description,
         history=eq.history,
         citations=eq.citations,
-        source_line=eq.source_line,
+        source=eq.source_label,
         concepts=eq.concepts,
     )
 

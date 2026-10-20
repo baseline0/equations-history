@@ -66,7 +66,7 @@ def autoencoder(
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
-            typer.echo(f"Source line: {eq.source_line}")
+            typer.echo(f"Source: {eq.source_label}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
     elif topic != "all":
         # Show specific equation
@@ -80,7 +80,7 @@ def autoencoder(
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
-            typer.echo(f"Source line: {eq.source_line}")
+            typer.echo(f"Source: {eq.source_label}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
         else:
             typer.echo(f"Unknown topic: {topic}", err=True)
@@ -125,7 +125,7 @@ def bert(
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
-            typer.echo(f"Source line: {eq.source_line}")
+            typer.echo(f"Source: {eq.source_label}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
     elif topic != "all":
         # Show specific equation
@@ -139,7 +139,7 @@ def bert(
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
-            typer.echo(f"Source line: {eq.source_line}")
+            typer.echo(f"Source: {eq.source_label}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
         else:
             typer.echo(f"Unknown topic: {topic}", err=True)
@@ -186,7 +186,7 @@ def optimizers(
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
-            typer.echo(f"Source line: {eq.source_line}")
+            typer.echo(f"Source: {eq.source_label}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
     elif topic != "all":
         # Show specific equation
@@ -200,7 +200,7 @@ def optimizers(
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
-            typer.echo(f"Source line: {eq.source_line}")
+            typer.echo(f"Source: {eq.source_label}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
         else:
             typer.echo(f"Unknown topic: {topic}", err=True)
@@ -247,7 +247,7 @@ def regularization(
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
-            typer.echo(f"Source line: {eq.source_line}")
+            typer.echo(f"Source: {eq.source_label}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
     elif topic != "all":
         # Show specific equation
@@ -261,7 +261,7 @@ def regularization(
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
-            typer.echo(f"Source line: {eq.source_line}")
+            typer.echo(f"Source: {eq.source_label}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
         else:
             typer.echo(f"Unknown topic: {topic}", err=True)
@@ -308,7 +308,7 @@ def loss_functions(
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
-            typer.echo(f"Source line: {eq.source_line}")
+            typer.echo(f"Source: {eq.source_label}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
     elif topic != "all":
         # Show specific equation
@@ -322,7 +322,7 @@ def loss_functions(
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
-            typer.echo(f"Source line: {eq.source_line}")
+            typer.echo(f"Source: {eq.source_label}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
         else:
             typer.echo(f"Unknown topic: {topic}", err=True)
@@ -369,7 +369,7 @@ def diffusion(
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
-            typer.echo(f"Source line: {eq.source_line}")
+            typer.echo(f"Source: {eq.source_label}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
     elif topic != "all":
         # Show specific equation
@@ -383,7 +383,7 @@ def diffusion(
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
-            typer.echo(f"Source line: {eq.source_line}")
+            typer.echo(f"Source: {eq.source_label}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
         else:
             typer.echo(f"Unknown topic: {topic}", err=True)
@@ -430,7 +430,7 @@ def entropy(
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
-            typer.echo(f"Source line: {eq.source_line}")
+            typer.echo(f"Source: {eq.source_label}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
     elif topic != "all":
         # Show specific equation
@@ -444,7 +444,7 @@ def entropy(
                 typer.echo("Citations:")
                 for cite in eq.citations:
                     typer.echo(f"  - {cite}")
-            typer.echo(f"Source line: {eq.source_line}")
+            typer.echo(f"Source: {eq.source_label}")
             typer.echo(f"Concepts: {', '.join(eq.concepts)}")
         else:
             typer.echo(f"Unknown topic: {topic}", err=True)
