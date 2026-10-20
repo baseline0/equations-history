@@ -9,6 +9,7 @@ Commands mirror the equation structure:
   learn regularization           # List all regularization equations
   learn loss-functions           # List all loss function equations
   learn diffusion                # List all diffusion model equations
+  learn entropy                  # List all entropy and information equations
 """
 
 from enum import StrEnum
@@ -18,6 +19,7 @@ import typer
 from equations_history.equations.autoencoders import get_all_equations as get_ae_equations
 from equations_history.equations.bert import get_all_equations as get_bert_equations
 from equations_history.equations.diffusion import get_all_equations as get_diff_equations
+from equations_history.equations.entropy import get_all_equations as get_entropy_equations
 from equations_history.equations.loss_functions import get_all_equations as get_loss_equations
 from equations_history.equations.optimizers import get_all_equations as get_opt_equations
 from equations_history.equations.regularization import get_all_equations as get_reg_equations
@@ -398,6 +400,67 @@ def diffusion(
 
 
 @app.command()
+def entropy(
+    topic: str = typer.Option(
+        ...,
+        "--topic",
+        help="Specific equation (entropy, conditional_entropy, joint_entropy, mutual_information, relative_entropy, jensens_inequality), or all to list every topic",
+    ),
+    explain: Toggle = typer.Option(
+        ...,
+        "--explain",
+        help="true: show all equations with full narrative; false: show one topic or list them",
+    ),
+    citations: Toggle = typer.Option(
+        ..., "--citations", help="true: include citations for each equation; false: omit them"
+    ),
+) -> None:
+    """Entropy and information equations: entropy, mutual information, KL divergence, Jensen's inequality."""
+    equations = get_entropy_equations()
+
+    if explain is Toggle.TRUE:
+        # Show all equations with full narrative
+        for name, eq in equations.items():
+            typer.echo(f"\n{'=' * 70}")
+            typer.echo(f"Name: {eq.name}")
+            typer.echo(f"LaTeX: {eq.latex}")
+            typer.echo(f"Description: {eq.description}")
+            typer.echo(f"History: {eq.history}")
+            if citations is Toggle.TRUE:
+                typer.echo("Citations:")
+                for cite in eq.citations:
+                    typer.echo(f"  - {cite}")
+            typer.echo(f"Source line: {eq.source_line}")
+            typer.echo(f"Concepts: {', '.join(eq.concepts)}")
+    elif topic != "all":
+        # Show specific equation
+        if topic in equations:
+            eq = equations[topic]
+            typer.echo(f"\nName: {eq.name}")
+            typer.echo(f"LaTeX: {eq.latex}")
+            typer.echo(f"Description: {eq.description}")
+            typer.echo(f"History: {eq.history}")
+            if citations is Toggle.TRUE:
+                typer.echo("Citations:")
+                for cite in eq.citations:
+                    typer.echo(f"  - {cite}")
+            typer.echo(f"Source line: {eq.source_line}")
+            typer.echo(f"Concepts: {', '.join(eq.concepts)}")
+        else:
+            typer.echo(f"Unknown topic: {topic}", err=True)
+            typer.echo("Available topics:", err=True)
+            for name in equations:
+                typer.echo(f"  - {name}", err=True)
+            raise typer.Exit(1)
+    else:
+        # List all equations
+        typer.echo("\nEntropy & Information Equations:")
+        for name, eq in equations.items():
+            typer.echo(f"\n  {name}: {eq.name}")
+            typer.echo(f"    Description: {eq.description[:70]}...")
+
+
+@app.command()
 def list_all() -> None:
     """List all available equations across all topics."""
     typer.echo("\n" + "=" * 70)
@@ -447,6 +510,14 @@ def list_all() -> None:
     for name, eq in diff_eqs.items():
         typer.echo(f"\n  {name}: {eq.name}")
         typer.echo(f"    {eq.description}")
+
+    typer.echo("\n" + "=" * 70)
+    typer.echo("ENTROPY & INFORMATION")
+    typer.echo("=" * 70)
+    entropy_eqs = get_entropy_equations()
+    for name, ent_eq in entropy_eqs.items():
+        typer.echo(f"\n  {name}: {ent_eq.name}")
+        typer.echo(f"    {ent_eq.description}")
 
 
 if __name__ == "__main__":

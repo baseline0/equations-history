@@ -20,12 +20,12 @@ This document catalogs high-value topics to add to equations-history, with curat
 #### Phase 5a: Entropy & Information (Chapter 2)
 **Why:** Foundation for VAE KL divergence and mutual information bounds.
 
-- [ ] **Entropy** — H(X) = -∑ p(x) log p(x)
-- [ ] **Conditional Entropy** — H(X|Y)
-- [ ] **Joint Entropy** — H(X,Y)
-- [ ] **Mutual Information** — I(X;Y) = H(X) - H(X|Y)
-- [ ] **Relative Entropy (KL Divergence)** — D(P||Q) = ∑ P(x) log(P(x)/Q(x))
-- [ ] **Jensen's Inequality** — For concave functions (foundation for many bounds)
+- [x] **Entropy** — H(X) = -∑ p(x) log p(x)
+- [x] **Conditional Entropy** — H(X|Y)
+- [x] **Joint Entropy** — H(X,Y)
+- [x] **Mutual Information** — I(X;Y) = H(X) - H(X|Y)
+- [x] **Relative Entropy (KL Divergence)** — D(P||Q) = ∑ P(x) log(P(x)/Q(x))
+- [x] **Jensen's Inequality** — For concave functions (foundation for many bounds)
 
 **Cross-links to ML:**
 - KL divergence in VAE ELBO (already covered)
