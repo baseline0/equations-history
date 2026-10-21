@@ -140,7 +140,7 @@ Response format:
   "description": "Core attention mechanism...",
   "history": "Introduced in 'Attention is All You Need' (Vaswani et al., 2017)...",
   "citations": ["Vaswani et al. (2017)..."],
-  "source_line": 30,
+  "source": "attention.py:30",
   "concepts": ["attention", "self-attention", "transformer"]
 }
 ```
@@ -179,18 +179,18 @@ It's a **learning tool for practitioners** who want to understand not just *what
 
 ## Roadmap
 
-**Phase 1 (Current):** Foundation  
+**Phase 1 (Current):** Foundation\
 - ✅ SymPy definitions for autoencoders + BERT
 - ✅ CLI + FastAPI endpoints
 - ✅ Test suite
 - 📋 Static narratives + README
 
-**Phase 2:** Interactive web UI  
+**Phase 2:** Interactive web UI\
 - Light visualizations (latent space explorer, attention heatmap)
 - Terminal-like navigation (tabs/arrows)
 - Mobile-responsive design
 
-**Phase 3:** Advanced features (deferred)  
+**Phase 3:** Advanced features (deferred)\
 - Lean formalization (optional)
 - More topics (optimizers, regularization, diffusion models)
 - Interactive derivations with exercises
