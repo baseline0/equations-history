@@ -8,6 +8,7 @@ when code moves.
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
+from types import FrameType
 
 # Frames from this file (__post_init__) and from the dataclass-generated
 # __init__ (compiled from "<string>") are skipped when locating the caller.
@@ -34,10 +35,13 @@ class Equation:
 
     def __post_init__(self) -> None:
         """Record (filename, lineno) of the code that constructed this equation."""
-        frame = sys._getframe(1)
-        while frame.f_code.co_filename in _INTERNAL_FILENAMES:
+        frame: FrameType | None = sys._getframe(1)
+        while frame is not None and frame.f_code.co_filename in _INTERNAL_FILENAMES:
             frame = frame.f_back
-        self.source = (frame.f_code.co_filename, frame.f_lineno)
+        if frame is None:
+            self.source = ("<unknown>", 0)
+        else:
+            self.source = (frame.f_code.co_filename, frame.f_lineno)
 
     @property
     def source_label(self) -> str:

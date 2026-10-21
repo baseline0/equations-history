@@ -97,7 +97,7 @@ class RelatedEquationResponse(BaseModel):
 class TaxonomyResponse(BaseModel):
     """Taxonomic classification of an equation."""
 
-    mathematical_form: dict[str, str | None] = Field(default_factory=dict)
+    mathematical_form: dict[str, str | int | None] = Field(default_factory=dict)
     physical_role: list[str] = Field(default_factory=list)
     structural_features: list[str] = Field(default_factory=list)
     domain: str
@@ -106,7 +106,7 @@ class TaxonomyResponse(BaseModel):
 
 
 @app.get("/health")
-async def health() -> dict:
+async def health() -> dict[str, str]:
     """Health check endpoint."""
     return {"status": "ok"}
 

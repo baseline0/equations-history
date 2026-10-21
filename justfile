@@ -20,7 +20,7 @@ set shell := ["bash", "-c"]
     uv run ruff check src/ tests/ --fix
 
 @check:
-    uv run mypy src/ --strict
+    uv run --extra dev mypy src/ --strict
     uv run ruff check src/ tests/
 
 # Pyright ratchet: fails if any file has more errors than pyright-baseline.json records

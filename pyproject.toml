@@ -39,6 +39,11 @@ strict = true
 warn_return_any = true
 warn_unused_configs = true
 
+# sympy ships no type information, so its imports are untyped by design.
+[[tool.mypy.overrides]]
+module = ["sympy"]
+ignore_missing_imports = true
+
 [tool.ruff]
 line-length = 120
 target-version = "py313"
