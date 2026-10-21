@@ -15,8 +15,10 @@ The per-topic commands are generated from the equation registry. TOPIC_CLI holds
 only the presentation for each topic (command name, headings, help text).
 """
 
+import json
 from dataclasses import dataclass
 from enum import StrEnum
+from pathlib import Path
 
 import typer
 
@@ -24,6 +26,8 @@ import typer
 import equations_history.equations  # noqa: F401
 from equations_history.core import Equation
 from equations_history.registry import equations_for, topics
+from equations_history.timeline import ExportError, build_timeline, render
+from equations_history.timeline import as_json as as_json_payload
 
 
 class Toggle(StrEnum):
@@ -181,6 +185,27 @@ def list_all() -> None:
         for name, eq in equations_for(topic_key).items():
             typer.echo(f"\n  {name}: {eq.name}")
             typer.echo(f"    {eq.description}")
+
+
+@app.command()
+def timeline(
+    export: Path = typer.Option(..., "--export", help="The knowledge export (collected.json) from tool-lit-review."),
+    paper: str = typer.Option(..., "--paper", help="Comma-separated versioned arXiv ids, for example 2609.16108v1."),
+    as_json: bool = typer.Option(  # typer-explicit: allow-optional: JSON output is opt-in
+        False, "--json", help="Print the timeline as JSON instead of text."
+    ),
+) -> None:
+    """Timeline of the equations collected from the chosen papers, dated by publication, unknown dates last."""
+    chosen = {item.strip() for item in paper.split(",") if item.strip()}
+    try:
+        result = build_timeline(export, chosen)
+    except (ExportError, ValueError) as error:
+        typer.echo(f"ERROR {error}", err=True)
+        raise typer.Exit(code=2) from error
+    if as_json:
+        typer.echo(json.dumps(as_json_payload(result), indent=2, ensure_ascii=False))
+    else:
+        typer.echo(render(result))
 
 
 if __name__ == "__main__":
