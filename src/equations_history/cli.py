@@ -208,5 +208,27 @@ def timeline(
         typer.echo(render(result))
 
 
+@app.command()
+def citations(
+    graph: Path = typer.Option(
+        ..., "--graph", help="papers/graph.json from tool-lit-review (validated against the contract)."
+    ),
+    paper: str = typer.Option(..., "--paper", help="A versioned arXiv id in the graph, for example 2610.23840v1."),
+) -> None:
+    """Which graph papers the chosen paper cites, and which graph papers cite it. Reads only."""
+    from equations_history.citations import GraphError, load_graph
+
+    try:
+        loaded = load_graph(graph)
+    except GraphError as error:
+        typer.echo(f"ERROR {error}", err=True)
+        raise typer.Exit(code=2) from error
+    if paper not in loaded.nodes:
+        typer.echo(f"{paper} is not a node in {graph.name}")
+        raise typer.Exit(code=1)
+    typer.echo(f"cites ({len(loaded.cites(paper))}): " + (", ".join(loaded.cites(paper)) or "none in graph"))
+    typer.echo(f"cited by ({len(loaded.cited_by(paper))}): " + (", ".join(loaded.cited_by(paper)) or "none in graph"))
+
+
 if __name__ == "__main__":
     app()
