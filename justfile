@@ -13,7 +13,7 @@ set shell := ["bash", "-c"]
     just --list
 
 @sync:
-    uv sync
+    uv sync --frozen
 
 @test:
     uv run pytest tests/ -xvs
