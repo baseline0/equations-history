@@ -56,3 +56,6 @@ coverage.xml
 
 # Local backlog: not versioned
 TODO.md
+
+# Scratch and generated output: never committed
+/working/
