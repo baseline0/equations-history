@@ -14,6 +14,7 @@ authors = [
 license = {text = "MIT"}
 
 dependencies = [
+    "mcp>=2.2,<3",
     "sympy>=1.12",
     "typer>=0.9.0",
     "fastapi>=0.104.0",
@@ -32,6 +33,7 @@ dev = [
 
 [project.scripts]
 learn = "equations_history.cli:app"
+equations-history-mcp = "equations_history.mcp_server:main"
 
 [tool.mypy]
 python_version = "3.13"
