@@ -43,19 +43,22 @@ set shell := ["bash", "-c"]
 test-unit:
     just test
 
-# Refresh a formula catalog snapshot from math-trace's templates/<name>/equations.json, and pin the manifest to the
-# math-trace commit. Refuses while the template has uncommitted changes, so the snapshot always matches a commit.
-sync-catalog name mt="../math-trace":
+# Refresh a formula catalog snapshot from math-trace, and pin the manifest to the math-trace commit. src is the catalog
+# path inside math-trace; empty means the template layout, templates/<name>/equations.json. Refuses while that file has
+# uncommitted changes, so the snapshot always matches a commit.
+sync-catalog name src="" mt="../math-trace":
     #!/usr/bin/env bash
     set -euo pipefail
-    if ! git -C "{{mt}}" diff --quiet HEAD -- "templates/{{name}}/equations.json" "templates/{{name}}/src/model.py"; then
-        echo "refusing: {{mt}} has uncommitted changes under templates/{{name}}" >&2
+    src="{{src}}"
+    if [ -z "$src" ]; then src="templates/{{name}}/equations.json"; fi
+    if ! git -C "{{mt}}" diff --quiet HEAD -- "$src"; then
+        echo "refusing: {{mt}} has uncommitted changes in $src" >&2
         exit 1
     fi
     dst="src/equations_history/catalogs/{{name}}.json"
-    cp "{{mt}}/templates/{{name}}/equations.json" "$dst"
+    cp "{{mt}}/$src" "$dst"
     commit=$(git -C "{{mt}}" rev-parse --short HEAD)
     sha=$(sha256sum "$dst" | cut -d' ' -f1)
-    printf '{\n  "source": "math-trace templates/%s/equations.json",\n  "source_commit": "%s",\n  "sha256": "%s"\n}\n' \
-        "{{name}}" "$commit" "$sha" > "src/equations_history/catalogs/{{name}}.manifest.json"
-    echo "synced {{name}} from math-trace $commit"
+    printf '{\n  "source": "math-trace %s",\n  "source_commit": "%s",\n  "sha256": "%s"\n}\n' \
+        "$src" "$commit" "$sha" > "src/equations_history/catalogs/{{name}}.manifest.json"
+    echo "synced {{name}} from math-trace $src at $commit"

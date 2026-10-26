@@ -1,0 +1,184 @@
+{
+  "state_normalisation": {
+    "name": "Qubit State Normalisation",
+    "history": "The amplitude postulates were stated by von Neumann (1932) for quantum mechanics in general. The qubit, a two-level system carrying one of these states, became the unit of quantum information in the 1990s.",
+    "citations": [
+      "Nielsen, M. A., & Chuang, I. L. (2010). Quantum Computation and Quantum Information (10th anniversary ed.). Cambridge University Press."
+    ],
+    "concepts": [
+      "qubit",
+      "quantum state",
+      "amplitude",
+      "normalisation",
+      "superposition"
+    ]
+  },
+  "bloch_vector_x": {
+    "name": "Bloch Vector, x Component",
+    "history": "Bloch (1946) introduced the sphere to describe the magnetisation of spin-1/2 nuclei. Quantum computing adopted it as the standard picture of a single qubit.",
+    "citations": [
+      "Nielsen, M. A., & Chuang, I. L. (2010). Quantum Computation and Quantum Information (10th anniversary ed.). Cambridge University Press.",
+      "Bloch, F. (1946). Nuclear induction. Physical Review, 70(7-8), 460-474."
+    ],
+    "concepts": [
+      "Bloch sphere",
+      "qubit",
+      "Pauli operator",
+      "expectation value"
+    ]
+  },
+  "bloch_vector_y": {
+    "name": "Bloch Vector, y Component",
+    "history": "The Bloch sphere picture was introduced for nuclear magnetic resonance by Bloch (1946). Its use for single qubits followed in the quantum information literature.",
+    "citations": [
+      "Nielsen, M. A., & Chuang, I. L. (2010). Quantum Computation and Quantum Information (10th anniversary ed.). Cambridge University Press.",
+      "Bloch, F. (1946). Nuclear induction. Physical Review, 70(7-8), 460-474."
+    ],
+    "concepts": [
+      "Bloch sphere",
+      "qubit",
+      "Pauli operator",
+      "expectation value"
+    ]
+  },
+  "bloch_vector_z": {
+    "name": "Bloch Vector, z Component",
+    "history": "Bloch (1946) introduced the sphere for nuclear spins. The z axis is the standard computational basis direction in quantum computing.",
+    "citations": [
+      "Nielsen, M. A., & Chuang, I. L. (2010). Quantum Computation and Quantum Information (10th anniversary ed.). Cambridge University Press.",
+      "Bloch, F. (1946). Nuclear induction. Physical Review, 70(7-8), 460-474."
+    ],
+    "concepts": [
+      "Bloch sphere",
+      "qubit",
+      "computational basis",
+      "Pauli operator"
+    ]
+  },
+  "born_rule_hadamard_plus": {
+    "name": "Born Rule (Hadamard on |0>)",
+    "history": "Born (1926) proposed that squared amplitudes give measurement probabilities. This is the measurement postulate that quantum algorithms rely on at their output.",
+    "citations": [
+      "Nielsen, M. A., & Chuang, I. L. (2010). Quantum Computation and Quantum Information (10th anniversary ed.). Cambridge University Press.",
+      "Born, M. (1926). Zur Quantenmechanik der Stoßvorgänge. Zeitschrift für Physik, 37, 863-867."
+    ],
+    "concepts": [
+      "Born rule",
+      "measurement",
+      "Hadamard gate",
+      "superposition"
+    ]
+  },
+  "hadamard_unitary": {
+    "name": "Hadamard Gate Is Unitary",
+    "history": "The matrix is named after Hadamard, whose matrices of this form appeared in the 1890s. Its role as a single-qubit gate was standardised in quantum circuit notation during the 1990s.",
+    "citations": [
+      "Nielsen, M. A., & Chuang, I. L. (2010). Quantum Computation and Quantum Information (10th anniversary ed.). Cambridge University Press."
+    ],
+    "concepts": [
+      "unitary",
+      "Hadamard gate",
+      "single-qubit gate",
+      "reversibility"
+    ]
+  },
+  "pauli_squares": {
+    "name": "Pauli Matrices Square to Identity",
+    "history": "Pauli (1927) introduced the matrices to describe the spin of the electron. Their algebra underlies the Pauli gates of quantum computing.",
+    "citations": [
+      "Nielsen, M. A., & Chuang, I. L. (2010). Quantum Computation and Quantum Information (10th anniversary ed.). Cambridge University Press.",
+      "Pauli, W. (1927). Zur Quantenmechanik des magnetischen Elektrons. Zeitschrift für Physik, 43, 601-623."
+    ],
+    "concepts": [
+      "Pauli matrices",
+      "Hermitian operator",
+      "eigenvalue",
+      "spin"
+    ]
+  },
+  "pauli_product": {
+    "name": "Pauli Product Rule",
+    "history": "Pauli (1927) gave the algebra of the spin matrices. The cyclic relation XY = iZ is the basic identity behind their use as quantum gates.",
+    "citations": [
+      "Nielsen, M. A., & Chuang, I. L. (2010). Quantum Computation and Quantum Information (10th anniversary ed.). Cambridge University Press.",
+      "Pauli, W. (1927). Zur Quantenmechanik des magnetischen Elektrons. Zeitschrift für Physik, 43, 601-623."
+    ],
+    "concepts": [
+      "Pauli matrices",
+      "commutator",
+      "quantum gate",
+      "algebra"
+    ]
+  },
+  "rotation_z_unitary": {
+    "name": "Z-Rotation Gate Is Unitary",
+    "history": "The rotation is the exponential of a Pauli matrix, so its unitarity follows from the Pauli algebra. Parameterised rotations became standard single-qubit gates in quantum circuit design.",
+    "citations": [
+      "Nielsen, M. A., & Chuang, I. L. (2010). Quantum Computation and Quantum Information (10th anniversary ed.). Cambridge University Press."
+    ],
+    "concepts": [
+      "unitary",
+      "rotation gate",
+      "phase",
+      "Bloch sphere"
+    ]
+  },
+  "bell_state_from_hadamard_and_cnot": {
+    "name": "Bell State from Hadamard and CNOT",
+    "history": "Bell (1964) showed that entangled states give correlations no local hidden-variable theory can reproduce. The Hadamard-then-CNOT circuit is the standard way to prepare one of these states.",
+    "citations": [
+      "Nielsen, M. A., & Chuang, I. L. (2010). Quantum Computation and Quantum Information (10th anniversary ed.). Cambridge University Press.",
+      "Bell, J. S. (1964). On the Einstein Podolsky Rosen paradox. Physics, 1(3), 195-200."
+    ],
+    "concepts": [
+      "entanglement",
+      "Bell state",
+      "CNOT",
+      "controlled gate",
+      "tensor product"
+    ]
+  },
+  "grover_two_qubits_one_iteration": {
+    "name": "Grover Search, Two Qubits, One Iteration",
+    "history": "Grover (1996) gave a quadratic speedup for unstructured search. For four items the speedup is exact after a single iteration, the case used as the textbook example.",
+    "citations": [
+      "Grover, L. K. (1996). A fast quantum mechanical algorithm for database search. Proceedings of the 28th ACM Symposium on Theory of Computing (STOC), 212-219.",
+      "Nielsen, M. A., & Chuang, I. L. (2010). Quantum Computation and Quantum Information (10th anniversary ed.). Cambridge University Press."
+    ],
+    "concepts": [
+      "Grover's algorithm",
+      "amplitude amplification",
+      "search",
+      "quantum speedup"
+    ]
+  },
+  "shor_factor_from_order": {
+    "name": "Shor Factoring from Order (N = 15)",
+    "history": "Shor (1997) showed that finding the period of modular exponentiation is solvable in polynomial time on a quantum computer. Factoring then reduces to classical number theory.",
+    "citations": [
+      "Shor, P. W. (1997). Polynomial-time algorithms for prime factorization and discrete logarithms on a quantum computer. SIAM Journal on Computing, 26(5), 1484-1509.",
+      "Nielsen, M. A., & Chuang, I. L. (2010). Quantum Computation and Quantum Information (10th anniversary ed.). Cambridge University Press."
+    ],
+    "concepts": [
+      "Shor's algorithm",
+      "order finding",
+      "modular arithmetic",
+      "factoring",
+      "gcd"
+    ]
+  },
+  "qft_unitary_n4": {
+    "name": "Quantum Fourier Transform Is Unitary (N = 4)",
+    "history": "The discrete Fourier transform is classical. Coppersmith (1994) gave an approximate version that fits quantum circuits, and Shor (1997) used the transform to find periods.",
+    "citations": [
+      "Nielsen, M. A., & Chuang, I. L. (2010). Quantum Computation and Quantum Information (10th anniversary ed.). Cambridge University Press.",
+      "Shor, P. W. (1997). Polynomial-time algorithms for prime factorization and discrete logarithms on a quantum computer. SIAM Journal on Computing, 26(5), 1484-1509."
+    ],
+    "concepts": [
+      "quantum Fourier transform",
+      "unitary",
+      "roots of unity",
+      "period finding"
+    ]
+  }
+}
