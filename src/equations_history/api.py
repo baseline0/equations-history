@@ -54,6 +54,7 @@ class EquationResponse(BaseModel):
     citations: list[str]
     source: str
     concepts: list[str]
+    year: int | None = None
 
 
 class ParameterMappingResponse(BaseModel):
@@ -146,6 +147,7 @@ def _to_response(eq: Equation) -> EquationResponse:
         citations=eq.citations,
         source=eq.source_label,
         concepts=eq.concepts,
+        year=eq.year,
     )
 
 

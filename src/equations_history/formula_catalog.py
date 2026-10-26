@@ -21,7 +21,7 @@ from equations_history import registry
 from equations_history.core import Equation
 
 CATALOG_FIELDS = frozenset({"latex", "description", "source_line", "assumptions", "units"})
-NARRATIVE_FIELDS = frozenset({"name", "history", "citations", "concepts"})
+NARRATIVE_FIELDS = frozenset({"name", "history", "citations", "concepts", "year"})
 
 
 class CatalogError(ValueError):
@@ -48,6 +48,7 @@ class Narrative:
     history: str
     citations: tuple[str, ...]
     concepts: tuple[str, ...]
+    year: int | None
 
 
 def _read_object(path: Path) -> dict[str, Any]:
@@ -108,7 +109,10 @@ def load_catalog(path: Path) -> dict[str, CatalogEntry]:
 
 
 def load_narratives(path: Path) -> dict[str, Narrative]:
-    """Narratives keyed by formula name. Each needs a display name, history, citations and concepts."""
+    """Narratives keyed by formula name. Each needs a display name, history, citations and concepts, and a year.
+
+    The year is an integer, or null while it is not yet known. A null is a placeholder, not a missing field.
+    """
     narratives: dict[str, Narrative] = {}
     for key, raw in _read_object(path).items():
         entry = _check_fields(path, key, raw, NARRATIVE_FIELDS)
@@ -117,8 +121,18 @@ def load_narratives(path: Path) -> dict[str, Narrative]:
             history=_text(path, key, "history", entry["history"], required=True),
             citations=_strings(path, key, "citations", entry["citations"]),
             concepts=_strings(path, key, "concepts", entry["concepts"]),
+            year=_year(path, key, entry["year"]),
         )
     return narratives
+
+
+def _year(path: Path, key: str, value: Any) -> int | None:
+    """An introduction year, or None while it is unknown. A boolean or a non-integer is refused."""
+    if value is None:
+        return None
+    if not isinstance(value, int) or isinstance(value, bool) or value < 1:
+        raise CatalogError(f"{path.name}: {key}.year must be an integer year or null")
+    return value
 
 
 def _factory(topic: str, entry: CatalogEntry, narrative: Narrative, source_file: str) -> Callable[[], Equation]:
@@ -133,6 +147,7 @@ def _factory(topic: str, entry: CatalogEntry, narrative: Narrative, source_file:
             history=narrative.history,
             citations=list(narrative.citations),
             concepts=list(narrative.concepts),
+            year=narrative.year,
         )
         equation.source = (source_file, entry.source_line)
         return equation

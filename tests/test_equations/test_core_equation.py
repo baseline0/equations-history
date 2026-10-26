@@ -56,7 +56,7 @@ def test_source_is_not_an_init_argument() -> None:
     """source is computed, so it is absent from __init__ and cannot be passed."""
     init_names = {f.name for f in fields(Equation) if f.init}
     assert "source" not in init_names
-    assert {"id", "name", "latex", "description", "history", "citations", "concepts"} == init_names
+    assert {"id", "name", "latex", "description", "history", "citations", "concepts", "year"} == init_names
     with pytest.raises(TypeError):
         Equation(  # type: ignore[call-arg]
             id="test.bad",

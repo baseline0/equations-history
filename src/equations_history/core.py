@@ -21,7 +21,8 @@ class Equation:
 
     ``id`` is stable and unique across the package, in the form
     ``"<module>.<name>"`` (for example ``"autoencoders.deterministic_encoder"``).
-    ``name`` is the display name.
+    ``name`` is the display name. ``year`` is the year the equation was introduced. It is a placeholder: None until the
+    years are filled in, and it is not the date of a paper in the corpus (the timeline reports that).
     """
 
     id: str
@@ -31,6 +32,7 @@ class Equation:
     history: str
     citations: list[str]
     concepts: list[str]
+    year: int | None = None
     source: tuple[str, int] = field(init=False)
 
     def __post_init__(self) -> None:

@@ -11,7 +11,8 @@
       "amplitude",
       "normalisation",
       "superposition"
-    ]
+    ],
+    "year": null
   },
   "bloch_vector_x": {
     "name": "Bloch Vector, x Component",
@@ -25,7 +26,8 @@
       "qubit",
       "Pauli operator",
       "expectation value"
-    ]
+    ],
+    "year": null
   },
   "bloch_vector_y": {
     "name": "Bloch Vector, y Component",
@@ -39,7 +41,8 @@
       "qubit",
       "Pauli operator",
       "expectation value"
-    ]
+    ],
+    "year": null
   },
   "bloch_vector_z": {
     "name": "Bloch Vector, z Component",
@@ -53,7 +56,8 @@
       "qubit",
       "computational basis",
       "Pauli operator"
-    ]
+    ],
+    "year": null
   },
   "born_rule_hadamard_plus": {
     "name": "Born Rule (Hadamard on |0>)",
@@ -67,7 +71,8 @@
       "measurement",
       "Hadamard gate",
       "superposition"
-    ]
+    ],
+    "year": null
   },
   "hadamard_unitary": {
     "name": "Hadamard Gate Is Unitary",
@@ -80,7 +85,8 @@
       "Hadamard gate",
       "single-qubit gate",
       "reversibility"
-    ]
+    ],
+    "year": null
   },
   "pauli_squares": {
     "name": "Pauli Matrices Square to Identity",
@@ -94,7 +100,8 @@
       "Hermitian operator",
       "eigenvalue",
       "spin"
-    ]
+    ],
+    "year": null
   },
   "pauli_product": {
     "name": "Pauli Product Rule",
@@ -108,7 +115,8 @@
       "commutator",
       "quantum gate",
       "algebra"
-    ]
+    ],
+    "year": null
   },
   "rotation_z_unitary": {
     "name": "Z-Rotation Gate Is Unitary",
@@ -121,7 +129,8 @@
       "rotation gate",
       "phase",
       "Bloch sphere"
-    ]
+    ],
+    "year": null
   },
   "bell_state_from_hadamard_and_cnot": {
     "name": "Bell State from Hadamard and CNOT",
@@ -136,7 +145,8 @@
       "CNOT",
       "controlled gate",
       "tensor product"
-    ]
+    ],
+    "year": null
   },
   "grover_two_qubits_one_iteration": {
     "name": "Grover Search, Two Qubits, One Iteration",
@@ -150,7 +160,8 @@
       "amplitude amplification",
       "search",
       "quantum speedup"
-    ]
+    ],
+    "year": null
   },
   "shor_factor_from_order": {
     "name": "Shor Factoring from Order (N = 15)",
@@ -165,7 +176,8 @@
       "modular arithmetic",
       "factoring",
       "gcd"
-    ]
+    ],
+    "year": null
   },
   "qft_unitary_n4": {
     "name": "Quantum Fourier Transform Is Unitary (N = 4)",
@@ -179,6 +191,7 @@
       "unitary",
       "roots of unity",
       "period finding"
-    ]
+    ],
+    "year": null
   }
 }

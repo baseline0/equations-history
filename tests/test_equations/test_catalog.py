@@ -38,6 +38,7 @@ NARRATIVE_ENTRY = {
     "history": "Derived in 1913.",
     "citations": ["Michaelis & Menten (1913)."],
     "concepts": ["enzyme kinetics"],
+    "year": None,
 }
 
 
@@ -189,3 +190,28 @@ def test_registration_refuses_a_second_topic_with_the_same_name(
 
 def test_narratives_file_matches_the_snapshot_keys() -> None:
     assert load_narratives(NARRATIVE).keys() == load_catalog(CATALOG).keys()
+
+
+@pytest.mark.parametrize("bad_year", ["1913", 1913.0, True, 0])
+def test_a_year_must_be_an_integer_or_null(bad_year: object, tmp_path: Path) -> None:
+    narrative = {**NARRATIVE_ENTRY, "year": bad_year}
+
+    with pytest.raises(CatalogError, match="year must be an integer year or null"):
+        load_narratives(_write(tmp_path / "narratives.json", {"michaelis_menten": narrative}))
+
+
+def test_a_null_year_is_the_placeholder_and_reaches_the_equation(
+    tmp_path: Path, fresh_registry: dict[str, dict[str, registry.EquationFactory]]
+) -> None:
+    catalog = _write(tmp_path / "catalog.json", {"michaelis_menten": FORMULA})
+    narratives = _write(tmp_path / "narratives.json", {"michaelis_menten": {**NARRATIVE_ENTRY, "year": None}})
+    register_catalog_topic("demo", __name__, catalog, narratives, "templates/demo/src/model.py")
+
+    assert registry.get("demo", "michaelis_menten").year is None
+
+
+def test_a_missing_year_field_is_refused(tmp_path: Path) -> None:
+    narrative = {k: v for k, v in NARRATIVE_ENTRY.items() if k != "year"}
+
+    with pytest.raises(CatalogError, match="missing \\['year'\\]"):
+        load_narratives(_write(tmp_path / "narratives.json", {"michaelis_menten": narrative}))

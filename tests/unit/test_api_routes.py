@@ -44,3 +44,10 @@ def test_a_catalog_equation_reports_its_math_trace_source() -> None:
     body = client.get("/api/equations/biochemistry/michaelis_menten").json()
 
     assert body["source"] == "templates/biochemistry/src/model.py:32"
+
+
+def test_the_response_carries_the_year_placeholder() -> None:
+    body = client.get("/api/equations/biochemistry/michaelis_menten").json()
+
+    assert "year" in body
+    assert body["year"] is None

@@ -7,7 +7,13 @@
       "Briggs, G. E., & Haldane, J. B. S. (1925). A note on the kinetics of enzyme action. Biochemical Journal, 19(2), 338-339.",
       "Cornish-Bowden, A. (2012). Fundamentals of Enzyme Kinetics (4th ed.). Wiley-Blackwell."
     ],
-    "concepts": ["enzyme kinetics", "Michaelis-Menten", "saturation kinetics", "steady state"]
+    "concepts": [
+      "enzyme kinetics",
+      "Michaelis-Menten",
+      "saturation kinetics",
+      "steady state"
+    ],
+    "year": null
   },
   "max_velocity": {
     "name": "Maximum Velocity",
@@ -16,7 +22,13 @@
       "Briggs, G. E., & Haldane, J. B. S. (1925). A note on the kinetics of enzyme action. Biochemical Journal, 19(2), 338-339.",
       "Cornish-Bowden, A. (2012). Fundamentals of Enzyme Kinetics (4th ed.). Wiley-Blackwell."
     ],
-    "concepts": ["maximum velocity", "enzyme concentration", "saturation", "catalysis"]
+    "concepts": [
+      "maximum velocity",
+      "enzyme concentration",
+      "saturation",
+      "catalysis"
+    ],
+    "year": null
   },
   "michaelis_constant": {
     "name": "Michaelis Constant",
@@ -26,7 +38,13 @@
       "Briggs, G. E., & Haldane, J. B. S. (1925). A note on the kinetics of enzyme action. Biochemical Journal, 19(2), 338-339.",
       "Cornish-Bowden, A. (2012). Fundamentals of Enzyme Kinetics (4th ed.). Wiley-Blackwell."
     ],
-    "concepts": ["Michaelis constant", "binding affinity", "half-saturation", "rate constants"]
+    "concepts": [
+      "Michaelis constant",
+      "binding affinity",
+      "half-saturation",
+      "rate constants"
+    ],
+    "year": null
   },
   "enzyme_mechanism": {
     "name": "Enzyme Reaction Scheme",
@@ -36,7 +54,14 @@
       "Michaelis, L., & Menten, M. L. (1913). Die Kinetik der Invertinwirkung. Biochemische Zeitschrift, 49, 333-369.",
       "Cornish-Bowden, A. (2012). Fundamentals of Enzyme Kinetics (4th ed.). Wiley-Blackwell."
     ],
-    "concepts": ["reaction mechanism", "enzyme-substrate complex", "binding", "catalysis", "release"]
+    "concepts": [
+      "reaction mechanism",
+      "enzyme-substrate complex",
+      "binding",
+      "catalysis",
+      "release"
+    ],
+    "year": null
   },
   "turnover_number": {
     "name": "Turnover Number",
@@ -45,7 +70,13 @@
       "Briggs, G. E., & Haldane, J. B. S. (1925). A note on the kinetics of enzyme action. Biochemical Journal, 19(2), 338-339.",
       "Cornish-Bowden, A. (2012). Fundamentals of Enzyme Kinetics (4th ed.). Wiley-Blackwell."
     ],
-    "concepts": ["turnover number", "catalytic constant", "rate constant", "saturation"]
+    "concepts": [
+      "turnover number",
+      "catalytic constant",
+      "rate constant",
+      "saturation"
+    ],
+    "year": null
   },
   "specificity": {
     "name": "Catalytic Efficiency (k_cat / K_m)",
@@ -54,6 +85,12 @@
       "Cornish-Bowden, A. (2012). Fundamentals of Enzyme Kinetics (4th ed.). Wiley-Blackwell.",
       "Michaelis, L., & Menten, M. L. (1913). Die Kinetik der Invertinwirkung. Biochemische Zeitschrift, 49, 333-369."
     ],
-    "concepts": ["catalytic efficiency", "specificity constant", "second-order rate constant", "low substrate"]
+    "concepts": [
+      "catalytic efficiency",
+      "specificity constant",
+      "second-order rate constant",
+      "low substrate"
+    ],
+    "year": null
   }
 }
