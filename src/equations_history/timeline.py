@@ -136,6 +136,8 @@ def render(timeline: Timeline) -> str:
     """Plain text: one block per equation, dated blocks first, then the unknown-date bucket."""
     lines: list[str] = []
     for entry in timeline.dated:
+        if entry.first_seen is None:
+            raise ValueError("a dated entry has no date; build_timeline puts undated entries in unknown_date")
         lines.append(f"{entry.first_seen.isoformat()}  {entry.latex.strip()}")
         for occurrence in entry.occurrences:
             lines.append(

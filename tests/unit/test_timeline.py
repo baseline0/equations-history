@@ -11,7 +11,7 @@ import pytest
 from typer.testing import CliRunner
 
 from equations_history import cli
-from equations_history.timeline import ExportError, build_timeline, normalise_latex, render
+from equations_history.timeline import ExportError, Timeline, TimelineEntry, build_timeline, normalise_latex, render
 
 pytestmark = pytest.mark.unit
 
@@ -149,3 +149,11 @@ def test_the_cli_json_output_has_dated_and_unknown_sections(export: Path) -> Non
     payload = json.loads(result.output)
     assert payload["dated"][0]["first_seen"] == "2024-01-05"
     assert payload["unknown_date"][0]["occurrences"][0]["paper_id"] == UNDATED
+
+
+def test_render_refuses_a_dated_entry_without_a_date() -> None:
+    """build_timeline never puts an undated entry in the dated list. A hand-built one is refused, not printed as None."""
+    broken = Timeline(dated=(TimelineEntry(latex="x", key="x", first_seen=None, occurrences=()),), unknown_date=())
+
+    with pytest.raises(ValueError, match="unknown_date"):
+        render(broken)
