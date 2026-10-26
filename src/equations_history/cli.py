@@ -10,6 +10,7 @@ Commands mirror the equation structure:
   learn loss-functions           # List all loss function equations
   learn diffusion                # List all diffusion model equations
   learn entropy                  # List all entropy and information equations
+  learn quantum                  # List all quantum computing equations
 
 The per-topic commands are generated from the equation registry. TOPIC_CLI holds
 only the presentation for each topic (command name, headings, help text).
@@ -101,6 +102,13 @@ TOPIC_CLI: dict[str, TopicCLI] = {
         banner="ENTROPY & INFORMATION",
         summary="Entropy and information equations: entropy, mutual information, KL divergence, Jensen's inequality.",
         topic_help="Specific equation (entropy, conditional_entropy, joint_entropy, mutual_information, relative_entropy, jensens_inequality), or all to list every topic",
+    ),
+    "quantum": TopicCLI(
+        command="quantum",
+        heading="Quantum Computing Equations",
+        banner="QUANTUM COMPUTING",
+        summary="Quantum computing equations: qubit states, Bloch sphere, gates, Grover, Shor, and the QFT.",
+        topic_help="Specific equation (state_normalisation, bloch_vector_x, born_rule_hadamard_plus, bell_state_from_hadamard_and_cnot, grover_two_qubits_one_iteration, shor_factor_from_order, qft_unitary_n4, etc.), or all to list every topic",
     ),
 }
 

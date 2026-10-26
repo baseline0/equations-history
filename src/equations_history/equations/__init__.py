@@ -7,6 +7,7 @@ from .diffusion import DiffusionEquations
 from .entropy import EntropyEquations
 from .loss_functions import LossFunctionEquations
 from .optimizers import OptimizerEquations
+from .quantum import QuantumEquations
 from .regularization import RegularizationEquations
 
 __all__ = [
@@ -17,4 +18,5 @@ __all__ = [
     "LossFunctionEquations",
     "DiffusionEquations",
     "EntropyEquations",
+    "QuantumEquations",
 ]
