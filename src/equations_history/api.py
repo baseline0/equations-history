@@ -119,7 +119,7 @@ class ApiRoute(NamedTuple):
     label: str
 
 
-# Routes exist only for the topics listed here. entropy has no HTTP routes.
+# Every registered topic has routes. A topic missing here is unreachable over HTTP, and a test checks that none is.
 API_ROUTES: dict[str, ApiRoute] = {
     "autoencoders": ApiRoute(segment="autoencoder", stem="autoencoder", label="autoencoder"),
     "bert": ApiRoute(segment="bert", stem="bert", label="BERT"),
@@ -127,6 +127,9 @@ API_ROUTES: dict[str, ApiRoute] = {
     "regularization": ApiRoute(segment="regularization", stem="regularization", label="regularization"),
     "loss_functions": ApiRoute(segment="loss-functions", stem="loss_function", label="loss function"),
     "diffusion": ApiRoute(segment="diffusion", stem="diffusion", label="diffusion model"),
+    "entropy": ApiRoute(segment="entropy", stem="entropy", label="entropy"),
+    "quantum": ApiRoute(segment="quantum", stem="quantum", label="quantum computing"),
+    "biochemistry": ApiRoute(segment="biochemistry", stem="biochemistry", label="biochemistry"),
 }
 
 if not set(API_ROUTES) <= set(topics()):

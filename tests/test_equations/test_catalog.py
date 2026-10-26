@@ -88,7 +88,7 @@ def test_each_equation_takes_latex_from_the_catalog_and_source_from_math_trace()
         assert eq.description == entry.description
         assert eq.source == (biochemistry.MATH_TRACE_MODEL, entry.source_line)
         assert eq.citations and eq.concepts
-        assert eq.source_label == f"model.py:{entry.source_line}"
+        assert eq.source_label == f"{biochemistry.MATH_TRACE_MODEL}:{entry.source_line}"
 
 
 def test_factories_report_the_topic_module_they_were_registered_from() -> None:

@@ -9,16 +9,23 @@ const API_BASE = 'http://localhost:8000/api';
 const state = {
     currentTopic: null,
     currentEquation: null,
-    topics: ['autoencoder', 'bert'],
+    topics: ['autoencoder', 'bert', 'optimizers', 'regularization', 'loss-functions', 'diffusion', 'entropy', 'quantum', 'biochemistry'],
     equations: {},
     selectedTopicIdx: 0,
     selectedEquationIdx: 0,
 };
 
-// Topics mapping
+// Topics mapping: keys are the API route segments
 const topicNames = {
     autoencoder: 'Autoencoders',
     bert: 'BERT',
+    optimizers: 'Optimizers',
+    regularization: 'Regularization',
+    'loss-functions': 'Loss Functions',
+    diffusion: 'Diffusion Models',
+    entropy: 'Entropy & Information',
+    quantum: 'Quantum Computing',
+    biochemistry: 'Biochemistry',
 };
 
 /**
@@ -195,7 +202,10 @@ async function displayEquation(key) {
     detailDiv.querySelector('.source-link')?.addEventListener('click', (e) => {
         e.preventDefault();
         const { file, line } = e.target.dataset;
-        const url = `https://github.com/baseline0/equations-history/blob/main/src/equations_history/equations/${file}#L${line}`;
+        // A relative file is a catalog source in math-trace; a bare file name is defined in this repo's equations/.
+        const url = file.includes('/')
+            ? `https://github.com/baseline0/math-trace/blob/main/${file}#L${line}`
+            : `https://github.com/baseline0/equations-history/blob/main/src/equations_history/equations/${file}#L${line}`;
         window.open(url, '_blank');
     });
 

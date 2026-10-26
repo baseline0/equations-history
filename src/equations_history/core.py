@@ -45,6 +45,13 @@ class Equation:
 
     @property
     def source_label(self) -> str:
-        """Short location for display, such as ``"autoencoders.py:42"``."""
+        """Location for display, such as ``"autoencoders.py:42"``.
+
+        A source is an absolute path when this package's code defines the equation. A catalog equation's source is a
+        relative path into math-trace, such as ``"templates/biochemistry/src/model.py:32"``, and is shown in full, so
+        it cannot be mistaken for a file in this repo.
+        """
         filename, lineno = self.source
+        if not Path(filename).is_absolute():
+            return f"{filename}:{lineno}"
         return f"{Path(filename).name}:{lineno}"

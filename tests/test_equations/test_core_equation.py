@@ -103,3 +103,11 @@ def test_equation_ids_are_unique_across_the_package() -> None:
             assert eq.id == f"{module_name}.{key}"
             ids.append(eq.id)
     assert len(ids) == len(set(ids))
+
+
+def test_a_relative_catalog_source_is_shown_in_full() -> None:
+    """A catalog equation's source is a math-trace path, shown whole so it is not mistaken for a file in this repo."""
+    eq = Equation(id="x.y", name="Y", latex="y", description="d", history="h", citations=[], concepts=[])
+    eq.source = ("templates/biochemistry/src/model.py", 32)
+
+    assert eq.source_label == "templates/biochemistry/src/model.py:32"
