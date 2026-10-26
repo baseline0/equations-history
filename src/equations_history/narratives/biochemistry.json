@@ -1,0 +1,59 @@
+{
+  "michaelis_menten": {
+    "name": "Michaelis-Menten Equation",
+    "history": "Michaelis and Menten (1913) derived the hyperbolic rate law for an enzyme-catalysed reaction under a quasi-steady-state assumption for the enzyme-substrate complex. Briggs and Haldane (1925) reached the same law by a steady-state argument, and it is still the default model of enzyme kinetics.",
+    "citations": [
+      "Michaelis, L., & Menten, M. L. (1913). Die Kinetik der Invertinwirkung. Biochemische Zeitschrift, 49, 333-369.",
+      "Briggs, G. E., & Haldane, J. B. S. (1925). A note on the kinetics of enzyme action. Biochemical Journal, 19(2), 338-339.",
+      "Cornish-Bowden, A. (2012). Fundamentals of Enzyme Kinetics (4th ed.). Wiley-Blackwell."
+    ],
+    "concepts": ["enzyme kinetics", "Michaelis-Menten", "saturation kinetics", "steady state"]
+  },
+  "max_velocity": {
+    "name": "Maximum Velocity",
+    "history": "V_max is the rate when the enzyme is saturated with substrate. Since the catalytic rate is k2 times the enzyme-substrate complex, and the complex is at most the total enzyme, V_max = k2 E0 follows from the mechanism. Briggs and Haldane (1925) analysed the steady state that yields it.",
+    "citations": [
+      "Briggs, G. E., & Haldane, J. B. S. (1925). A note on the kinetics of enzyme action. Biochemical Journal, 19(2), 338-339.",
+      "Cornish-Bowden, A. (2012). Fundamentals of Enzyme Kinetics (4th ed.). Wiley-Blackwell."
+    ],
+    "concepts": ["maximum velocity", "enzyme concentration", "saturation", "catalysis"]
+  },
+  "michaelis_constant": {
+    "name": "Michaelis Constant",
+    "history": "The Michaelis constant K_m is the substrate concentration at which the rate is half of V_max. Michaelis and Menten (1913) introduced the constant, and Briggs and Haldane (1925) gave it in terms of the rate constants of the mechanism, (k-1 + k2) / k1.",
+    "citations": [
+      "Michaelis, L., & Menten, M. L. (1913). Die Kinetik der Invertinwirkung. Biochemische Zeitschrift, 49, 333-369.",
+      "Briggs, G. E., & Haldane, J. B. S. (1925). A note on the kinetics of enzyme action. Biochemical Journal, 19(2), 338-339.",
+      "Cornish-Bowden, A. (2012). Fundamentals of Enzyme Kinetics (4th ed.). Wiley-Blackwell."
+    ],
+    "concepts": ["Michaelis constant", "binding affinity", "half-saturation", "rate constants"]
+  },
+  "enzyme_mechanism": {
+    "name": "Enzyme Reaction Scheme",
+    "history": "Henri (1903) proposed that substrate first binds reversibly to the enzyme, forming a complex that then breaks down to product and free enzyme. Michaelis and Menten (1913) built their kinetic analysis on this scheme.",
+    "citations": [
+      "Henri, V. (1903). Lois générales de l'action des diastases. Paris: Hermann.",
+      "Michaelis, L., & Menten, M. L. (1913). Die Kinetik der Invertinwirkung. Biochemische Zeitschrift, 49, 333-369.",
+      "Cornish-Bowden, A. (2012). Fundamentals of Enzyme Kinetics (4th ed.). Wiley-Blackwell."
+    ],
+    "concepts": ["reaction mechanism", "enzyme-substrate complex", "binding", "catalysis", "release"]
+  },
+  "turnover_number": {
+    "name": "Turnover Number",
+    "history": "The turnover number k_cat is the number of substrate molecules one enzyme molecule converts per unit time when the enzyme is saturated. In the simple scheme it equals the rate constant k2 of the catalytic step, so k_cat = k2 holds only for that scheme.",
+    "citations": [
+      "Briggs, G. E., & Haldane, J. B. S. (1925). A note on the kinetics of enzyme action. Biochemical Journal, 19(2), 338-339.",
+      "Cornish-Bowden, A. (2012). Fundamentals of Enzyme Kinetics (4th ed.). Wiley-Blackwell."
+    ],
+    "concepts": ["turnover number", "catalytic constant", "rate constant", "saturation"]
+  },
+  "specificity": {
+    "name": "Catalytic Efficiency (k_cat / K_m)",
+    "history": "At low substrate concentration most enzyme is free, so the rate is k_cat / K_m times the enzyme and substrate concentrations. The ratio is therefore a second-order rate constant for free enzyme reacting with substrate, which is why it is used to compare enzymes acting on the same substrate.",
+    "citations": [
+      "Cornish-Bowden, A. (2012). Fundamentals of Enzyme Kinetics (4th ed.). Wiley-Blackwell.",
+      "Michaelis, L., & Menten, M. L. (1913). Die Kinetik der Invertinwirkung. Biochemische Zeitschrift, 49, 333-369."
+    ],
+    "concepts": ["catalytic efficiency", "specificity constant", "second-order rate constant", "low substrate"]
+  }
+}

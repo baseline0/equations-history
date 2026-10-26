@@ -6,3 +6,8 @@ from pathlib import Path
 REPO_ROOT: Path = Path(__file__).resolve().parents[2]
 
 CITATION_GRAPH_SCHEMA_PATH: Path = REPO_ROOT / "contracts" / "citation_graph.schema.json"
+
+# The package's own data: the formula catalogs copied from math-trace, and the narratives written here.
+PACKAGE_ROOT: Path = Path(__file__).resolve().parent
+CATALOG_DIR: Path = PACKAGE_ROOT / "catalogs"
+NARRATIVE_DIR: Path = PACKAGE_ROOT / "narratives"

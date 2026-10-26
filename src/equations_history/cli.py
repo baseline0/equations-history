@@ -11,6 +11,7 @@ Commands mirror the equation structure:
   learn diffusion                # List all diffusion model equations
   learn entropy                  # List all entropy and information equations
   learn quantum                  # List all quantum computing equations
+  learn biochemistry             # List all enzyme-kinetics equations (from math-trace)
 
 The per-topic commands are generated from the equation registry. TOPIC_CLI holds
 only the presentation for each topic (command name, headings, help text).
@@ -109,6 +110,13 @@ TOPIC_CLI: dict[str, TopicCLI] = {
         banner="QUANTUM COMPUTING",
         summary="Quantum computing equations: qubit states, Bloch sphere, gates, Grover, Shor, and the QFT.",
         topic_help="Specific equation (state_normalisation, bloch_vector_x, born_rule_hadamard_plus, bell_state_from_hadamard_and_cnot, grover_two_qubits_one_iteration, shor_factor_from_order, qft_unitary_n4, etc.), or all to list every topic",
+    ),
+    "biochemistry": TopicCLI(
+        command="biochemistry",
+        heading="Biochemistry Equations",
+        banner="BIOCHEMISTRY",
+        summary="Enzyme kinetics equations from math-trace: Michaelis-Menten, V_max, K_m, k_cat, and k_cat/K_m.",
+        topic_help="Specific equation (michaelis_menten, max_velocity, michaelis_constant, enzyme_mechanism, turnover_number, specificity), or all to list every topic",
     ),
 }
 

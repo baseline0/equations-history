@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "equations-history/contracts/formula_catalog.schema.json",
+  "title": "Formula catalog (producer: math-trace, templates/<name>/equations.json)",
+  "description": "Each key is a formula name. Each value comes from a Formula(...) call in the template's src/model.py, and source_line is the line where that call starts. The adapter in equations_history.formula_catalog is the runtime check; this file is the contract that both repos point at.",
+  "type": "object",
+  "minProperties": 1,
+  "additionalProperties": {
+    "type": "object",
+    "required": ["latex", "description", "source_line", "assumptions", "units"],
+    "additionalProperties": false,
+    "properties": {
+      "latex": {"type": "string", "pattern": "\\S"},
+      "description": {"type": "string", "pattern": "\\S"},
+      "source_line": {"type": "integer", "minimum": 1},
+      "assumptions": {"type": "string"},
+      "units": {"type": "string"}
+    }
+  }
+}

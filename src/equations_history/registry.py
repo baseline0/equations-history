@@ -14,17 +14,22 @@ EquationFactory = Callable[[], Equation]
 _registry: dict[str, dict[str, EquationFactory]] = {}
 
 
+def register(topic: str, name: str, factory: EquationFactory) -> None:
+    """Record ``factory`` under ``topic`` and ``name``. Each name is registered once per topic."""
+    methods = _registry.setdefault(topic, {})
+    if name in methods:
+        raise ValueError(f"Duplicate equation {topic}.{name}")
+    methods[name] = factory
+
+
 def equation(topic: str) -> Callable[[EquationFactory], EquationFactory]:
     """Record a method under ``topic`` (keyed by its name) and return it unchanged."""
 
-    def register(factory: EquationFactory) -> EquationFactory:
-        methods = _registry.setdefault(topic, {})
-        if factory.__name__ in methods:
-            raise ValueError(f"Duplicate equation {topic}.{factory.__name__}")
-        methods[factory.__name__] = factory
+    def record(factory: EquationFactory) -> EquationFactory:
+        register(topic, factory.__name__, factory)
         return factory
 
-    return register
+    return record
 
 
 def topics() -> list[str]:

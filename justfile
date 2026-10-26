@@ -42,3 +42,20 @@ set shell := ["bash", "-c"]
 # Unit tests: the gate the pre-push hook runs (fleet hook standard, fleet_base.hook_standard R4)
 test-unit:
     just test
+
+# Refresh a formula catalog snapshot from math-trace's templates/<name>/equations.json, and pin the manifest to the
+# math-trace commit. Refuses while the template has uncommitted changes, so the snapshot always matches a commit.
+sync-catalog name mt="../math-trace":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if ! git -C "{{mt}}" diff --quiet HEAD -- "templates/{{name}}/equations.json" "templates/{{name}}/src/model.py"; then
+        echo "refusing: {{mt}} has uncommitted changes under templates/{{name}}" >&2
+        exit 1
+    fi
+    dst="src/equations_history/catalogs/{{name}}.json"
+    cp "{{mt}}/templates/{{name}}/equations.json" "$dst"
+    commit=$(git -C "{{mt}}" rev-parse --short HEAD)
+    sha=$(sha256sum "$dst" | cut -d' ' -f1)
+    printf '{\n  "source": "math-trace templates/%s/equations.json",\n  "source_commit": "%s",\n  "sha256": "%s"\n}\n' \
+        "{{name}}" "$commit" "$sha" > "src/equations_history/catalogs/{{name}}.manifest.json"
+    echo "synced {{name}} from math-trace $commit"
