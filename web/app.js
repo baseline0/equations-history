@@ -164,7 +164,7 @@ async function displayEquation(key) {
                 <div class="metadata-item">
                     <div class="metadata-label">Source</div>
                     <div class="metadata-value">
-                        <a href="#" class="source-link" data-line="${equation.source.split(':').pop()}">
+                        <a href="#" class="source-link" data-file="${equation.source.split(':')[0]}" data-line="${equation.source.split(':').pop()}">
                             equations/${equation.source}
                         </a>
                     </div>
@@ -194,8 +194,8 @@ async function displayEquation(key) {
     // Handle source link click
     detailDiv.querySelector('.source-link')?.addEventListener('click', (e) => {
         e.preventDefault();
-        const line = e.target.dataset.line;
-        const url = `https://github.com/baseline0/equations-history/blob/main/src/equations_history/equations/${state.currentTopic}.py#L${line}`;
+        const { file, line } = e.target.dataset;
+        const url = `https://github.com/baseline0/equations-history/blob/main/src/equations_history/equations/${file}#L${line}`;
         window.open(url, '_blank');
     });
 
