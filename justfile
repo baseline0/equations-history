@@ -80,3 +80,25 @@ records-public:
         uv run learn record public --path "dist/records/$id.json" --paper-store tests/fixtures/paper_store \
             --out "dist/public-records/$id.json"
     done
+
+# Check pages/ is ready to publish before you push: a deployable build, every record has its page, and nothing is left
+# uncommitted. Read only. It does not push, deploy, or change Pages settings.
+publish-check:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    test -f pages/BUILD.json || { echo "FAIL pages/BUILD.json is missing; run just formula-copy in tool-publish"; exit 1; }
+    python3 - <<'PY'
+    import json, sys
+    from pathlib import Path
+    build = json.loads(Path("pages/BUILD.json").read_text(encoding="utf-8"))
+    if build["preview"] is not False:
+        sys.exit("FAIL pages/ is a preview build, not deployable")
+    missing = [r for r in build["records"] if not Path("pages", r, "index.html").is_file()]
+    if missing:
+        sys.exit(f"FAIL no page for {missing}")
+    print(f"OK deployable build with {len(build['records'])} record(s): {', '.join(build['records'])}")
+    PY
+    if [ -n "$(git status --porcelain -- pages)" ]; then
+        echo "FAIL pages/ has uncommitted changes; commit them before pushing"; exit 1
+    fi
+    echo "OK pages/ is committed. Next: push, set Pages source to GitHub Actions, then start the workflow."
