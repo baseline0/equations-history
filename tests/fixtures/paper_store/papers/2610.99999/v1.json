@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "arxiv_id": "2610.99999",
+  "version": "v1",
+  "title": "Restricted-licence fixture paper",
+  "doi": null,
+  "licence": "https://creativecommons.org/licenses/by-nc/4.0",
+  "pdf_sha256": null,
+  "tex_sha256": null,
+  "status": "skipped",
+  "fetched_at": "2026-10-20T00:00:00+00:00"
+}

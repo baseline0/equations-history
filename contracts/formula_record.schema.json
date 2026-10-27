@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "equations-history/contracts/formula_record.schema.json",
+  "title": "Formula record v1 (assembled by equations-history; inputs: math-trace catalog, narrative, paper store)",
+  "description": "One formula, joined from its code provenance (math-trace), its narrative (equations-history) and optionally its literature locator (tool-lit-review's paper store). The assembler in equations_history.formula_record writes this shape; tool-publish reads only the public view of it. Literature is optional: a code-only formula is valid. Restricted-licence papers never appear here; the licence is checked against the paper-store manifest, not recorded in this file.",
+  "type": "object",
+  "required": ["id", "core", "provenance", "narrative"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Stable slug. Owned by equations-history; a rename is a breaking change."
+    },
+    "core": {
+      "type": "object",
+      "required": ["name", "latex", "units", "assumptions"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string", "pattern": "\\S"},
+        "latex": {"type": "string", "pattern": "\\S"},
+        "units": {
+          "type": "object",
+          "required": ["lhs", "rhs"],
+          "additionalProperties": false,
+          "properties": {
+            "lhs": {"type": "string", "pattern": "\\S"},
+            "rhs": {"type": "string", "pattern": "\\S"}
+          }
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {"type": "string", "pattern": "\\S"}
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["code"],
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "type": "object",
+          "required": ["repo", "file", "source_line"],
+          "additionalProperties": false,
+          "properties": {
+            "repo": {"type": "string", "const": "math-trace"},
+            "file": {"type": "string", "pattern": "\\S"},
+            "source_line": {"type": "integer", "minimum": 1}
+          }
+        },
+        "literature": {
+          "type": "object",
+          "required": ["paper_store_id", "version", "locator"],
+          "additionalProperties": false,
+          "properties": {
+            "paper_store_id": {
+              "type": "string",
+              "pattern": "^[0-9]{4}\\.[0-9]{4,5}$",
+              "description": "arXiv identifier without its version suffix, as in the paper-store layout."
+            },
+            "version": {
+              "type": "string",
+              "pattern": "^v[0-9]+$",
+              "description": "The manifest version, for example v1. A string, as in the paper-store manifest."
+            },
+            "locator": {
+              "type": "string",
+              "pattern": "\\S",
+              "description": "Where the formula sits in the paper, for example 'page 4, equation 3'. Never raw TeX from the paper."
+            }
+          }
+        }
+      }
+    },
+    "narrative": {
+      "type": "object",
+      "required": ["year", "history", "citations", "concepts"],
+      "additionalProperties": false,
+      "properties": {
+        "year": {"type": ["integer", "null"], "minimum": 1},
+        "history": {"type": "string", "pattern": "\\S"},
+        "citations": {"type": "array", "items": {"type": "string", "pattern": "\\S"}},
+        "concepts": {"type": "array", "items": {"type": "string", "pattern": "\\S"}}
+      }
+    }
+  }
+}

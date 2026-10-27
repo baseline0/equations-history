@@ -1,0 +1,36 @@
+{
+  "id": "michaelis-menten",
+  "core": {
+    "name": "Michaelis-Menten Equation",
+    "latex": "v = \\frac{S V_{max}}{K_{m} + S}",
+    "units": {
+      "lhs": "umol / min",
+      "rhs": "umol / min"
+    },
+    "assumptions": [
+      "Quasi-steady-state assumption (d[ES]/dt ≈ 0)"
+    ]
+  },
+  "provenance": {
+    "code": {
+      "repo": "math-trace",
+      "file": "templates/biochemistry/src/model.py",
+      "source_line": 32
+    }
+  },
+  "narrative": {
+    "year": null,
+    "history": "Michaelis and Menten (1913) derived the hyperbolic rate law for an enzyme-catalysed reaction under a quasi-steady-state assumption for the enzyme-substrate complex. Briggs and Haldane (1925) reached the same law by a steady-state argument, and it is still the default model of enzyme kinetics.",
+    "citations": [
+      "Michaelis, L., & Menten, M. L. (1913). Die Kinetik der Invertinwirkung. Biochemische Zeitschrift, 49, 333-369.",
+      "Briggs, G. E., & Haldane, J. B. S. (1925). A note on the kinetics of enzyme action. Biochemical Journal, 19(2), 338-339.",
+      "Cornish-Bowden, A. (2012). Fundamentals of Enzyme Kinetics (4th ed.). Wiley-Blackwell."
+    ],
+    "concepts": [
+      "enzyme kinetics",
+      "Michaelis-Menten",
+      "saturation kinetics",
+      "steady state"
+    ]
+  }
+}

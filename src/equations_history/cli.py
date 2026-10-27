@@ -21,12 +21,16 @@ import json
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
+from typing import Any
 
 import typer
 
 # Importing the package registers every topic module's equations.
 import equations_history.equations  # noqa: F401
 from equations_history.core import Equation
+from equations_history.formula_catalog import CatalogError, load_catalog, load_narratives
+from equations_history.formula_record import AssemblyError, assemble_record, check_record, public_view
+from equations_history.paper_store import PaperStore
 from equations_history.registry import equations_for, topics
 from equations_history.timeline import ExportError, build_timeline, render
 from equations_history.timeline import as_json as as_json_payload
@@ -244,6 +248,142 @@ def citations(
         raise typer.Exit(code=1)
     typer.echo(f"cites ({len(loaded.cites(paper))}): " + (", ".join(loaded.cites(paper)) or "none in graph"))
     typer.echo(f"cited by ({len(loaded.cited_by(paper))}): " + (", ".join(loaded.cited_by(paper)) or "none in graph"))
+
+
+record_app = typer.Typer(help="Formula records (formula-record/1): check them, and write the public view.")
+app.add_typer(record_app, name="record")
+
+
+def _read_record(path: Path) -> dict[str, Any]:
+    """The JSON object in ``path``. Exits with code 2 when the file is unreadable or not an object."""
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        typer.echo(f"ERROR {path.name}: cannot read JSON: {error}", err=True)
+        raise typer.Exit(code=2) from error
+    if not isinstance(data, dict):
+        typer.echo(f"ERROR {path.name}: a formula record is a JSON object", err=True)
+        raise typer.Exit(code=2)
+    return data
+
+
+@record_app.command("validate")
+def record_validate(
+    path: Path = typer.Option(
+        ..., "--path", help="A formula record, for example records/navier-stokes-momentum-3d.json."
+    ),
+    paper_store: Path = typer.Option(
+        ..., "--paper-store", help="The paper-store root, for example /home/mark/paper-store."
+    ),
+) -> None:
+    """Check a formula record against the contract, its units and the paper store. Exits 1 with every problem found."""
+    problems = check_record(_read_record(path), PaperStore(paper_store))
+    for problem in problems:
+        typer.echo(f"{path.name}: {problem}")
+    if problems:
+        raise typer.Exit(code=1)
+    typer.echo(f"{path.name}: valid")
+
+
+@record_app.command("public")
+def record_public(
+    path: Path = typer.Option(..., "--path", help="A formula record to reduce to its public fields."),
+    paper_store: Path = typer.Option(
+        ..., "--paper-store", help="The paper-store root, for example /home/mark/paper-store."
+    ),
+    out: Path = typer.Option(..., "--out", help="Where to write the public view, as JSON."),
+) -> None:
+    """Write the public view of a valid formula record. A record with problems is refused and nothing is written."""
+    record = _read_record(path)
+    problems = check_record(record, PaperStore(paper_store))
+    if problems:
+        for problem in problems:
+            typer.echo(f"{path.name}: {problem}", err=True)
+        raise typer.Exit(code=1)
+    out.write_text(json.dumps(public_view(record), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    typer.echo(f"wrote {out}")
+
+
+def _assemble_to_file(
+    catalog: Path,
+    narrative: Path,
+    formula: str,
+    record_id: str,
+    source_file: str,
+    paper_store: Path,
+    literature: dict[str, str] | None,
+    out: Path,
+) -> None:
+    """Assemble one formula record and write it. Exits 2 when the formula is missing, 1 when it cannot be assembled."""
+    try:
+        entries = load_catalog(catalog)
+        narratives = load_narratives(narrative)
+        if formula not in entries or formula not in narratives:
+            typer.echo(f"ERROR {formula!r} is not in both {catalog.name} and {narrative.name}", err=True)
+            raise typer.Exit(code=2)
+        record = assemble_record(
+            record_id,
+            entries[formula],
+            narratives[formula],
+            source_file=source_file,
+            store=PaperStore(paper_store),
+            literature=literature,
+        )
+    except (CatalogError, AssemblyError) as error:
+        typer.echo(f"ERROR {error}", err=True)
+        raise typer.Exit(code=1) from error
+    out.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    typer.echo(f"wrote {out}")
+
+
+@record_app.command("assemble")
+def record_assemble(
+    catalog: Path = typer.Option(..., "--catalog", help="A math-trace equations.json snapshot."),
+    narrative: Path = typer.Option(..., "--narrative", help="The narrative JSON for the same topic."),
+    formula: str = typer.Option(
+        ..., "--formula", help="The formula's key in the catalog, for example michaelis_menten."
+    ),
+    record_id: str = typer.Option(..., "--id", help="The record's slug, for example michaelis-menten."),
+    source_file: str = typer.Option(
+        ...,
+        "--source-file",
+        help="The template's model.py path in math-trace, for example templates/biochemistry/src/model.py.",
+    ),
+    paper_store: Path = typer.Option(
+        ..., "--paper-store", help="The paper-store root, for example /home/mark/paper-store."
+    ),
+    out: Path = typer.Option(..., "--out", help="Where to write the formula record, as JSON."),
+) -> None:
+    """Assemble a code-only formula record, and check it against the paper store."""
+    _assemble_to_file(catalog, narrative, formula, record_id, source_file, paper_store, None, out)
+
+
+@record_app.command("assemble-cited")
+def record_assemble_cited(
+    catalog: Path = typer.Option(..., "--catalog", help="A math-trace equations.json snapshot."),
+    narrative: Path = typer.Option(..., "--narrative", help="The narrative JSON for the same topic."),
+    formula: str = typer.Option(
+        ..., "--formula", help="The formula's key in the catalog, for example michaelis_menten."
+    ),
+    record_id: str = typer.Option(..., "--id", help="The record's slug, for example michaelis-menten."),
+    source_file: str = typer.Option(
+        ...,
+        "--source-file",
+        help="The template's model.py path in math-trace, for example templates/biochemistry/src/model.py.",
+    ),
+    paper_store: Path = typer.Option(
+        ..., "--paper-store", help="The paper-store root, for example /home/mark/paper-store."
+    ),
+    literature_id: str = typer.Option(
+        ..., "--literature-id", help="The arXiv id of the paper the formula is taken from."
+    ),
+    literature_version: str = typer.Option(..., "--literature-version", help="The paper's version, for example v1."),
+    locator: str = typer.Option(..., "--locator", help="Where the formula sits in the paper, for example 'page 4'."),
+    out: Path = typer.Option(..., "--out", help="Where to write the formula record, as JSON."),
+) -> None:
+    """Assemble a formula record that cites a paper, and check the licence and version against the paper store."""
+    literature = {"paper_store_id": literature_id, "version": literature_version, "locator": locator}
+    _assemble_to_file(catalog, narrative, formula, record_id, source_file, paper_store, literature, out)
 
 
 if __name__ == "__main__":

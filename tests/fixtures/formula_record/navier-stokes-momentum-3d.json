@@ -1,0 +1,28 @@
+{
+  "id": "navier-stokes-momentum-3d",
+  "core": {
+    "name": "Navier-Stokes Momentum Equation",
+    "latex": "\\rho \\left(\\frac{\\partial \\mathbf{u}}{\\partial t} + \\mathbf{u} \\cdot \\nabla \\mathbf{u}\\right) = -\\nabla p + \\mu \\nabla^2 \\mathbf{u} + \\mathbf{f}",
+    "units": {
+      "lhs": "kg / (m^2 s^2)",
+      "rhs": "N / m^3"
+    },
+    "assumptions": [
+      "Incompressible flow",
+      "Newtonian fluid"
+    ]
+  },
+  "provenance": {
+    "code": {
+      "repo": "math-trace",
+      "file": "templates/navier_stokes/src/model.py",
+      "source_line": 42
+    }
+  },
+  "narrative": {
+    "year": 1845,
+    "history": "Developed by extending Euler's equations with viscous terms.",
+    "citations": ["Navier 1822", "Stokes 1845"],
+    "concepts": ["Momentum conservation", "Viscous stress tensor"]
+  }
+}

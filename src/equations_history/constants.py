@@ -11,3 +11,5 @@ CITATION_GRAPH_SCHEMA_PATH: Path = REPO_ROOT / "contracts" / "citation_graph.sch
 PACKAGE_ROOT: Path = Path(__file__).resolve().parent
 CATALOG_DIR: Path = PACKAGE_ROOT / "catalogs"
 NARRATIVE_DIR: Path = PACKAGE_ROOT / "narratives"
+
+FORMULA_RECORD_SCHEMA_PATH: Path = REPO_ROOT / "contracts" / "formula_record.schema.json"
