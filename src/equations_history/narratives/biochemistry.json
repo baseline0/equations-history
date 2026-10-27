@@ -79,7 +79,7 @@
     "year": null
   },
   "specificity": {
-    "name": "Catalytic Efficiency (k_cat / K_m)",
+    "name": "Catalytic Efficiency",
     "history": "At low substrate concentration most enzyme is free, so the rate is k_cat / K_m times the enzyme and substrate concentrations. The ratio is therefore a second-order rate constant for free enzyme reacting with substrate, which is why it is used to compare enzymes acting on the same substrate.",
     "citations": [
       "Cornish-Bowden, A. (2012). Fundamentals of Enzyme Kinetics (4th ed.). Wiley-Blackwell.",
