@@ -63,8 +63,20 @@ sync-catalog name src="" mt="../math-trace":
         "$src" "$commit" "$sha" > "src/equations_history/catalogs/{{name}}.manifest.json"
     echo "synced {{name}} from math-trace $src at $commit"
 
-# Write the public view of the pilot formula records to dist/public-records (gitignored), for the tool-publish preview.
-# Only records grounded in math-trace belong here, so the Navier-Stokes example is left out.
+# Assemble the grounded biochemistry records from the math-trace snapshot, then write their public views to
+# dist/public-records (gitignored) for the tool-publish preview. Only records grounded in math-trace belong here, so the
+# Navier-Stokes example is left out. Each formula is listed as key:id.
 records-public:
-    mkdir -p dist/public-records
-    uv run learn record public --path tests/fixtures/formula_record/michaelis-menten.json --paper-store tests/fixtures/paper_store --out dist/public-records/michaelis-menten.json
+    #!/usr/bin/env bash
+    set -euo pipefail
+    mkdir -p dist/records dist/public-records
+    for pair in michaelis_menten:michaelis-menten specificity:specificity; do
+        formula="${pair%%:*}"
+        id="${pair##*:}"
+        uv run learn record assemble --catalog src/equations_history/catalogs/biochemistry.json \
+            --narrative src/equations_history/narratives/biochemistry.json --formula "$formula" --id "$id" \
+            --source-file templates/biochemistry/src/model.py --paper-store tests/fixtures/paper_store \
+            --out "dist/records/$id.json"
+        uv run learn record public --path "dist/records/$id.json" --paper-store tests/fixtures/paper_store \
+            --out "dist/public-records/$id.json"
+    done
