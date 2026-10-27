@@ -62,3 +62,9 @@ sync-catalog name src="" mt="../math-trace":
     printf '{\n  "source": "math-trace %s",\n  "source_commit": "%s",\n  "sha256": "%s"\n}\n' \
         "$src" "$commit" "$sha" > "src/equations_history/catalogs/{{name}}.manifest.json"
     echo "synced {{name}} from math-trace $src at $commit"
+
+# Write the public view of the pilot formula records to dist/public-records (gitignored), for the tool-publish preview.
+# Only records grounded in math-trace belong here, so the Navier-Stokes example is left out.
+records-public:
+    mkdir -p dist/public-records
+    uv run learn record public --path tests/fixtures/formula_record/michaelis-menten.json --paper-store tests/fixtures/paper_store --out dist/public-records/michaelis-menten.json
