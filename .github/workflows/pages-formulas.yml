@@ -1,0 +1,35 @@
+# Manual publish of the reviewed formula pages in pages/ to GitHub Pages. Started by hand, and it waits for approval in
+# "production". The pages are copied here by hand from tool-publish (just formula-copy) after review. This workflow
+# refuses any folder whose BUILD.json is not marked deployable.
+name: Publish formula pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages-formulas
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Refuse a folder that is not a reviewed deployable build
+        run: |
+          test -f pages/BUILD.json || { echo "pages/BUILD.json is missing"; exit 1; }
+          python3 -c "import json,sys; sys.exit(0 if json.load(open('pages/BUILD.json'))['preview'] is False else 1)" \
+            || { echo "pages/ is a preview build; copy a reviewed build with just formula-copy"; exit 1; }
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: pages
+      - id: deployment
+        uses: actions/deploy-pages@v4
