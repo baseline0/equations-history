@@ -1,5 +1,9 @@
 # equations-history: Traceable Equation Narratives
 
+<!-- fleet-standard:begin -->
+**Universal rules:** `~/.claude/CLAUDE.md` (fleet standard 1.2.0).
+<!-- fleet-standard:end -->
+
 Code-first, interactive learning for ML mathematics. Each formula is tied to source code, narrative context, and (optionally) formal proof.
 
 **For universal rules, see `~/.claude/CLAUDE.md`.**
