@@ -21,6 +21,8 @@ from equations_history import registry
 from equations_history.core import Equation
 
 CATALOG_FIELDS = frozenset({"latex", "description", "source_line", "assumptions", "units"})
+# Structured units arrived after the first snapshots. A snapshot without them still loads; the assembler refuses it.
+OPTIONAL_CATALOG_FIELDS = frozenset({"units_lhs", "units_rhs"})
 NARRATIVE_FIELDS = frozenset({"name", "history", "citations", "concepts", "year"})
 
 
@@ -38,6 +40,8 @@ class CatalogEntry:
     source_line: int
     assumptions: str
     units: str
+    units_lhs: str = ""
+    units_rhs: str = ""
 
 
 @dataclass(frozen=True)
@@ -62,12 +66,14 @@ def _read_object(path: Path) -> dict[str, Any]:
     return data
 
 
-def _check_fields(path: Path, key: str, entry: Any, fields: frozenset[str]) -> dict[str, Any]:
-    """``entry`` must be an object with exactly ``fields``. Returns it, typed for the caller."""
+def _check_fields(
+    path: Path, key: str, entry: Any, fields: frozenset[str], optional: frozenset[str] = frozenset()
+) -> dict[str, Any]:
+    """``entry`` must be an object with all of ``fields``, and no key beyond those and ``optional``."""
     if not isinstance(entry, dict):
         raise CatalogError(f"{path.name}: {key} must be an object")
     missing = fields - entry.keys()
-    unexpected = entry.keys() - fields
+    unexpected = entry.keys() - fields - optional
     if missing or unexpected:
         raise CatalogError(
             f"{path.name}: {key} has missing {sorted(missing)} and unexpected {sorted(unexpected)} fields"
@@ -93,7 +99,7 @@ def load_catalog(path: Path) -> dict[str, CatalogEntry]:
     """Formulas from a math-trace equations.json snapshot, checked against the catalog contract."""
     entries: dict[str, CatalogEntry] = {}
     for key, raw in _read_object(path).items():
-        entry = _check_fields(path, key, raw, CATALOG_FIELDS)
+        entry = _check_fields(path, key, raw, CATALOG_FIELDS, OPTIONAL_CATALOG_FIELDS)
         source_line = entry["source_line"]
         if not isinstance(source_line, int) or isinstance(source_line, bool) or source_line < 1:
             raise CatalogError(f"{path.name}: {key}.source_line must be a positive integer")
@@ -104,6 +110,8 @@ def load_catalog(path: Path) -> dict[str, CatalogEntry]:
             source_line=source_line,
             assumptions=_text(path, key, "assumptions", entry["assumptions"], required=False),
             units=_text(path, key, "units", entry["units"], required=False),
+            units_lhs=_text(path, key, "units_lhs", entry.get("units_lhs", ""), required=False),
+            units_rhs=_text(path, key, "units_rhs", entry.get("units_rhs", ""), required=False),
         )
     return entries
 

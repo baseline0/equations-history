@@ -14,7 +14,9 @@
       "description": {"type": "string", "pattern": "\\S"},
       "source_line": {"type": "integer", "minimum": 1},
       "assumptions": {"type": "string"},
-      "units": {"type": "string"}
+      "units": {"type": "string"},
+      "units_lhs": {"type": "string", "description": "Units of the left-hand side, pint-parseable. Empty when not an equation. Optional until every template declares it."},
+      "units_rhs": {"type": "string", "description": "Units of the right-hand side, in the same form as units_lhs. Both sides must have the same dimensions."}
     }
   }
 }
