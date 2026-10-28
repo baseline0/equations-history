@@ -102,3 +102,14 @@ publish-check:
         echo "FAIL pages/ has uncommitted changes; commit them before pushing"; exit 1
     fi
     echo "OK pages/ is committed. Next: push, set Pages source to GitHub Actions, then start the workflow."
+
+# Build the formula pages from the reviewed records in formula-records/. Deployable (the default) only when every record
+# has a current review; a preview is marked and must never be published. Writes pages/ by default.
+[group("pages")]
+pages-build mode="deployable" out="pages":
+    uv run python scripts/formula_pages_cli.py build --mode "{{mode}}" --out "{{out}}"
+
+# Record that a person reviewed one record. The review is pinned to the record's bytes, so an edit voids it.
+[group("pages")]
+pages-approve id reviewer:
+    uv run python scripts/formula_pages_cli.py approve --id "{{id}}" --reviewer "{{reviewer}}"

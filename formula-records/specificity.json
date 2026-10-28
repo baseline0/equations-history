@@ -1,0 +1,33 @@
+{
+  "id": "specificity",
+  "core": {
+    "latex": "k_{cat}/K_m = \\frac{k_{2}}{K_{m}}",
+    "assumptions": [
+      "Low substrate concentration regime"
+    ],
+    "units": {
+      "lhs": "mM^-1 s^-1",
+      "rhs": "s^-1 / mM"
+    },
+    "name": "Catalytic Efficiency"
+  },
+  "provenance": {
+    "code": {
+      "repo": "math-trace"
+    }
+  },
+  "narrative": {
+    "concepts": [
+      "catalytic efficiency",
+      "specificity constant",
+      "second-order rate constant",
+      "low substrate"
+    ],
+    "citations": [
+      "Cornish-Bowden, A. (2012). Fundamentals of Enzyme Kinetics (4th ed.). Wiley-Blackwell.",
+      "Michaelis, L., & Menten, M. L. (1913). Die Kinetik der Invertinwirkung. Biochemische Zeitschrift, 49, 333-369."
+    ],
+    "history": "At low substrate concentration most enzyme is free, so the rate is k_cat / K_m times the enzyme and substrate concentrations. The ratio is therefore a second-order rate constant for free enzyme reacting with substrate, which is why it is used to compare enzymes acting on the same substrate.",
+    "year": null
+  }
+}
