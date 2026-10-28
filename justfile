@@ -87,7 +87,7 @@ records-public:
 publish-check:
     #!/usr/bin/env bash
     set -euo pipefail
-    test -f pages/BUILD.json || { echo "FAIL pages/BUILD.json is missing; run just formula-copy in tool-publish"; exit 1; }
+    test -f pages/BUILD.json || { echo "FAIL pages/BUILD.json is missing; run just pages-build"; exit 1; }
     python3 - <<'PY'
     import json, sys
     from pathlib import Path

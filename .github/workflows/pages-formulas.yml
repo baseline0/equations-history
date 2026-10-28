@@ -1,5 +1,5 @@
 # Manual publish of the reviewed formula pages in pages/ to GitHub Pages. Started by hand, and it waits for approval in
-# "production". The pages are copied here by hand from tool-publish (just formula-copy) after review. This workflow
+# "production". The pages are built here from the reviewed records in formula-records/ (just pages-build). This workflow
 # refuses any folder whose BUILD.json is not marked deployable.
 name: Publish formula pages
 
@@ -27,7 +27,7 @@ jobs:
         run: |
           test -f pages/BUILD.json || { echo "pages/BUILD.json is missing"; exit 1; }
           python3 -c "import json,sys; sys.exit(0 if json.load(open('pages/BUILD.json'))['preview'] is False else 1)" \
-            || { echo "pages/ is a preview build; copy a reviewed build with just formula-copy"; exit 1; }
+            || { echo "pages/ is a preview build; rebuild a deployable one with just pages-build"; exit 1; }
       - uses: actions/upload-pages-artifact@v3
         with:
           path: pages
