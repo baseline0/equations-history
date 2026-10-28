@@ -58,5 +58,23 @@ def approve(
     typer.echo(f"approved {record_id} by {reviewer}")
 
 
+@app.command("approve-all")
+def approve_all(
+    reviewer: str = typer.Option(..., "--reviewer", help="The person who reviewed every record, by name."),
+) -> None:
+    """Record one review for each record in formula-records/, each pinned to its current bytes.
+
+    Run it only after reading the change to formula-records/ (git diff). Every record is approved; none is skipped.
+    """
+    try:
+        records = formula_pages.load_public_records_with_digests(RECORDS)
+        for record, _ in records:
+            formula_pages.approve_record(RECORDS, REVIEWS, record["id"], reviewer, now=datetime.now(UTC))
+    except formula_pages.FormulaPageError as error:
+        typer.echo(f"approval refused: {error}")
+        raise typer.Exit(1) from error
+    typer.echo(f"approved {len(records)} record(s) by {reviewer}: {', '.join(r['id'] for r, _ in records)}")
+
+
 if __name__ == "__main__":
     app()

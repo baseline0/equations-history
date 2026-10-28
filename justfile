@@ -114,3 +114,9 @@ pages-build mode="deployable" out="pages":
 [group("pages")]
 pages-approve id reviewer:
     uv run python scripts/formula_pages_cli.py approve --id "{{id}}" --reviewer "{{reviewer}}"
+
+# Approve every record in formula-records/. Read the change first (git diff -- formula-records): this is a review, not a stamp.
+[group("pages")]
+pages-approve-all reviewer:
+    git diff --stat -- formula-records
+    uv run python scripts/formula_pages_cli.py approve-all --reviewer "{{reviewer}}"

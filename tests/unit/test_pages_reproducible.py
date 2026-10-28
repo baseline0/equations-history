@@ -41,3 +41,32 @@ def test_the_published_pages_are_a_deployable_build_of_the_reviewed_records(tmp_
             assert fresh == shipped, rel
         else:
             assert (built / rel).read_bytes() == (published / rel).read_bytes(), rel
+
+
+def test_approve_all_reviews_every_record_against_its_current_bytes(tmp_path: Path) -> None:
+    import shutil
+
+    from typer.testing import CliRunner
+
+    records = tmp_path / "formula-records"
+    shutil.copytree(REPO_ROOT / "formula-records", records)
+    for record in records.glob("*.json"):
+        if record.name != "reviews.json":
+            record.write_text(
+                record.read_text(encoding="utf-8") + "\n", encoding="utf-8"
+            )  # a changed byte voids the review
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("formula_pages_cli", REPO_ROOT / "scripts" / "formula_pages_cli.py")
+    cli = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cli)
+
+    original = cli.RECORDS, cli.REVIEWS
+    cli.RECORDS, cli.REVIEWS = records, records / "reviews.json"
+    try:
+        result = CliRunner().invoke(cli.app, ["approve-all", "--reviewer", "Test"])
+    finally:
+        cli.RECORDS, cli.REVIEWS = original
+    assert result.exit_code == 0, result.output
+    digests = {r["id"]: d for r, d in formula_pages.load_public_records_with_digests(records)}
+    assert formula_pages.review_problems(digests, formula_pages.load_reviews(records / "reviews.json")) == []
