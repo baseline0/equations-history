@@ -1,0 +1,22 @@
+# The test suite on every push and pull request. Only tests run here: nothing is deployed, and the Pages publish stays manual
+# (pages-formulas.yml). The lock is used as committed, so a stale uv.lock fails the run.
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv python install 3.13
+      - run: uv sync --frozen
+      - run: uv run pytest tests -q
