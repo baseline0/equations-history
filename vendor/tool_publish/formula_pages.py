@@ -173,6 +173,11 @@ def _preview_line(preview: bool) -> str:
     return '<p class="units">Preview: not reviewed for publication.</p>' if preview else ""
 
 
+def _robots(preview: bool) -> str:
+    """Preview pages are kept out of search. Reviewed pages are public and indexable: the review gate decides what ships."""
+    return '<meta name="robots" content="noindex">' if preview else ""
+
+
 def render_formula_page(record: Mapping[str, Any], *, preview: bool = True) -> str:
     """One formula as a self-contained page. KaTeX is loaded from a pinned CDN release; the LaTeX is escaped first.
 
@@ -201,7 +206,7 @@ def render_formula_page(record: Mapping[str, Any], *, preview: bool = True) -> s
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
+{_robots(preview)}
 <title>{name}</title>
 <link rel="stylesheet" href="{KATEX_BASE}/katex.min.css">
 <style>
@@ -248,7 +253,7 @@ def render_index(records: list[Mapping[str, Any]], *, preview: bool = True) -> s
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex">
+{_robots(preview)}
 <title>{title}</title>
 </head>
 <body>

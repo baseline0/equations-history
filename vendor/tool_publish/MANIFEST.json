@@ -1,7 +1,7 @@
 {
   "source": "tool-publish src/tool_publish/formula_pages.py",
-  "source_commit": "6aff54a",
+  "source_commit": "bb582d5",
   "files": {
-    "formula_pages.py": "dd531b455996c88ba380820b94e3a279fb90f658b1477e1ea1a064cfb12add0d"
+    "formula_pages.py": "4baabe97834d8fac1a0bb7d976e8b914c88b0355065906a759bc92f5bfad25cc"
   }
 }
