@@ -158,8 +158,10 @@ just cli               # Run Typer CLI help
 ```bash
 git status                        # Check current state
 git add path/to/file              # Stage specific files
-just commit                       # Commit with auto-generated message
+MESSAGE="type: subject" FILES="path/to/file" just commit
 ```
+
+Commit only with `just commit`, never `git commit` directly. `FILES` must list exactly the staged paths; the recipe refuses the commit otherwise.
 
 Commit messages should reference:
 - Which equation(s) were added/updated
