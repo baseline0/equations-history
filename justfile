@@ -63,13 +63,14 @@ sync-catalog name src="" mt="../math-trace":
         "$src" "$commit" "$sha" > "src/equations_history/catalogs/{{name}}.manifest.json"
     echo "synced {{name}} from math-trace $src at $commit"
 
-# Assemble the grounded biochemistry records from the math-trace snapshot, then write their public views to
-# dist/public-records (gitignored) for the tool-publish preview. Only records grounded in math-trace belong here, so the
-# Navier-Stokes example is left out. Each formula is listed as key:id.
+# Assemble the grounded biochemistry records from the math-trace snapshot, then write their public views straight into
+# formula-records/, the reviewed set. A changed record voids its review, so a deployable build refuses until someone
+# reviews it again (just pages-approve). Only records grounded in math-trace belong here, so the Navier-Stokes example is
+# left out. Each formula is listed as key:id.
 records-public:
     #!/usr/bin/env bash
     set -euo pipefail
-    mkdir -p dist/records dist/public-records
+    mkdir -p dist/records formula-records
     for pair in michaelis_menten:michaelis-menten specificity:specificity; do
         formula="${pair%%:*}"
         id="${pair##*:}"
@@ -78,7 +79,7 @@ records-public:
             --source-file templates/biochemistry/src/model.py --paper-store tests/fixtures/paper_store \
             --out "dist/records/$id.json"
         uv run learn record public --path "dist/records/$id.json" --paper-store tests/fixtures/paper_store \
-            --out "dist/public-records/$id.json"
+            --out "formula-records/$id.json"
     done
 
 # Check pages/ is ready to publish before you push: a deployable build, every record has its page, and nothing is left
