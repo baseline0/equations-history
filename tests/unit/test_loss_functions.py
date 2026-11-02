@@ -1,7 +1,8 @@
 """Tests for loss function equations."""
 
+from source_check import assert_source_is_equation_call
+
 from equations_history.equations.loss_functions import LossFunctionEquations, get_all_equations
-from test_equations.source_check import assert_source_is_equation_call
 
 
 def test_cross_entropy_binary_equation() -> None:

@@ -15,8 +15,7 @@ set shell := ["bash", "-c"]
 @sync:
     uv sync --frozen
 
-@test:
-    uv run pytest tests/ -xvs
+test: test-unit
 
 @fmt:
     uv run ruff format src/ tests/
@@ -40,8 +39,16 @@ set shell := ["bash", "-c"]
     uv run learn --help
 
 # Unit tests: the gate the pre-push hook runs (fleet hook standard, fleet_base.hook_standard R4)
+# Unit tests only (what CI and the pre-push gate run). Self-contained: depends on no other recipe.
 test-unit:
-    just test
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if uv run pytest --version >/dev/null 2>&1; then
+        uv run pytest -m unit --tb=short -v
+        exit 0
+    fi
+    echo "error: test-unit cannot run in this repo: install pytest as a dev dependency (uv add --dev pytest)" >&2
+    exit 1
 
 # Refresh a formula catalog snapshot from math-trace, and pin the manifest to the math-trace commit. src is the catalog
 # path inside math-trace; empty means the template layout, templates/<name>/equations.json. Refuses while that file has
