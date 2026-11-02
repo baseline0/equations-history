@@ -7,9 +7,9 @@ from dataclasses import fields
 from pathlib import Path
 
 import pytest
+from source_check import assert_source_is_equation_call
 
 from equations_history.core import Equation
-from test_equations.source_check import assert_source_is_equation_call
 
 TOPIC_MODULES = ["autoencoders", "bert", "diffusion", "entropy", "loss_functions", "optimizers", "regularization"]
 

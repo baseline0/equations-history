@@ -1,7 +1,8 @@
 """Tests for autoencoder equations."""
 
+from source_check import assert_source_is_equation_call
+
 from equations_history.equations.autoencoders import AutoencoderEquations, get_all_equations
-from test_equations.source_check import assert_source_is_equation_call
 
 
 def test_deterministic_encoder_equation() -> None:

@@ -1,7 +1,8 @@
 """Tests for optimizer equations."""
 
+from source_check import assert_source_is_equation_call
+
 from equations_history.equations.optimizers import OptimizerEquations, get_all_equations
-from test_equations.source_check import assert_source_is_equation_call
 
 
 def test_sgd_update_equation() -> None:
