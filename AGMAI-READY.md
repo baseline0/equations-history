@@ -131,16 +131,7 @@ Example: "Mechanical oscillator and RLC circuit are structurally equivalent."
 **README Statement**:
 > "Lean proofs establish mathematical equivalence under explicitly stated assumptions. They do not validate empirical adequacy, historical interpretation, parameter estimation, or real-world applicability. See assumptions section for caveats."
 
-### Verification Vocabulary for equations-history
-
-| Status | Meaning | Example |
-|--------|---------|---------|
-| `source_cited` | Equation appears in cited work | "Kermack-McKendrick 1927, equation (1)" |
-| `transcription_verified` | Equation faithfully transcribed from cited source | "Manual check: matches original notation exactly" |
-| `symbolic_equivalent` | Modern form is algebraically equivalent to original | "Proven: F=ma ⟺ d(mv)/dt = F under constant m" |
-| `formally_verified` | Lean theorem proven under stated assumptions | "Lean: MechanicalOscillator.energyEquals(RLCCircuit.energy)" |
-| `historical_interpretation` | Human-curated claim about significance or adoption | "This formulation became standard post-1970" |
-| `visual_verified` | Interactive visualization matches mathematical claim | "Latent space plot confirms VAE KL divergence decay" |
+**Verification Status Enum**: See `src/equations_history/verification.py` for VerificationStatus enum (codified specification, source: this section formerly lines 134-143).
 
 ---
 
