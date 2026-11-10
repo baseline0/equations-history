@@ -83,7 +83,7 @@ include_external_packages = true
 dev = [
     {include-group = "test"},
     "types-jsonschema>=4.23",
-    "httpx>=0.27",
+    "httpx2>=2.16.0",
     "pyright>=1.1.414",
     "ruff==0.16.8",
     "antlr4-python3-runtime==4.11.1",
