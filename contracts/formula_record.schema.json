@@ -66,7 +66,7 @@
             },
             "locator": {
               "type": "string",
-              "pattern": "\\S",
+              "pattern": "^(?=.*\\S)[^\\\\$]*$",
               "description": "Where the formula sits in the paper, for example 'page 4, equation 3'. Never raw TeX from the paper."
             }
           }

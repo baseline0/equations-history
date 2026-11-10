@@ -97,6 +97,24 @@ def test_the_contract_rejects_malformed_records(pilot: dict[str, Any], path: tup
     assert validate_record(record), f"{'/'.join(path)} should be rejected"
 
 
+@pytest.mark.parametrize("locator", ["\\frac{1}{2}", "$E = mc^2$", "eq. \\(3\\)", "page 4\\"])
+def test_a_literature_locator_never_carries_raw_tex(pilot: dict[str, Any], locator: str) -> None:
+    """Design intent: a locator names where a formula sits in a paper, so raw TeX from the paper is refused at the contract."""
+    pilot["provenance"]["literature"] = {"paper_store_id": "2610.23820", "version": "v1", "locator": locator}
+    errors = validate_record(pilot)
+    assert any(error.startswith("provenance/literature/locator") for error in errors), errors
+
+
+def test_a_plain_literature_locator_is_accepted_by_the_contract(pilot: dict[str, Any]) -> None:
+    """Design intent: a human-readable locator such as 'page 4, equation 3' stays valid after the no-TeX rule."""
+    pilot["provenance"]["literature"] = {
+        "paper_store_id": "2610.23820",
+        "version": "v1",
+        "locator": "page 4, equation 3",
+    }
+    assert validate_record(pilot) == []
+
+
 def test_units_with_the_same_dimensions_agree() -> None:
     assert units_agree("kg / (m^2 s^2)", "N / m^3")
     assert units_agree("kg/(m^2 s^2)", "Pa / m")
