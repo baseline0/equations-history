@@ -155,8 +155,9 @@ MECH_RLC_RELATION = Relation(
     normalized_form_source=r"m\ddot{x} + c\dot{x} + kx = F(t)",
     normalized_form_target=r"L\ddot{q} + R\dot{q} + \frac{1}{C}q = V(t)",
     visual_diagram="bond_graph_second_order_system",
-    visual_diagram_url="https://example.com/bond_graph_rlc.svg",  # TODO: create this
+    visual_diagram_url=None,
     notes=(
+        "A bond-graph diagram is a candidate asset for this example; no hosted image is provided. "
         "This correspondence is one of the most important in systems theory. "
         "It demonstrates that energy-dissipative, second-order linear systems have a common abstract structure "
         "independent of physical domain. Extensions to thermal systems (RC circuits), "
