@@ -1,12 +1,14 @@
 """MCP stdio server for equations-history: read-only views of the equation registry.
 
-Three tools, each replying with the fleet read envelope (fleet-coordination, contracts/read-envelope/FORMAT.md):
-list_topics, list_equations and get_equation. Nothing here writes, and no tool reaches the network. A bad topic or
-equation name is an envelope with an error, not a traceback, so a caller can always parse the reply.
+Read tools reply with the fleet read envelope (fleet-coordination, contracts/read-envelope/FORMAT.md):
+list_topics, list_equations, get_equation, list_formula_records and get_formula_record. Nothing here
+writes, and no tool reaches the network. Bad identifiers are envelope errors, not tracebacks.
 """
 
 from __future__ import annotations
 
+import json
+import re
 from typing import Any
 
 from mcp.server.mcpserver import MCPServer
@@ -14,6 +16,11 @@ from mcp.types import ToolAnnotations
 
 import equations_history.equations  # noqa: F401  importing the package registers every topic
 from equations_history import registry
+from equations_history.constants import REPO_ROOT
+from equations_history.formula_record import validate_record
+
+FORMULA_RECORDS_DIR = REPO_ROOT / "formula-records"
+RECORD_ID_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 
 CONTRACT = "fleet.read-envelope"
 VERSION = "1.0"
@@ -66,7 +73,51 @@ def get_equation(topic: str, name: str) -> dict[str, Any]:
     )
 
 
-READ_TOOLS = (list_topics, list_equations, get_equation)
+def _record_ids() -> list[str]:
+    """Stable slug ids of files that actually look like formula records (not sidecars)."""
+    ids: list[str] = []
+    if not FORMULA_RECORDS_DIR.is_dir():
+        return ids
+    for path in sorted(FORMULA_RECORDS_DIR.glob("*.json")):
+        if not RECORD_ID_RE.match(path.stem):
+            continue
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        if isinstance(data, dict) and "core" in data:
+            ids.append(path.stem)
+    return ids
+
+
+def list_formula_records() -> dict[str, Any]:
+    """The ids of assembled formula records available for traceability checks."""
+    return envelope("list_formula_records", {"records": _record_ids()})
+
+
+def get_formula_record(record_id: str) -> dict[str, Any]:
+    """One formula record with its full provenance and any schema violations, for offline traceability.
+
+    The public website view strips file/source_line; this tool returns the stored record verbatim and
+    reports validation errors so a caller can see when provenance is incomplete.
+    """
+    if not RECORD_ID_RE.match(record_id):
+        return envelope("get_formula_record", error=f"invalid formula record id {record_id!r}")
+    path = FORMULA_RECORDS_DIR / f"{record_id}.json"
+    if not path.is_file():
+        return envelope("get_formula_record", error=f"unknown formula record {record_id!r}")
+    try:
+        record = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        return envelope("get_formula_record", error=f"cannot read formula record {record_id!r}: {exc}")
+    violations = validate_record(record)
+    return envelope(
+        "get_formula_record",
+        {"record_id": record_id, "record": record, "validation_errors": violations},
+    )
+
+
+READ_TOOLS = (list_topics, list_equations, get_equation, list_formula_records, get_formula_record)
 
 
 def build_server() -> MCPServer:

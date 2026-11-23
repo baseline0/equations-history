@@ -15,7 +15,13 @@ from equations_history.mcp_server import (
 
 pytestmark = pytest.mark.unit
 
-EXPECTED_TOOLS = {"list_topics", "list_equations", "get_equation"}
+EXPECTED_TOOLS = {
+    "list_topics",
+    "list_equations",
+    "get_equation",
+    "list_formula_records",
+    "get_formula_record",
+}
 
 
 def test_every_reply_is_the_fleet_read_envelope():
