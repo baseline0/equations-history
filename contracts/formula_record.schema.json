@@ -46,7 +46,9 @@
           "properties": {
             "repo": {"type": "string", "const": "math-trace"},
             "file": {"type": "string", "pattern": "\\S"},
-            "source_line": {"type": "integer", "minimum": 1}
+            "source_line": {"type": "integer", "minimum": 1},
+            "expr_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "commit": {"type": "string", "pattern": "\\S"}
           }
         },
         "literature": {

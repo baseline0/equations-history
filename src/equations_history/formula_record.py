@@ -112,6 +112,8 @@ def assemble_record(
     source_file: str,
     store: PaperStore,
     literature: Mapping[str, str] | None = None,
+    expr_hash: str | None = None,
+    commit: str | None = None,
 ) -> dict[str, Any]:
     """Join one math-trace catalog entry and its narrative into a formula-record/1 object, and check it.
 
@@ -130,7 +132,13 @@ def assemble_record(
             "assumptions": [entry.assumptions] if entry.assumptions.strip() else [],
         },
         "provenance": {
-            "code": {"repo": "math-trace", "file": source_file, "source_line": entry.source_line},
+            "code": {
+                "repo": "math-trace",
+                "file": source_file,
+                "source_line": entry.source_line,
+                **({"expr_hash": expr_hash} if expr_hash else {}),
+                **({"commit": commit} if commit else {}),
+            },
         },
         "narrative": {
             "year": narrative.year,

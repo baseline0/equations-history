@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import re
+from pathlib import Path
 from typing import Any
 
 from mcp.server.mcpserver import MCPServer
@@ -20,7 +21,17 @@ from equations_history.constants import REPO_ROOT
 from equations_history.formula_record import validate_record
 
 FORMULA_RECORDS_DIR = REPO_ROOT / "formula-records"
+FULL_RECORDS_DIR = REPO_ROOT / "formula-records-full"
 RECORD_ID_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
+
+
+def _record_path(record_id: str) -> tuple[Path, bool]:
+    """Full provenance record when assembled, else the public website view."""
+    full = FULL_RECORDS_DIR / f"{record_id}.json"
+    if full.is_file():
+        return full, True
+    return FORMULA_RECORDS_DIR / f"{record_id}.json", False
+
 
 CONTRACT = "fleet.read-envelope"
 VERSION = "1.0"
@@ -78,7 +89,8 @@ def _record_ids() -> list[str]:
     ids: list[str] = []
     if not FORMULA_RECORDS_DIR.is_dir():
         return ids
-    for path in sorted(FORMULA_RECORDS_DIR.glob("*.json")):
+    paths = set(FORMULA_RECORDS_DIR.glob("*.json")) | set(FULL_RECORDS_DIR.glob("*.json"))
+    for path in sorted(paths):
         if not RECORD_ID_RE.match(path.stem):
             continue
         try:
@@ -103,7 +115,7 @@ def get_formula_record(record_id: str) -> dict[str, Any]:
     """
     if not RECORD_ID_RE.match(record_id):
         return envelope("get_formula_record", error=f"invalid formula record id {record_id!r}")
-    path = FORMULA_RECORDS_DIR / f"{record_id}.json"
+    path, complete = _record_path(record_id)
     if not path.is_file():
         return envelope("get_formula_record", error=f"unknown formula record {record_id!r}")
     try:
@@ -113,7 +125,12 @@ def get_formula_record(record_id: str) -> dict[str, Any]:
     violations = validate_record(record)
     return envelope(
         "get_formula_record",
-        {"record_id": record_id, "record": record, "validation_errors": violations},
+        {
+            "record_id": record_id,
+            "record": record,
+            "provenance_complete": complete,
+            "validation_errors": violations,
+        },
     )
 
 
