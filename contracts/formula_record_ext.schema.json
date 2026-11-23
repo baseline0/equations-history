@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "equations-history/contracts/formula_record_ext.schema.json",
+  "title": "Formula record extension v1 (additive verification, external context and crosswalk)",
+  "description": "A sidecar for formula-record/1. It never changes the published record: it carries verification states from math-trace, pointer-only external context (for example a Stacks tag), and a review pin. A record without this file remains valid.",
+  "type": "object",
+  "required": ["record_id", "record_sha256"],
+  "additionalProperties": false,
+  "properties": {
+    "record_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "The slug of the formula record this sidecar extends."
+    },
+    "record_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 of the canonical JSON of the full record. Detects drift between record and extension."
+    },
+    "math_trace_id": {
+      "type": "string",
+      "pattern": "\\S",
+      "description": "The producer-side formula key, for example math-trace/michaelis_menten. Optional when the slug is enough."
+    },
+    "expr_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "The canonical SymPy expression hash from math-trace when the base record does not carry one yet."
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "holds": {"type": ["boolean", "null"], "description": "math-trace's residual check. null means not exported."},
+        "statuses": {
+          "type": "object",
+          "description": "Independent statuses; an absent status is unverified, never false.",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["by"],
+            "additionalProperties": false,
+            "properties": {
+              "by": {"type": "string", "pattern": "\\S"},
+              "date": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+              "note": {"type": "string"},
+              "test_file": {"type": "string"}
+            }
+          }
+        },
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["claim_id"],
+            "additionalProperties": false,
+            "properties": {
+              "claim_id": {"type": "string", "pattern": "\\S"},
+              "theorem_path": {"type": "string"},
+              "theorem_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "source_commit": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "external": {
+      "type": "array",
+      "description": "Pointer-only context. Nothing here is fetched at read time; snapshots carry their own sha256 and licence status.",
+      "items": {
+        "type": "object",
+        "required": ["kind", "id", "licence_status"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": {"type": "string", "enum": ["stacks", "paper", "other"]},
+          "id": {"type": "string", "pattern": "\\S", "description": "For stacks: the tag, for example 0ELT."},
+          "url": {"type": "string", "description": "Canonical upstream URL of the snapshot, not a fetch-on-read instruction."},
+          "snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "licence_status": {"type": "string", "enum": ["OPEN", "LOCAL_ONLY", "RESTRICTED", "UNKNOWN"]},
+          "retrieved_at": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+          "note": {"type": "string"}
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "required": ["sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "reviewed_by": {"type": "string"},
+        "reviewed_at": {"type": "string"}
+      }
+    }
+  }
+}

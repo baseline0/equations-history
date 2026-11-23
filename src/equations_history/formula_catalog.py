@@ -11,6 +11,7 @@ The contract is contracts/formula_catalog.schema.json. The checks below are the 
 
 from __future__ import annotations
 
+import hashlib
 import json
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -22,7 +23,7 @@ from equations_history.core import Equation
 
 CATALOG_FIELDS = frozenset({"latex", "description", "source_line", "assumptions", "units"})
 # Structured units arrived after the first snapshots. A snapshot without them still loads; the assembler refuses it.
-OPTIONAL_CATALOG_FIELDS = frozenset({"units_lhs", "units_rhs"})
+OPTIONAL_CATALOG_FIELDS = frozenset({"units_lhs", "units_rhs", "code_ref"})
 NARRATIVE_FIELDS = frozenset({"name", "history", "citations", "concepts", "year"})
 
 
@@ -42,6 +43,7 @@ class CatalogEntry:
     units: str
     units_lhs: str = ""
     units_rhs: str = ""
+    code_ref: str = ""
 
 
 @dataclass(frozen=True)
@@ -95,8 +97,40 @@ def _strings(path: Path, key: str, field: str, value: Any) -> tuple[str, ...]:
     return tuple(value)
 
 
-def load_catalog(path: Path) -> dict[str, CatalogEntry]:
-    """Formulas from a math-trace equations.json snapshot, checked against the catalog contract."""
+def verify_catalog_snapshot(path: Path, manifest_path: Path) -> dict[str, Any]:
+    """Check a snapshot's sha256 and source_commit before its formulas are trusted.
+
+    Tests used to do this by hand. Loading a topic should do it too, so a stale snapshot cannot silently
+    become the source of a published record when the manifest and the bytes drift apart.
+    """
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise CatalogError(f"{manifest_path.name}: cannot read manifest: {error}") from error
+    if not isinstance(manifest, dict):
+        raise CatalogError(f"{manifest_path.name}: a manifest is a JSON object")
+    expected = manifest.get("sha256")
+    commit = manifest.get("source_commit")
+    if not isinstance(expected, str) or len(expected) != 64 or any(char not in "0123456789abcdef" for char in expected):
+        raise CatalogError(f"{manifest_path.name}: sha256 must be 64 lowercase hex characters")
+    if not isinstance(commit, str) or not commit.strip():
+        raise CatalogError(f"{manifest_path.name}: source_commit is required")
+    try:
+        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+    except OSError as error:
+        raise CatalogError(f"{path.name}: cannot read snapshot: {error}") from error
+    if actual != expected:
+        raise CatalogError(f"{path.name}: snapshot sha256 {actual} does not match manifest {expected}")
+    return manifest
+
+
+def load_catalog(path: Path, *, manifest: Path | None = None) -> dict[str, CatalogEntry]:
+    """Formulas from a math-trace equations.json snapshot, checked against the catalog contract.
+
+    When ``manifest`` is given, the file's digest and source pin are verified first.
+    """
+    if manifest is not None:
+        verify_catalog_snapshot(path, manifest)
     entries: dict[str, CatalogEntry] = {}
     for key, raw in _read_object(path).items():
         entry = _check_fields(path, key, raw, CATALOG_FIELDS, OPTIONAL_CATALOG_FIELDS)
@@ -112,6 +146,7 @@ def load_catalog(path: Path) -> dict[str, CatalogEntry]:
             units=_text(path, key, "units", entry["units"], required=False),
             units_lhs=_text(path, key, "units_lhs", entry.get("units_lhs", ""), required=False),
             units_rhs=_text(path, key, "units_rhs", entry.get("units_rhs", ""), required=False),
+            code_ref=_text(path, key, "code_ref", entry.get("code_ref", ""), required=False),
         )
     return entries
 
@@ -176,7 +211,8 @@ def register_catalog_topic(
     the template's model.py in math-trace, which is where each recorded source_line points. The two files must name
     the same formulas: a formula with no narrative, or a narrative with no formula, fails here.
     """
-    entries = load_catalog(catalog_path)
+    manifest_path = catalog_path.with_name(f"{catalog_path.stem}.manifest.json")
+    entries = load_catalog(catalog_path, manifest=manifest_path if manifest_path.is_file() else None)
     narratives = load_narratives(narrative_path)
     if entries.keys() != narratives.keys():
         without_narrative = sorted(entries.keys() - narratives.keys())

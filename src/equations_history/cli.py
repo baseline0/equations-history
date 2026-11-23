@@ -31,6 +31,7 @@ from equations_history.core import Equation
 from equations_history.formula_catalog import CatalogError, load_catalog, load_narratives
 from equations_history.formula_record import AssemblyError, assemble_record, check_record, public_view
 from equations_history.paper_store import PaperStore
+from equations_history.record_bundle import build_bundle, build_extension, write_extension
 from equations_history.registry import equations_for, topics
 from equations_history.timeline import ExportError, build_timeline, render
 from equations_history.timeline import as_json as as_json_payload
@@ -304,6 +305,29 @@ def record_public(
     typer.echo(f"wrote {out}")
 
 
+def _provenance_fields(
+    provenance: Path | None,
+    formula: str | None,
+    expr_hash: str | None,
+    commit: str | None,
+) -> tuple[str | None, str | None, dict[str, Any] | None]:
+    """Fill identity fields from math-trace's additive provenance artifact when one is supplied."""
+    if provenance is None:
+        return expr_hash, commit, None
+    if not formula:
+        raise CatalogError("--formula is required when --provenance is given")
+    try:
+        data = json.loads(provenance.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise CatalogError(f"{provenance.name}: cannot read provenance: {error}") from error
+    if not isinstance(data, dict) or not isinstance(data.get("equations"), dict):
+        raise CatalogError(f"{provenance.name}: expected an equation_provenance artifact")
+    entry = data["equations"].get(formula)
+    if not isinstance(entry, dict):
+        raise CatalogError(f"{provenance.name}: no formula {formula!r}")
+    return expr_hash or entry.get("expr_hash"), commit or data.get("source_commit"), data
+
+
 def _assemble_to_file(
     catalog: Path,
     narrative: Path,
@@ -313,9 +337,18 @@ def _assemble_to_file(
     paper_store: Path,
     literature: dict[str, str] | None,
     out: Path,
+    *,
+    expr_hash: str | None = None,
+    commit: str | None = None,
+    provenance: Path | None = None,
+    stacks_tag: str | None = None,
+    ext_out: Path | None = None,
 ) -> None:
     """Assemble one formula record and write it. Exits 2 when the formula is missing, 1 when it cannot be assembled."""
     try:
+        expr_hash, commit, provenance_data = _provenance_fields(provenance, formula, expr_hash, commit)
+        if ext_out is not None and provenance_data is None:
+            raise CatalogError("--provenance is required when --ext-out is given")
         entries = load_catalog(catalog)
         narratives = load_narratives(narrative)
         if formula not in entries or formula not in narratives:
@@ -328,12 +361,19 @@ def _assemble_to_file(
             source_file=source_file,
             store=PaperStore(paper_store),
             literature=literature,
+            expr_hash=expr_hash,
+            commit=commit,
         )
     except (CatalogError, AssemblyError) as error:
         typer.echo(f"ERROR {error}", err=True)
         raise typer.Exit(code=1) from error
     out.write_text(json.dumps(record, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     typer.echo(f"wrote {out}")
+    if provenance_data is not None:
+        ext = build_extension(record, provenance_data, formula=formula, stacks_tag=stacks_tag)
+        target = ext_out or out.with_name(f"{record_id}.ext.json")
+        write_extension(ext, target)
+        typer.echo(f"wrote {target}")
 
 
 @record_app.command("assemble")
@@ -353,9 +393,38 @@ def record_assemble(
         ..., "--paper-store", help="The paper-store root, for example /home/mark/paper-store."
     ),
     out: Path = typer.Option(..., "--out", help="Where to write the formula record, as JSON."),
+    provenance: Path | None = typer.Option(  # typer-explicit: allow-optional: additive provenance input
+        None, "--provenance", help="math-trace equation_provenance.json, for expr_hash, commit and verification."
+    ),
+    expr_hash: str | None = typer.Option(  # typer-explicit: allow-optional: derived from provenance when omitted
+        None, "--expr-hash", help="Explicit canonical SymPy expression hash."
+    ),
+    commit: str | None = typer.Option(  # typer-explicit: allow-optional: derived from provenance when omitted
+        None, "--commit", help="Explicit math-trace source commit."
+    ),
+    stacks_tag: str | None = typer.Option(  # typer-explicit: allow-optional: optional pointer-only snapshot
+        None, "--stacks-tag", help="Optional Stacks Project tag, pointer only."
+    ),
+    ext_out: Path | None = typer.Option(  # typer-explicit: allow-optional: defaults beside the record
+        None, "--ext-out", help="Where to write the extension sidecar."
+    ),
 ) -> None:
     """Assemble a code-only formula record, and check it against the paper store."""
-    _assemble_to_file(catalog, narrative, formula, record_id, source_file, paper_store, None, out)
+    _assemble_to_file(
+        catalog,
+        narrative,
+        formula,
+        record_id,
+        source_file,
+        paper_store,
+        None,
+        out,
+        expr_hash=expr_hash,
+        commit=commit,
+        provenance=provenance,
+        stacks_tag=stacks_tag,
+        ext_out=ext_out,
+    )
 
 
 @record_app.command("assemble-cited")
@@ -380,10 +449,53 @@ def record_assemble_cited(
     literature_version: str = typer.Option(..., "--literature-version", help="The paper's version, for example v1."),
     locator: str = typer.Option(..., "--locator", help="Where the formula sits in the paper, for example 'page 4'."),
     out: Path = typer.Option(..., "--out", help="Where to write the formula record, as JSON."),
+    provenance: Path | None = typer.Option(  # typer-explicit: allow-optional: additive provenance input
+        None, "--provenance", help="math-trace equation_provenance.json, for expr_hash, commit and verification."
+    ),
+    expr_hash: str | None = typer.Option(  # typer-explicit: allow-optional: derived from provenance when omitted
+        None, "--expr-hash", help="Explicit canonical SymPy expression hash."
+    ),
+    commit: str | None = typer.Option(  # typer-explicit: allow-optional: derived from provenance when omitted
+        None, "--commit", help="Explicit math-trace source commit."
+    ),
+    stacks_tag: str | None = typer.Option(  # typer-explicit: allow-optional: optional pointer-only snapshot
+        None, "--stacks-tag", help="Optional Stacks Project tag, pointer only."
+    ),
+    ext_out: Path | None = typer.Option(  # typer-explicit: allow-optional: defaults beside the record
+        None, "--ext-out", help="Where to write the extension sidecar."
+    ),
 ) -> None:
     """Assemble a formula record that cites a paper, and check the licence and version against the paper store."""
     literature = {"paper_store_id": literature_id, "version": literature_version, "locator": locator}
-    _assemble_to_file(catalog, narrative, formula, record_id, source_file, paper_store, literature, out)
+    _assemble_to_file(
+        catalog,
+        narrative,
+        formula,
+        record_id,
+        source_file,
+        paper_store,
+        literature,
+        out,
+        expr_hash=expr_hash,
+        commit=commit,
+        provenance=provenance,
+        stacks_tag=stacks_tag,
+        ext_out=ext_out,
+    )
+
+
+@record_app.command("bundle")
+def record_bundle_cmd(
+    record_id: str = typer.Option(..., "--id", help="The formula record slug."),
+    public: bool = typer.Option(False, "--public", help="Build the bundle from the reviewed public view."),
+) -> None:
+    """Print the merged record bundle: identity crosswalk, verification, review pin and narrative chunk."""
+    try:
+        bundle = build_bundle(record_id, public=public)
+    except CatalogError as error:
+        typer.echo(f"ERROR {error}", err=True)
+        raise typer.Exit(code=1) from error
+    typer.echo(json.dumps(bundle, indent=2, ensure_ascii=False))
 
 
 if __name__ == "__main__":

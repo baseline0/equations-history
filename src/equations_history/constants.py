@@ -13,3 +13,7 @@ CATALOG_DIR: Path = PACKAGE_ROOT / "catalogs"
 NARRATIVE_DIR: Path = PACKAGE_ROOT / "narratives"
 
 FORMULA_RECORD_SCHEMA_PATH: Path = REPO_ROOT / "contracts" / "formula_record.schema.json"
+FORMULA_RECORD_EXT_SCHEMA_PATH: Path = REPO_ROOT / "contracts" / "formula_record_ext.schema.json"
+FULL_RECORDS_DIR: Path = REPO_ROOT / "formula-records-full"
+PUBLIC_RECORDS_DIR: Path = REPO_ROOT / "formula-records"
+REVIEWS_PATH: Path = PUBLIC_RECORDS_DIR / "reviews.json"

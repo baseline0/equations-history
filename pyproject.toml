@@ -36,6 +36,7 @@ dev = [
 [project.scripts]
 learn = "equations_history.cli:app"
 equations-history-mcp = "equations_history.mcp_server:main"
+equations-history-serve = "equations_history.http_server:main"
 
 [tool.mypy]
 python_version = "3.13"

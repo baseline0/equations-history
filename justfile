@@ -32,6 +32,10 @@ test: test-unit
 @serve:
     uv run uvicorn equations_history.api:app --reload --host 0.0.0.0 --port 8000
 
+# Serve the Layer-2 HTTP/MCP shape at the fleet's standard port (read-only by design).
+@serve-mcp:
+    uv run equations-history-serve --host 0.0.0.0 --port 8080
+
 @cli *ARGS:
     uv run learn {{ARGS}}
 
