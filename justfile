@@ -1,11 +1,6 @@
 # equations-history: Task automation
 
-import 'just/repo-push.just'
-
-import 'just/fleet-clean.just'
-import 'just/fleet-checks.just'
-import 'just/fleet-commit.just'
-import 'just/fleet-test.just'
+import 'just/fleet-recipes.just'
 
 set shell := ["bash", "-c"]
 
