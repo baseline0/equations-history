@@ -7,6 +7,20 @@ history, the citations and the concepts. Nothing here imports math-trace. The sn
 interface, so a change in math-trace reaches this repo as a snapshot update, not as silent drift.
 
 The contract is contracts/formula_catalog.schema.json. The checks below are the runtime form of that contract.
+
+## Specification Map
+
+| Rule or Invariant | Authority | Enforcement |
+|---|---|---|
+| Catalog/narrative JSON must be an object with at least one key | `contracts/formula_catalog.schema.json`; this module boundary check | `_read_object`; `tests/unit/test_catalog.py::test_empty_catalog_is_rejected`, `test_unreadable_json_names_the_file` |
+| Each catalog entry has required fields `{latex,description,source_line,assumptions,units}` and only optional `{units_lhs,units_rhs,code_ref}` | `contracts/formula_catalog.schema.json`; `CATALOG_FIELDS`/`OPTIONAL_CATALOG_FIELDS` | `_check_fields`, `load_catalog`; `tests/unit/test_catalog.py::test_bad_catalog_entries_are_rejected_by_loader_and_schema` |
+| `source_line` is a positive integer (not bool) | `contracts/formula_catalog.schema.json` | `load_catalog`; `tests/unit/test_catalog.py::test_bad_catalog_entries_are_rejected_by_loader_and_schema` |
+| Required text fields are non-empty strings; optional text fields are strings | this module boundary contract | `_text`, `load_catalog`, `load_narratives`; `tests/unit/test_catalog.py::test_bad_catalog_entries_are_rejected_by_loader_and_schema` |
+| Narrative has required `{name,history,citations,concepts,year}`; citations/concepts are non-empty lists of non-empty strings | this module boundary contract | `_check_fields`, `_strings`, `load_narratives`; `tests/unit/test_catalog.py::test_narrative_needs_nonempty_citations`, `test_a_missing_year_field_is_refused` |
+| `year` is an integer >= 1 or `null` (placeholder, not missing); bool rejected | this module boundary contract | `_year`, `load_narratives`; `tests/unit/test_catalog.py::test_a_year_must_be_an_integer_or_null`, `test_a_null_year_is_the_placeholder_and_reaches_the_equation` |
+| Snapshot manifest must have 64-char lowercase hex `sha256` and non-empty `source_commit`; snapshot bytes must match manifest | snapshot integrity contract | `verify_catalog_snapshot`; `tests/unit/test_catalog.py::test_snapshot_matches_its_manifest`, `tests/unit/test_record_bundle.py::test_a_stale_manifest_is_refused_at_load_time`, `test_a_current_manifest_is_accepted` |
+| Catalog and narrative keys must match exactly before registration | registration contract | `register_catalog_topic`; `tests/unit/test_catalog.py::test_registration_refuses_a_formula_without_a_narrative`, `test_narratives_file_matches_the_snapshot_keys` |
+| Registered equations carry math-trace source file/line, not this module's source | traceability contract | `_factory`, `register_catalog_topic`; `tests/unit/test_catalog.py::test_each_equation_takes_latex_from_the_catalog_and_source_from_math_trace`, `test_registration_builds_equations_with_their_math_trace_source` |
 """
 
 from __future__ import annotations

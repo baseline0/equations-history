@@ -158,3 +158,22 @@ def test_the_cli_bundle_command_prints_the_merged_view() -> None:
 
     assert result.exit_code == 0, result.output
     assert json.loads(result.stdout)["identity"]["knowledge_id"] == "formula-michaelis-menten"
+
+
+def test_build_extension_refuses_unknown_formula() -> None:
+    with pytest.raises(CatalogError, match="no formula 'missing'"):
+        build_extension(_record(), _provenance(), formula="missing")
+
+
+def test_validate_extension_reports_contract_violations() -> None:
+    bad = {"record_id": "michaelis-menten"}  # missing required fields per schema
+
+    problems = validate_extension(bad)
+
+    assert problems
+    assert any("record_sha256" in p or "required" in p.lower() or p for p in problems)
+
+
+def test_build_bundle_refuses_unknown_record() -> None:
+    with pytest.raises(CatalogError, match="unknown formula record 'does-not-exist'"):
+        build_bundle("does-not-exist")

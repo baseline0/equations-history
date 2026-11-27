@@ -19,6 +19,7 @@ from equations_history.formula_catalog import (
     load_catalog,
     load_narratives,
     register_catalog_topic,
+    verify_catalog_snapshot,
 )
 
 CATALOG = CATALOG_DIR / "biochemistry.json"
@@ -215,3 +216,24 @@ def test_a_missing_year_field_is_refused(tmp_path: Path) -> None:
 
     with pytest.raises(CatalogError, match="missing \\['year'\\]"):
         load_narratives(_write(tmp_path / "narratives.json", {"michaelis_menten": narrative}))
+
+
+def test_manifest_rejects_bad_sha256_format(tmp_path: Path) -> None:
+    catalog = _write(tmp_path / "catalog.json", {"michaelis_menten": FORMULA})
+    manifest = _write(
+        tmp_path / "catalog.manifest.json",
+        {"source_commit": "abc123", "sha256": "not-a-hash"},
+    )
+
+    with pytest.raises(CatalogError, match="sha256 must be 64 lowercase hex"):
+        verify_catalog_snapshot(catalog, manifest)
+
+
+def test_manifest_rejects_missing_source_commit(tmp_path: Path) -> None:
+    digest = hashlib.sha256(catalog_bytes := json.dumps({"michaelis_menten": FORMULA}).encode()).hexdigest()
+    catalog = tmp_path / "catalog.json"
+    catalog.write_bytes(catalog_bytes)
+    manifest = _write(tmp_path / "catalog.manifest.json", {"sha256": digest})
+
+    with pytest.raises(CatalogError, match="source_commit is required"):
+        verify_catalog_snapshot(catalog, manifest)

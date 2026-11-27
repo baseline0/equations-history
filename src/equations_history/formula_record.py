@@ -2,6 +2,19 @@
 
 Everything here is pure: it takes parsed JSON and returns values or error messages. Reading files and printing belong to
 the CLI. The schema in contracts/formula_record.schema.json is the contract; ``validate_record`` is its runtime form.
+
+## Specification Map
+
+| Rule or Invariant | Authority | Enforcement |
+|---|---|---|
+| A formula record is valid only when it satisfies `contracts/formula_record.schema.json` (Draft 2020-12) | `contracts/formula_record.schema.json` | `_validator`, `validate_record`; `tests/unit/test_formula_record.py::test_the_schema_is_valid_draft_2020_12`, `test_the_pilot_record_is_valid`, `test_every_fixture_record_is_valid`, `test_the_contract_rejects_malformed_records` |
+| Literature block is optional; when present it must have canonical paper-store id/version/locator and no self-attested licence flag | `contracts/formula_record.schema.json`; paper-store contract | `validate_record`; `tests/unit/test_formula_record.py::test_a_literature_block_is_optional`, `test_the_contract_rejects_malformed_records` |
+| Literature locator names a human-readable location and must not carry raw TeX/LaTeX markup | record publication contract | `validate_record` via schema; `tests/unit/test_formula_record.py::test_a_literature_locator_never_carries_raw_tex`, `test_a_plain_literature_locator_is_accepted_by_the_contract` |
+| Unit consistency is checked only after schema validation passes; parse errors and dimension mismatches are reported, not raised | unit-consistency contract | `record_problems`, `unit_problems`, `units_agree`; `tests/unit/test_formula_record.py::test_units_with_the_same_dimensions_agree`, `test_units_with_different_dimensions_are_reported`, `test_units_pint_cannot_parse_are_reported_not_raised`, `test_a_record_that_fails_the_contract_is_not_unit_checked` |
+| Only canonical open licences are accepted; missing/non-canonical/NC licences are refused | paper-store licence contract | `literature_is_open`, `literature_problems`; `tests/unit/test_formula_record.py::test_the_three_open_licences_are_accepted`, `test_any_other_licence_is_refused`, `test_a_literature_block_on_a_restricted_paper_is_refused` |
+| Literature must pin the store's latest version; unknown/restricted/old-version papers are refused | paper-store contract | `literature_problems`, `check_record`; `tests/unit/test_formula_record.py::test_a_literature_block_on_an_open_current_paper_passes`, `test_a_literature_block_on_an_unknown_paper_is_refused`, `test_a_literature_block_pinning_an_old_version_is_refused`, `test_check_record_skips_the_paper_store_when_the_record_is_malformed` |
+| Public view exposes only `PUBLIC_FIELDS`; internal provenance paths/source lines are withheld; input is not mutated | publication boundary contract | `PUBLIC_FIELDS`, `public_view`, `_pick`; `tests/unit/test_formula_record.py::test_the_public_view_drops_internal_provenance_and_keeps_the_narrative`, `test_the_public_view_keeps_a_literature_locator_but_no_tex`, `test_the_public_view_does_not_mutate_its_input` |
+| Assembly requires declared `units_lhs` and `units_rhs`; assembled record must pass `check_record` before return | assembly contract | `assemble_record`; `tests/unit/test_formula_record.py::test_the_assembler_reproduces_the_michaelis_menten_record_from_its_sources`, `test_the_assembler_refuses_a_formula_whose_units_math_trace_has_not_declared`, `test_the_assembler_accepts_max_velocity_once_its_units_are_declared` |
 """
 
 from __future__ import annotations

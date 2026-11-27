@@ -6,6 +6,19 @@ record digest. ``build_bundle`` joins the record, its sidecar and the review pin
 object, and derives the crosswalk ids that math-trace, tool-lit-review and tool-rag all use.
 
 Everything here is pure file/JSON work. No network call is made; a Stacks pointer never fetches.
+
+## Specification Map
+
+| Rule or Invariant | Authority | Enforcement |
+|---|---|---|
+| Canonical record digest is SHA-256 of deterministic JSON (sorted keys, compact separators, UTF-8) | crosswalk/refresh contract | `canonical_json`, `record_sha256`; `tests/unit/test_record_bundle.py::test_an_extension_can_carry_verification_and_a_pointer_only_stack_tag` (digest equality) |
+| Review pin `current` compares raw public file bytes SHA-256, not canonicalized record digest | publication review contract | `file_sha256`, `review_for`; `tests/unit/test_record_bundle.py::test_a_bundle_derives_a_crosswalk_without_changing_the_record` |
+| Extension sidecar must satisfy `contracts/formula_record_ext.schema.json`; invalid/malformed sidecars raise `CatalogError` | `contracts/formula_record_ext.schema.json` | `_extension_validator`, `validate_extension`, `load_extension`; `tests/unit/test_record_bundle.py::test_the_extension_schema_is_valid_draft_2020_12`, `test_an_extension_can_carry_verification_and_a_pointer_only_stack_tag` |
+| Bundle build refuses unknown records and records failing `record_problems`; invalid extension is an error | bundle assembly contract | `_load_record`, `build_bundle`; `tests/unit/test_record_bundle.py::test_a_bundle_derives_a_crosswalk_without_changing_the_record` (happy path), CLI bundle/assemble coverage |
+| Crosswalk ids are derived (record_id/slug/expr_hash/math_trace_id/rag_record_key/knowledge_id/stacks_tag), never hand-maintained | crosswalk contract | `identity`, `build_bundle`; `tests/unit/test_record_bundle.py::test_a_bundle_derives_a_crosswalk_without_changing_the_record` |
+| Verification exposes `holds`, known status names present in sidecar only; absent statuses omitted (never false) | verification contract | `STATUSES`, `verification`; `tests/unit/test_record_bundle.py::test_an_extension_can_carry_verification_and_a_pointer_only_stack_tag` |
+| External context is pointer-only; Stacks pointers are marked `RESTRICTED` and never fetched | external-content contract | `build_extension`, `external_context`; `tests/unit/test_record_bundle.py::test_an_extension_can_carry_verification_and_a_pointer_only_stack_tag` |
+| `build_extension` refuses provenance missing the named formula; built extension must validate | provenance-join contract | `build_extension`; `tests/unit/test_record_bundle.py::test_the_cli_wires_provenance_identity_and_writes_the_sidecar` (happy path) |
 """
 
 from __future__ import annotations
