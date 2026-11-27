@@ -42,7 +42,7 @@ equations-history/
 ├── .python-version                # "3.13"
 ├── justfile                       # Tasks
 ├── README.md                      # Public overview
-├── TODO.md                        # Phase 1-3 roadmap
+├── ROADMAP.md                     # Current status and near-term roadmap
 ├── CLAUDE.md                      # This file
 │
 ├── src/equations_history/
@@ -205,7 +205,7 @@ To add a new equation module:
 - **Typer Docs**: https://typer.tiangolo.com/
 - **FastAPI Docs**: https://fastapi.tiangolo.com/
 - **math-trace**: Sibling project (derivation → publication)
-- **Comparison to existing tools**: See TODO.md (positioning section)
+- **Comparison to existing tools**: See [ROADMAP.md](ROADMAP.md) and [docs/EXPANSION_OPPORTUNITIES.md](docs/EXPANSION_OPPORTUNITIES.md)
 
 ## Questions?
 

@@ -67,15 +67,16 @@ Each equation includes:
 ```
 equations-history/
 ├── src/equations_history/
-│   ├── equations/
-│   │   ├── autoencoders.py      # Autoencoder definitions
-│   │   └── bert.py               # BERT definitions
-│   ├── cli.py                    # Typer CLI entry point
-│   └── api.py                    # FastAPI endpoints
-├── tests/
-│   └── test_equations/           # Equation validation tests
-├── TODO.md                       # Phase 1-3 roadmap
-└── CLAUDE.md                     # Project configuration
+│   ├── equations/               # SymPy equation modules (autoencoders, bert, entropy, ...)
+│   ├── cli.py                   # Typer CLI entry point
+│   ├── api.py                   # FastAPI endpoints
+│   ├── http_server.py           # HTTP server
+│   ├── mcp_server.py            # MCP server
+│   └── formula_catalog.py       # Formula catalog/records
+├── tests/                       # Test suite
+├── docs/                        # Narratives, expansion backlog, lean/crawl docs
+├── ROADMAP.md                   # Current status and near-term roadmap
+└── CLAUDE.md                    # Project configuration
 ```
 
 ## Philosophy
@@ -195,7 +196,7 @@ It's a **learning tool for practitioners** who want to understand not just *what
 - More topics (optimizers, regularization, diffusion models)
 - Interactive derivations with exercises
 
-See [TODO.md](TODO.md) for detailed roadmap.
+See [ROADMAP.md](ROADMAP.md) for current status and [docs/EXPANSION_OPPORTUNITIES.md](docs/EXPANSION_OPPORTUNITIES.md) for the detailed topic backlog.
 
 ## Contributing
 
@@ -224,4 +225,4 @@ MIT
 
 ---
 
-**Questions?** See [CLAUDE.md](CLAUDE.md) for project details or check [TODO.md](TODO.md) for roadmap.
+**Questions?** See [CLAUDE.md](CLAUDE.md) for project details or check [ROADMAP.md](ROADMAP.md) for status and next steps.
