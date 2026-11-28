@@ -62,11 +62,13 @@ def test_approve_all_reviews_every_record_against_its_current_bytes(tmp_path: Pa
     spec.loader.exec_module(cli)
 
     original = cli.RECORDS, cli.REVIEWS
-    cli.RECORDS, cli.REVIEWS = records, records / "reviews.json"
+    setattr(cli, "RECORDS", records)
+    setattr(cli, "REVIEWS", records / "reviews.json")
     try:
         result = CliRunner().invoke(cli.app, ["approve-all", "--reviewer", "Test"])
     finally:
-        cli.RECORDS, cli.REVIEWS = original
+        setattr(cli, "RECORDS", original[0])
+        setattr(cli, "REVIEWS", original[1])
     assert result.exit_code == 0, result.output
     digests = {r["id"]: d for r, d in formula_pages.load_public_records_with_digests(records)}
     assert formula_pages.review_problems(digests, formula_pages.load_reviews(records / "reviews.json")) == []
